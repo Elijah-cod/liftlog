@@ -41,6 +41,11 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
           <p className="mt-3 text-sm leading-6 text-slate-600">
             Use a magic link to open your athlete workspace, run today&apos;s session, and sync your logs to Supabase.
           </p>
+          <div className="mt-4">
+            <Link href="/setup" className="text-sm font-semibold text-sky-700 underline-offset-4 hover:underline">
+              View full setup checklist
+            </Link>
+          </div>
 
           {!isSupabaseConfigured ? (
             <div className="mt-6 rounded-3xl border border-amber-200 bg-amber-50 px-4 py-4 text-sm leading-6 text-amber-900">
@@ -98,4 +103,3 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
     </AppShell>
   );
 }
-

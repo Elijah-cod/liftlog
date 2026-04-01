@@ -25,8 +25,24 @@ export default async function TodayPage() {
             No workout scheduled
           </h1>
           <p className="mt-3 text-sm leading-6 text-slate-600">
-            The MVP is focused on workout execution, so this screen stays intentionally simple until schedule management is added later.
+            {auth
+              ? "Your live account is authenticated, but there is no scheduled workout for today yet. Use the setup guide to seed a schedule, or add one directly in Supabase."
+              : "The MVP is focused on workout execution, so this screen stays intentionally simple until schedule management is added later."}
           </p>
+          <div className="mt-6 flex items-center justify-center gap-3">
+            <Link
+              href={auth ? "/setup" : "/login"}
+              className="rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white"
+            >
+              {auth ? "Open setup guide" : "Open login"}
+            </Link>
+            <Link
+              href="/api/health"
+              className="rounded-full border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-700"
+            >
+              Check health
+            </Link>
+          </div>
         </div>
       </AppShell>
     );
@@ -49,6 +65,11 @@ export default async function TodayPage() {
           <p className="mt-3 max-w-sm text-sm leading-6 text-slate-600">
             Run the session, log every set, recover your draft if the tab closes, and finish with a clean workout record.
           </p>
+          <div className="mt-4">
+            <Link href="/setup" className="text-sm font-semibold text-sky-700 underline-offset-4 hover:underline">
+              Open setup and live-mode checklist
+            </Link>
+          </div>
         </section>
 
         <section className="flex-1 px-4 py-5">

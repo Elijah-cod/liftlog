@@ -23,5 +23,10 @@ export function getPublicEnv() {
   return {
     supabaseUrl: env.nextPublicSupabaseUrl ?? "",
     supabasePublishableKey: env.nextPublicSupabasePublishableKey ?? "",
+    appUrl: env.nextPublicAppUrl ?? "",
   };
+}
+
+export function isLiveModeEnabled() {
+  return isSupabaseConfigured;
 }

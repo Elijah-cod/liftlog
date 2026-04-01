@@ -22,12 +22,15 @@ npm run dev
 
 Open [http://localhost:3000/today](http://localhost:3000/today).
 
+For a guided live-mode checklist inside the app, open `/setup`.
+
 ## Scripts
 
 ```bash
 npm run lint
 npm run typecheck
 npm run test
+npm run build
 ```
 
 ## Supabase setup
@@ -47,6 +50,11 @@ When env vars are present and the request has a valid Supabase session cookie, t
 - Submit your email to receive a magic link.
 - The callback route exchanges the auth code for a session and creates your `profiles` row automatically on first login.
 - Authenticated app pages redirect unauthenticated users back to `/login`.
+
+## Operability checks
+
+- `GET /api/health` returns whether the app is in `mock`, `configured-no-session`, or `live` mode.
+- `/setup` provides the in-app checklist for env vars, SQL setup, login, and smoke testing.
 
 ## Recommended commit sequence
 
