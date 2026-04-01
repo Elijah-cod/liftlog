@@ -6,7 +6,8 @@ import { formatWorkoutDate } from "@/lib/session-utils";
 import { getWorkoutRepository } from "@/lib/server/workouts";
 
 export default async function TodayPage() {
-  const workout = await getWorkoutRepository().getTodayWorkout();
+  const repository = await getWorkoutRepository();
+  const workout = await repository.getTodayWorkout();
 
   if (!workout) {
     return (
@@ -88,4 +89,3 @@ export default async function TodayPage() {
     </AppShell>
   );
 }
-

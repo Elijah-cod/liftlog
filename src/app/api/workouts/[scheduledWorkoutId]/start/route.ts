@@ -9,7 +9,8 @@ interface RouteContext {
 
 export async function GET(_: Request, context: RouteContext) {
   const { scheduledWorkoutId } = await context.params;
-  const session = await getWorkoutRepository().startWorkoutSession(scheduledWorkoutId);
+  const repository = await getWorkoutRepository();
+  const session = await repository.startWorkoutSession(scheduledWorkoutId);
 
   if (!session) {
     return fail("Workout not found", 404);
@@ -22,7 +23,8 @@ export async function GET(_: Request, context: RouteContext) {
 
 export async function POST(_: Request, context: RouteContext) {
   const { scheduledWorkoutId } = await context.params;
-  const session = await getWorkoutRepository().startWorkoutSession(scheduledWorkoutId);
+  const repository = await getWorkoutRepository();
+  const session = await repository.startWorkoutSession(scheduledWorkoutId);
 
   if (!session) {
     return fail("Workout not found", 404);
@@ -30,4 +32,3 @@ export async function POST(_: Request, context: RouteContext) {
 
   return ok(session);
 }
-

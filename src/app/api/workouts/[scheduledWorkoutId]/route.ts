@@ -9,7 +9,8 @@ interface RouteContext {
 
 export async function GET(_: Request, context: RouteContext) {
   const { scheduledWorkoutId } = await context.params;
-  const preview = await getWorkoutRepository().getScheduledWorkoutPreview(scheduledWorkoutId);
+  const repository = await getWorkoutRepository();
+  const preview = await repository.getScheduledWorkoutPreview(scheduledWorkoutId);
 
   if (!preview) {
     return fail("Workout not found", 404);
@@ -17,4 +18,3 @@ export async function GET(_: Request, context: RouteContext) {
 
   return ok(preview);
 }
-

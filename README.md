@@ -37,7 +37,9 @@ npm run test
 3. Apply the SQL in [supabase/migrations/20260401130000_create_workout_logging.sql](/Users/elijah/Documents/Projects/liftlog/supabase/migrations/20260401130000_create_workout_logging.sql).
 4. Update and run [supabase/seed.sql](/Users/elijah/Documents/Projects/liftlog/supabase/seed.sql) with a real `auth.users` UUID.
 
-Until those values exist, the app runs in seeded mock mode so the workout execution UI remains testable.
+If Supabase env vars are missing, or there is no authenticated Supabase user yet, the app falls back to seeded mock data so the workout execution UI remains testable while auth is still being built.
+
+When env vars are present and the request has a valid Supabase session cookie, the repository switches to live Postgres reads and writes automatically.
 
 ## Recommended commit sequence
 

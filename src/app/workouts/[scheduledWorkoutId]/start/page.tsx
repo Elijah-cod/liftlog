@@ -10,7 +10,8 @@ interface StartWorkoutPageProps {
 
 export default async function StartWorkoutPage({ params }: StartWorkoutPageProps) {
   const { scheduledWorkoutId } = await params;
-  const session = await getWorkoutRepository().startWorkoutSession(scheduledWorkoutId);
+  const repository = await getWorkoutRepository();
+  const session = await repository.startWorkoutSession(scheduledWorkoutId);
 
   if (!session) {
     notFound();
@@ -22,4 +23,3 @@ export default async function StartWorkoutPage({ params }: StartWorkoutPageProps
       : `/sessions/${session.id}`,
   );
 }
-

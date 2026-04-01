@@ -11,7 +11,8 @@ interface WorkoutPreviewPageProps {
 
 export default async function WorkoutPreviewPage({ params }: WorkoutPreviewPageProps) {
   const { scheduledWorkoutId } = await params;
-  const preview = await getWorkoutRepository().getScheduledWorkoutPreview(scheduledWorkoutId);
+  const repository = await getWorkoutRepository();
+  const preview = await repository.getScheduledWorkoutPreview(scheduledWorkoutId);
 
   if (!preview) {
     notFound();

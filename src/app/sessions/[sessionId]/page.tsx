@@ -11,7 +11,8 @@ interface SessionPageProps {
 
 export default async function SessionPage({ params }: SessionPageProps) {
   const { sessionId } = await params;
-  const session = await getWorkoutRepository().getSessionDetail(sessionId);
+  const repository = await getWorkoutRepository();
+  const session = await repository.getSessionDetail(sessionId);
 
   if (!session) {
     notFound();
@@ -23,4 +24,3 @@ export default async function SessionPage({ params }: SessionPageProps) {
 
   return <ActiveWorkoutClient initialSession={session} />;
 }
-

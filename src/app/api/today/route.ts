@@ -2,8 +2,8 @@ import { ok } from "@/lib/api";
 import { getWorkoutRepository } from "@/lib/server/workouts";
 
 export async function GET() {
-  const workout = await getWorkoutRepository().getTodayWorkout();
+  const repository = await getWorkoutRepository();
+  const workout = await repository.getTodayWorkout();
 
   return ok(workout);
 }
-

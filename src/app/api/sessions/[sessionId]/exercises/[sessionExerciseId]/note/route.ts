@@ -18,7 +18,8 @@ export async function PATCH(request: Request, context: RouteContext) {
     return fail("Invalid note payload");
   }
 
-  const session = await getWorkoutRepository().saveExerciseNote(
+  const repository = await getWorkoutRepository();
+  const session = await repository.saveExerciseNote(
     sessionId,
     sessionExerciseId,
     parsed.data.notes,
@@ -30,4 +31,3 @@ export async function PATCH(request: Request, context: RouteContext) {
 
   return ok(session);
 }
-

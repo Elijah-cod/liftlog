@@ -10,7 +10,8 @@ interface RouteContext {
 
 export async function POST(_: Request, context: RouteContext) {
   const { sessionId, sessionExerciseId } = await context.params;
-  const session = await getWorkoutRepository().addExtraSet(sessionId, sessionExerciseId);
+  const repository = await getWorkoutRepository();
+  const session = await repository.addExtraSet(sessionId, sessionExerciseId);
 
   if (!session) {
     return fail("Session or exercise not found", 404);
@@ -18,4 +19,3 @@ export async function POST(_: Request, context: RouteContext) {
 
   return ok(session);
 }
-

@@ -11,7 +11,8 @@ interface CompletePageProps {
 
 export default async function CompletePage({ params }: CompletePageProps) {
   const { sessionId } = await params;
-  const session = await getWorkoutRepository().getSessionDetail(sessionId);
+  const repository = await getWorkoutRepository();
+  const session = await repository.getSessionDetail(sessionId);
 
   if (!session) {
     notFound();
@@ -23,4 +24,3 @@ export default async function CompletePage({ params }: CompletePageProps) {
 
   return <SessionSummary session={session} />;
 }
-

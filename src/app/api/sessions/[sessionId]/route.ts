@@ -9,7 +9,8 @@ interface RouteContext {
 
 export async function GET(_: Request, context: RouteContext) {
   const { sessionId } = await context.params;
-  const session = await getWorkoutRepository().getSessionDetail(sessionId);
+  const repository = await getWorkoutRepository();
+  const session = await repository.getSessionDetail(sessionId);
 
   if (!session) {
     return fail("Session not found", 404);
@@ -17,4 +18,3 @@ export async function GET(_: Request, context: RouteContext) {
 
   return ok(session);
 }
-

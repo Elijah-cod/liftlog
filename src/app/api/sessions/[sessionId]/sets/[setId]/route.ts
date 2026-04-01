@@ -18,7 +18,8 @@ export async function PATCH(request: Request, context: RouteContext) {
     return fail("Invalid set payload");
   }
 
-  const session = await getWorkoutRepository().saveSessionSet(sessionId, setId, parsed.data);
+  const repository = await getWorkoutRepository();
+  const session = await repository.saveSessionSet(sessionId, setId, parsed.data);
 
   if (!session) {
     return fail("Session or set not found", 404);
@@ -29,7 +30,8 @@ export async function PATCH(request: Request, context: RouteContext) {
 
 export async function DELETE(_: Request, context: RouteContext) {
   const { sessionId, setId } = await context.params;
-  const session = await getWorkoutRepository().removeExtraSet(sessionId, setId);
+  const repository = await getWorkoutRepository();
+  const session = await repository.removeExtraSet(sessionId, setId);
 
   if (!session) {
     return fail("Session or set not found", 404);
@@ -37,4 +39,3 @@ export async function DELETE(_: Request, context: RouteContext) {
 
   return ok(session);
 }
-
