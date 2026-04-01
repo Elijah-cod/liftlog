@@ -5,6 +5,7 @@ import type {
   ScheduledWorkoutPreview,
   SessionExercise,
   SessionProgress,
+  TodayWorkoutSummary,
   WorkoutSessionDetail,
 } from "@/lib/types";
 import { formatNumber } from "@/lib/utils";
@@ -167,4 +168,3 @@ export function compareMetricTrend(current: number | null, previous: number | nu
 
   return current > previous ? "up" : "down";
 }
-
