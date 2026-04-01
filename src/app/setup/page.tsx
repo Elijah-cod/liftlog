@@ -1,9 +1,15 @@
 import Link from "next/link";
 import { CheckCircle2, CircleAlert, Database, KeyRound, Rocket, TestTube2 } from "lucide-react";
 
-import { seedLiveDemoData } from "@/app/setup/actions";
+import {
+  clearLiveDrafts,
+  saveScheduleAssignment,
+  seedLiveDemoData,
+} from "@/app/setup/actions";
 import { AppShell } from "@/components/app-shell";
 import { AuthChip } from "@/components/auth-chip";
+import { getOptionalSupabaseAuth } from "@/lib/server/auth";
+import { getScheduleManagerData } from "@/lib/server/live-schedule";
 import { getRuntimeStatus } from "@/lib/server/runtime-status";
 
 function StepCard({
@@ -38,15 +44,22 @@ function StepCard({
 interface SetupPageProps {
   searchParams: Promise<{
     seeded?: string;
+    scheduleSaved?: string;
+    draftsCleared?: string;
     error?: string;
   }>;
 }
 
 export default async function SetupPage({ searchParams }: SetupPageProps) {
   const runtime = await getRuntimeStatus();
+  const auth = runtime.isAuthenticated ? await getOptionalSupabaseAuth() : null;
   const params = await searchParams;
   const seeded = params.seeded === "1";
+  const scheduleSaved = params.scheduleSaved === "1";
+  const draftsCleared = params.draftsCleared === "1";
   const error = params.error;
+  const scheduleManager =
+    auth && runtime.isSupabaseConfigured ? await getScheduleManagerData(auth) : null;
 
   return (
     <AppShell>
@@ -148,6 +161,88 @@ export default async function SetupPage({ searchParams }: SetupPageProps) {
                     Add `SUPABASE_SERVICE_ROLE_KEY` to enable one-click live data bootstrap from inside the app.
                   </div>
                 )}
+              </article>
+            ) : null}
+
+            {runtime.isAuthenticated && scheduleManager ? (
+              <article className="rounded-[28px] border border-slate-200 bg-white p-5 shadow-[0_16px_40px_rgba(148,163,184,0.12)]">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <h2 className="text-lg font-semibold text-slate-950">Manage the next three days</h2>
+                    <p className="mt-2 text-sm leading-6 text-slate-600">
+                      Assign templates for yesterday, today, and tomorrow without leaving the app.
+                    </p>
+                  </div>
+                  <div className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-slate-600">
+                    Refreshed {scheduleManager.generatedAt}
+                  </div>
+                </div>
+
+                {scheduleSaved ? (
+                  <div className="mt-4 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+                    Schedule saved successfully.
+                  </div>
+                ) : null}
+
+                {draftsCleared ? (
+                  <div className="mt-4 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+                    In-progress sessions were cleared. Completed history was left intact.
+                  </div>
+                ) : null}
+
+                <div className="mt-5 space-y-4">
+                  {scheduleManager.slots.map((slot) => (
+                    <form
+                      key={slot.date}
+                      action={saveScheduleAssignment}
+                      className="rounded-3xl border border-slate-200 bg-slate-50 px-4 py-4"
+                    >
+                      <input type="hidden" name="date" value={slot.date} />
+                      <div className="flex items-start justify-between gap-4">
+                        <div>
+                          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                            {slot.label}
+                          </p>
+                          <p className="mt-1 text-sm text-slate-600">{slot.date}</p>
+                          <p className="mt-2 text-base font-semibold text-slate-950">
+                            {slot.templateName ?? "No template assigned"}
+                          </p>
+                          {slot.latestSessionStatus ? (
+                            <p className="mt-1 text-sm text-slate-600">
+                              Latest session: <span className="font-semibold capitalize">{slot.latestSessionStatus}</span>
+                            </p>
+                          ) : null}
+                        </div>
+                        <button
+                          type="submit"
+                          className="rounded-full bg-slate-950 px-4 py-3 text-sm font-semibold text-white"
+                        >
+                          Save
+                        </button>
+                      </div>
+                      <select
+                        name="templateSlug"
+                        defaultValue={slot.templateSlug ?? scheduleManager.templates[0]?.slug}
+                        className="mt-4 h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-950 outline-none"
+                      >
+                        {scheduleManager.templates.map((template) => (
+                          <option key={template.slug} value={template.slug}>
+                            {template.workoutName} · {template.workoutLabel}
+                          </option>
+                        ))}
+                      </select>
+                    </form>
+                  ))}
+                </div>
+
+                <form action={clearLiveDrafts} className="mt-5">
+                  <button
+                    type="submit"
+                    className="rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700"
+                  >
+                    Clear in-progress sessions
+                  </button>
+                </form>
               </article>
             ) : null}
 
