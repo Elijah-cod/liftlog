@@ -1,36 +1,59 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# LiftLog MVP
+
+LiftLog is a mobile-first web MVP focused strictly on daily workout execution and logging.
+
+## What is included
+
+- `Today` page with the scheduled workout entry point
+- Workout preview page with seeded exercise data
+- Active workout logging with notes, custom sets, rest timers, autosaved local draft recovery, and optimistic syncing
+- Completed or partial workout summary page
+- Supabase-ready schema and RLS migration files
+- Seeded mock repository so the app runs immediately before a real Supabase project is configured
 
 ## Getting Started
 
-First, run the development server:
+Install dependencies and run the development server:
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000/today](http://localhost:3000/today).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run lint
+npm run typecheck
+npm run test
+```
 
-## Learn More
+## Supabase setup
 
-To learn more about Next.js, take a look at the following resources:
+1. Copy `.env.example` to `.env.local`.
+2. Add your Supabase URL and publishable key.
+3. Apply the SQL in [supabase/migrations/20260401130000_create_workout_logging.sql](/Users/elijah/Documents/Projects/liftlog/supabase/migrations/20260401130000_create_workout_logging.sql).
+4. Update and run [supabase/seed.sql](/Users/elijah/Documents/Projects/liftlog/supabase/seed.sql) with a real `auth.users` UUID.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Until those values exist, the app runs in seeded mock mode so the workout execution UI remains testable.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Recommended commit sequence
 
-## Deploy on Vercel
+- `chore: bootstrap next.js app shell and core developer tooling`
+- `feat: add auth and postgres schema for workout execution logging`
+- `feat: seed workout templates exercises and daily schedule data`
+- `feat: build today and workout preview flows`
+- `feat: create active session lifecycle and autosaved draft store`
+- `feat: implement exercise cards set logging and superset layout`
+- `feat: support notes custom sets and rest timers`
+- `feat: add completed workout summary and partial workout handling`
+- `test: cover workout execution flows and failure recovery`
+- `chore: harden production deployment env validation and error monitoring`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Deployment notes
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Use Vercel for the Next.js app and Supabase for Postgres/Auth.
+- Keep the mock repository for local demos only.
+- Replace the seeded placeholder media once real exercise assets are available.
