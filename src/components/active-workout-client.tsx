@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { CheckCircle2, ChevronDown, ChevronUp, LoaderCircle, Plus, Save, X } from "lucide-react";
 
 import { AppShell } from "@/components/app-shell";
+import { AuthChip } from "@/components/auth-chip";
 import { RestTimer } from "@/components/rest-timer";
 import {
   buildExerciseGroups,
@@ -23,6 +24,8 @@ import { cn, secondsToClock } from "@/lib/utils";
 
 interface ActiveWorkoutClientProps {
   initialSession: WorkoutSessionDetail;
+  viewerLabel: string;
+  authMode: "mock" | "live";
 }
 
 type SaveState = "saved" | "saving" | "error";
@@ -243,7 +246,11 @@ function ExercisePanel({
   );
 }
 
-export function ActiveWorkoutClient({ initialSession }: ActiveWorkoutClientProps) {
+export function ActiveWorkoutClient({
+  initialSession,
+  viewerLabel,
+  authMode,
+}: ActiveWorkoutClientProps) {
   const router = useRouter();
   const session = useWorkoutSessionStore((state) => state.session);
   const hydrated = useWorkoutSessionStore((state) => state.hydrated);
@@ -455,20 +462,23 @@ export function ActiveWorkoutClient({ initialSession }: ActiveWorkoutClientProps
                 {session.workoutName}
               </h1>
             </div>
-            <button
-              type="button"
-              onClick={() => {
-                if (incompleteWork) {
-                  setFinishConfirmOpen(true);
-                  return;
-                }
+            <div className="flex flex-col items-end gap-2">
+              <AuthChip label={viewerLabel} mode={authMode} showSignOut={authMode === "live"} />
+              <button
+                type="button"
+                onClick={() => {
+                  if (incompleteWork) {
+                    setFinishConfirmOpen(true);
+                    return;
+                  }
 
-                void finishWorkout();
-              }}
-              className="rounded-full bg-sky-600 px-4 py-3 text-sm font-semibold text-white shadow-[0_16px_32px_rgba(14,116,255,0.35)]"
-            >
-              Finish
-            </button>
+                  void finishWorkout();
+                }}
+                className="rounded-full bg-sky-600 px-4 py-3 text-sm font-semibold text-white shadow-[0_16px_32px_rgba(14,116,255,0.35)]"
+              >
+                Finish
+              </button>
+            </div>
           </div>
           <div className="mt-5">
             <div className="flex items-center justify-between text-sm font-medium text-slate-600">

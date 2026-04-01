@@ -2,12 +2,17 @@ import Link from "next/link";
 import { CalendarDays, ChevronRight, Clock4, Dumbbell } from "lucide-react";
 
 import { AppShell } from "@/components/app-shell";
+import { AuthChip } from "@/components/auth-chip";
 import { formatWorkoutDate } from "@/lib/session-utils";
+import { requirePageAuth } from "@/lib/server/auth";
 import { getWorkoutRepository } from "@/lib/server/workouts";
 
 export default async function TodayPage() {
-  const repository = await getWorkoutRepository();
+  const auth = await requirePageAuth("/today");
+  const repository = await getWorkoutRepository(auth);
   const workout = await repository.getTodayWorkout();
+  const authMode = auth ? "live" : "mock";
+  const viewerLabel = auth?.user.email ?? "Mock athlete";
 
   if (!workout) {
     return (
@@ -31,9 +36,12 @@ export default async function TodayPage() {
     <AppShell>
       <div className="flex h-full flex-col">
         <section className="border-b border-slate-200/70 px-6 pb-6 pt-8">
-          <div className="inline-flex items-center gap-2 rounded-full border border-sky-200 bg-sky-50 px-3 py-1 text-sm font-semibold text-sky-700">
-            <Clock4 className="size-4" />
-            Daily execution MVP
+          <div className="flex items-start justify-between gap-4">
+            <div className="inline-flex items-center gap-2 rounded-full border border-sky-200 bg-sky-50 px-3 py-1 text-sm font-semibold text-sky-700">
+              <Clock4 className="size-4" />
+              Daily execution MVP
+            </div>
+            <AuthChip label={viewerLabel} mode={authMode} showSignOut={authMode === "live"} />
           </div>
           <h1 className="mt-6 font-display text-4xl font-semibold tracking-tight text-slate-950">
             LiftLog

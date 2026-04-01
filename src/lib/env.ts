@@ -1,6 +1,7 @@
 const env = {
   nextPublicSupabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL,
   nextPublicSupabasePublishableKey: process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
+  nextPublicAppUrl: process.env.NEXT_PUBLIC_APP_URL,
   supabaseServiceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY,
 };
 
@@ -24,4 +25,3 @@ export function getPublicEnv() {
     supabasePublishableKey: env.nextPublicSupabasePublishableKey ?? "",
   };
 }
-

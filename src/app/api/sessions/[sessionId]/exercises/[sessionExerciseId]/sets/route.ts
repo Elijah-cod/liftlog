@@ -1,4 +1,5 @@
 import { fail, ok } from "@/lib/api";
+import { requireRouteAuth } from "@/lib/server/auth";
 import { getWorkoutRepository } from "@/lib/server/workouts";
 
 interface RouteContext {
@@ -10,7 +11,13 @@ interface RouteContext {
 
 export async function POST(_: Request, context: RouteContext) {
   const { sessionId, sessionExerciseId } = await context.params;
-  const repository = await getWorkoutRepository();
+  const auth = await requireRouteAuth();
+
+  if (!auth && process.env.NEXT_PUBLIC_SUPABASE_URL) {
+    return fail("Unauthorized", 401);
+  }
+
+  const repository = await getWorkoutRepository(auth);
   const session = await repository.addExtraSet(sessionId, sessionExerciseId);
 
   if (!session) {

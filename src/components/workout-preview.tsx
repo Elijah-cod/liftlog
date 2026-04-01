@@ -2,14 +2,17 @@ import Link from "next/link";
 import { ChevronRight, Dumbbell, Play, Sparkles } from "lucide-react";
 
 import { AppShell } from "@/components/app-shell";
+import { AuthChip } from "@/components/auth-chip";
 import { buildExerciseGroups, formatWorkoutDate } from "@/lib/session-utils";
 import type { ScheduledWorkoutPreview } from "@/lib/types";
 
 interface WorkoutPreviewProps {
   workout: ScheduledWorkoutPreview;
+  viewerLabel: string;
+  authMode: "mock" | "live";
 }
 
-export function WorkoutPreview({ workout }: WorkoutPreviewProps) {
+export function WorkoutPreview({ workout, viewerLabel, authMode }: WorkoutPreviewProps) {
   const groups = buildExerciseGroups(
     workout.exercises.map((exercise) => ({
       ...exercise,
@@ -33,15 +36,16 @@ export function WorkoutPreview({ workout }: WorkoutPreviewProps) {
               </h1>
               <p className="mt-1 text-sm text-slate-600">{workout.workoutLabel}</p>
             </div>
-            <div className="rounded-full border border-sky-200 bg-sky-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.22em] text-sky-700">
-              {workout.status === "completed"
-                ? "Complete"
-                : workout.status === "partial"
-                  ? "Partial"
-                  : workout.status === "in_progress"
-                    ? "In Progress"
-                    : "Queued"}
-            </div>
+            <AuthChip label={viewerLabel} mode={authMode} showSignOut={authMode === "live"} />
+          </div>
+          <div className="mt-4 inline-flex rounded-full border border-sky-200 bg-sky-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.22em] text-sky-700">
+            {workout.status === "completed"
+              ? "Complete"
+              : workout.status === "partial"
+                ? "Partial"
+                : workout.status === "in_progress"
+                  ? "In Progress"
+                  : "Queued"}
           </div>
           <div className="mt-6 grid grid-cols-3 gap-3">
             <div className="rounded-3xl border border-slate-200 bg-white/90 p-4">

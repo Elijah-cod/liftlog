@@ -1,14 +1,17 @@
 import { CheckCircle2, Clock3 } from "lucide-react";
 
 import { AppShell } from "@/components/app-shell";
+import { AuthChip } from "@/components/auth-chip";
 import { buildExerciseGroups, formatSetSummary, formatWorkoutDate } from "@/lib/session-utils";
 import type { WorkoutSessionDetail } from "@/lib/types";
 
 interface SessionSummaryProps {
   session: WorkoutSessionDetail;
+  viewerLabel: string;
+  authMode: "mock" | "live";
 }
 
-export function SessionSummary({ session }: SessionSummaryProps) {
+export function SessionSummary({ session, viewerLabel, authMode }: SessionSummaryProps) {
   const groups = buildExerciseGroups(session.exercises);
   const isComplete = session.status === "completed";
 
@@ -16,9 +19,12 @@ export function SessionSummary({ session }: SessionSummaryProps) {
     <AppShell>
       <div className="flex h-full flex-col">
         <section className="border-b border-slate-200/70 px-6 pb-6 pt-8">
-          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-sm font-semibold text-emerald-700">
-            {isComplete ? <CheckCircle2 className="size-4" /> : <Clock3 className="size-4" />}
-            {isComplete ? "Completed Workout" : "Partial Workout"}
+          <div className="flex items-start justify-between gap-4">
+            <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-sm font-semibold text-emerald-700">
+              {isComplete ? <CheckCircle2 className="size-4" /> : <Clock3 className="size-4" />}
+              {isComplete ? "Completed Workout" : "Partial Workout"}
+            </div>
+            <AuthChip label={viewerLabel} mode={authMode} showSignOut={authMode === "live"} />
           </div>
           <p className="mt-4 text-sm font-medium text-sky-600">{formatWorkoutDate(session.scheduledDate)}</p>
           <h1 className="mt-2 font-display text-3xl font-semibold tracking-tight text-slate-950">
@@ -86,4 +92,3 @@ export function SessionSummary({ session }: SessionSummaryProps) {
     </AppShell>
   );
 }
-

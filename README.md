@@ -33,13 +33,20 @@ npm run test
 ## Supabase setup
 
 1. Copy `.env.example` to `.env.local`.
-2. Add your Supabase URL and publishable key.
+2. Add your Supabase URL, publishable key, and app URL.
 3. Apply the SQL in [supabase/migrations/20260401130000_create_workout_logging.sql](/Users/elijah/Documents/Projects/liftlog/supabase/migrations/20260401130000_create_workout_logging.sql).
 4. Update and run [supabase/seed.sql](/Users/elijah/Documents/Projects/liftlog/supabase/seed.sql) with a real `auth.users` UUID.
 
 If Supabase env vars are missing, or there is no authenticated Supabase user yet, the app falls back to seeded mock data so the workout execution UI remains testable while auth is still being built.
 
 When env vars are present and the request has a valid Supabase session cookie, the repository switches to live Postgres reads and writes automatically.
+
+## Auth flow
+
+- Visit `/login` when Supabase is configured.
+- Submit your email to receive a magic link.
+- The callback route exchanges the auth code for a session and creates your `profiles` row automatically on first login.
+- Authenticated app pages redirect unauthenticated users back to `/login`.
 
 ## Recommended commit sequence
 

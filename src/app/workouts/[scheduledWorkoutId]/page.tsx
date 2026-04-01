@@ -1,6 +1,7 @@
 import { notFound, redirect } from "next/navigation";
 
 import { WorkoutPreview } from "@/components/workout-preview";
+import { requirePageAuth } from "@/lib/server/auth";
 import { getWorkoutRepository } from "@/lib/server/workouts";
 
 interface WorkoutPreviewPageProps {
@@ -11,7 +12,8 @@ interface WorkoutPreviewPageProps {
 
 export default async function WorkoutPreviewPage({ params }: WorkoutPreviewPageProps) {
   const { scheduledWorkoutId } = await params;
-  const repository = await getWorkoutRepository();
+  const auth = await requirePageAuth(`/workouts/${scheduledWorkoutId}`);
+  const repository = await getWorkoutRepository(auth);
   const preview = await repository.getScheduledWorkoutPreview(scheduledWorkoutId);
 
   if (!preview) {
@@ -22,5 +24,11 @@ export default async function WorkoutPreviewPage({ params }: WorkoutPreviewPageP
     redirect(`/sessions/${preview.activeSessionId}`);
   }
 
-  return <WorkoutPreview workout={preview} />;
+  return (
+    <WorkoutPreview
+      workout={preview}
+      viewerLabel={auth?.user.email ?? "Mock athlete"}
+      authMode={auth ? "live" : "mock"}
+    />
+  );
 }
