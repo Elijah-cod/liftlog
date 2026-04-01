@@ -55,6 +55,7 @@ When env vars are present and the request has a valid Supabase session cookie, t
 
 - `GET /api/health` returns whether the app is in `mock`, `configured-no-session`, or `live` mode.
 - `/setup` provides the in-app checklist for env vars, SQL setup, login, and smoke testing.
+- If `SUPABASE_SERVICE_ROLE_KEY` is configured, `/setup` can seed the authenticated athlete directly from inside the app.
 
 ## Recommended commit sequence
 

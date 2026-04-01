@@ -7,6 +7,6 @@ export async function GET() {
   return ok({
     status: "ok",
     ...status,
+    bootstrapAvailable: status.canBootstrapLiveData,
   });
 }
-

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { CheckCircle2, CircleAlert, Database, KeyRound, Rocket, TestTube2 } from "lucide-react";
 
+import { seedLiveDemoData } from "@/app/setup/actions";
 import { AppShell } from "@/components/app-shell";
 import { AuthChip } from "@/components/auth-chip";
 import { getRuntimeStatus } from "@/lib/server/runtime-status";
@@ -34,8 +35,18 @@ function StepCard({
   );
 }
 
-export default async function SetupPage() {
+interface SetupPageProps {
+  searchParams: Promise<{
+    seeded?: string;
+    error?: string;
+  }>;
+}
+
+export default async function SetupPage({ searchParams }: SetupPageProps) {
   const runtime = await getRuntimeStatus();
+  const params = await searchParams;
+  const seeded = params.seeded === "1";
+  const error = params.error;
 
   return (
     <AppShell>
@@ -100,9 +111,45 @@ export default async function SetupPage() {
             <StepCard
               icon={<Database className="size-5" />}
               title="2. Apply schema and seed data"
-              body="Run the migration SQL in Supabase, then update the profile UUID in the seed file to match a real auth.users ID and execute the seed. That gives the live app exercises, templates, scheduled workouts, and starter history."
+              body="Run the migration SQL in Supabase. If you have a service role key configured and you are signed in, you can also seed the authenticated athlete directly from this page."
               code={`Migration: supabase/migrations/20260401130000_create_workout_logging.sql\nSeed: supabase/seed.sql`}
             />
+
+            {runtime.isAuthenticated ? (
+              <article className="rounded-[28px] border border-slate-200 bg-white p-5 shadow-[0_16px_40px_rgba(148,163,184,0.12)]">
+                <h2 className="text-lg font-semibold text-slate-950">Bootstrap live athlete data</h2>
+                <p className="mt-2 text-sm leading-6 text-slate-600">
+                  This seeds exercise definitions, workout templates, a three-day schedule, and starter history directly into your live account.
+                </p>
+
+                {seeded ? (
+                  <div className="mt-4 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+                    Live demo data was seeded successfully. Open today&apos;s page to confirm your schedule.
+                  </div>
+                ) : null}
+
+                {error ? (
+                  <div className="mt-4 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800">
+                    {error}
+                  </div>
+                ) : null}
+
+                {runtime.canBootstrapLiveData ? (
+                  <form action={seedLiveDemoData} className="mt-5">
+                    <button
+                      type="submit"
+                      className="rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white"
+                    >
+                      Seed demo data into my live account
+                    </button>
+                  </form>
+                ) : (
+                  <div className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+                    Add `SUPABASE_SERVICE_ROLE_KEY` to enable one-click live data bootstrap from inside the app.
+                  </div>
+                )}
+              </article>
+            ) : null}
 
             <StepCard
               icon={<Rocket className="size-5" />}
@@ -141,4 +188,3 @@ export default async function SetupPage() {
     </AppShell>
   );
 }
-
