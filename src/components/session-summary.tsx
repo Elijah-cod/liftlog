@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { CheckCircle2, Clock3 } from "lucide-react";
 
 import { AppShell } from "@/components/app-shell";
@@ -88,6 +89,23 @@ export function SessionSummary({ session, viewerLabel, authMode }: SessionSummar
             ))}
           </div>
         </section>
+
+        <div className="border-t border-slate-200/70 bg-white/85 px-4 py-4">
+          <div className="grid grid-cols-2 gap-3">
+            <Link
+              href="/today"
+              className="flex items-center justify-center rounded-full border border-slate-200 px-5 py-4 text-sm font-semibold text-slate-700"
+            >
+              Back to today
+            </Link>
+            <Link
+              href="/history"
+              className="flex items-center justify-center rounded-full bg-slate-950 px-5 py-4 text-sm font-semibold text-white"
+            >
+              View history
+            </Link>
+          </div>
+        </div>
       </div>
     </AppShell>
   );

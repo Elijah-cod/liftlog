@@ -659,6 +659,51 @@ export function createSupabaseWorkoutRepository(
       return preview ? deriveTodayStatus(preview) : null;
     },
 
+    async listRecentSessions(filters) {
+      const trimmedQuery = filters?.query?.trim();
+      let query = client
+        .from("workout_sessions")
+        .select("id")
+        .eq("profile_id", user.id)
+        .order("updated_at", { ascending: false })
+        .limit(filters?.limit ?? 20);
+
+      if (filters?.status && filters.status !== "all") {
+        query = query.eq("status", filters.status);
+      }
+
+      if (trimmedQuery) {
+        query = query.or(
+          `workout_name.ilike.%${trimmedQuery}%,workout_label.ilike.%${trimmedQuery}%`,
+        );
+      }
+
+      const { data, error } = await query.returns<Array<{ id: string }>>();
+      const sessionIds = requireData(data, error, "Unable to load recent sessions") ?? [];
+
+      const details = await Promise.all(
+        sessionIds.map(async (entry) => buildSessionDetail(client, user.id, entry.id)),
+      );
+
+      return details
+        .filter((session): session is WorkoutSessionDetail => Boolean(session))
+        .map((session) => ({
+          id: session.id,
+          scheduledDate: session.scheduledDate,
+          workoutName: session.workoutName,
+          workoutLabel: session.workoutLabel,
+          status: session.status,
+          startedAt: session.startedAt,
+          completedAt: session.completedAt,
+          updatedAt: session.updatedAt,
+          completedExercises: session.progress.completedExercises,
+          totalExercises: session.progress.totalExercises,
+          completedSets: session.progress.completedSets,
+          totalSets: session.progress.totalSets,
+        }))
+        .sort((left, right) => right.updatedAt.localeCompare(left.updatedAt));
+    },
+
     async getScheduledWorkoutPreview(id: string) {
       return getScheduledWorkoutPreviewByFilter(client, user.id, { id });
     },

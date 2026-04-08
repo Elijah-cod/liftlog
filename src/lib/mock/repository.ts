@@ -5,6 +5,7 @@ import type {
   ScheduledWorkoutPreview,
   SessionExercise,
   TodayWorkoutSummary,
+  WorkoutHistoryEntry,
   WorkoutSessionDetail,
   WorkoutSet,
 } from "@/lib/types";
@@ -147,6 +148,40 @@ export const mockWorkoutRepository = {
     const preview = getDb().scheduledWorkouts.find((entry) => entry.scheduledDate === today);
 
     return preview ? deriveTodayStatus(preview) : null;
+  },
+
+  async listRecentSessions(filters?: {
+    status?: WorkoutHistoryEntry["status"] | "all";
+    query?: string;
+    limit?: number;
+  }) {
+    const query = filters?.query?.trim().toLowerCase() ?? "";
+    const status = filters?.status ?? "all";
+    const limit = filters?.limit ?? 20;
+
+    return [...getDb().sessions]
+      .filter((session) => (status === "all" ? true : session.status === status))
+      .filter((session) =>
+        query.length === 0
+          ? true
+          : `${session.workoutName} ${session.workoutLabel}`.toLowerCase().includes(query),
+      )
+      .sort((left, right) => right.updatedAt.localeCompare(left.updatedAt))
+      .slice(0, limit)
+      .map((session) => ({
+        id: session.id,
+        scheduledDate: session.scheduledDate,
+        workoutName: session.workoutName,
+        workoutLabel: session.workoutLabel,
+        status: session.status,
+        startedAt: session.startedAt,
+        completedAt: session.completedAt,
+        updatedAt: session.updatedAt,
+        completedExercises: session.progress.completedExercises,
+        totalExercises: session.progress.totalExercises,
+        completedSets: session.progress.completedSets,
+        totalSets: session.progress.totalSets,
+      }));
   },
 
   async getScheduledWorkoutPreview(id: string) {
@@ -325,4 +360,3 @@ export const mockWorkoutRepository = {
     return session;
   },
 };
-

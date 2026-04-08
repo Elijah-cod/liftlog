@@ -1,6 +1,10 @@
 import { mockWorkoutRepository } from "@/lib/mock/repository";
 
 describe("mock workout repository", () => {
+  beforeEach(() => {
+    globalThis.__liftlogMockDb = undefined;
+  });
+
   it("creates a session only once for a scheduled workout", async () => {
     const today = await mockWorkoutRepository.getTodayWorkout();
 
@@ -33,5 +37,17 @@ describe("mock workout repository", () => {
 
     expect(finished?.status).toBe("partial");
   });
-});
 
+  it("lists recent sessions with status and text filters", async () => {
+    const recent = await mockWorkoutRepository.listRecentSessions({
+      status: "completed",
+      query: "Workout A",
+      limit: 10,
+    });
+
+    expect(recent.length).toBeGreaterThan(0);
+    expect(recent.every((session) => session.status === "completed")).toBe(true);
+    expect(recent.every((session) => session.workoutName.includes("Workout A"))).toBe(true);
+    expect(recent[0]?.updatedAt >= recent[recent.length - 1]!.updatedAt).toBe(true);
+  });
+});

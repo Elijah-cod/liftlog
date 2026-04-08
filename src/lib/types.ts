@@ -108,6 +108,21 @@ export interface TodayWorkoutSummary {
   completedAt: string | null;
 }
 
+export interface WorkoutHistoryEntry {
+  id: string;
+  scheduledDate: string;
+  workoutName: string;
+  workoutLabel: string;
+  status: SessionStatus;
+  startedAt: string;
+  completedAt: string | null;
+  updatedAt: string;
+  completedExercises: number;
+  totalExercises: number;
+  completedSets: number;
+  totalSets: number;
+}
+
 export interface ApiResult<T> {
   data: T;
   error: null;
@@ -119,4 +134,3 @@ export interface ApiErrorResult {
 }
 
 export type ApiResponse<T> = ApiResult<T> | ApiErrorResult;
-

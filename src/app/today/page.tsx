@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CalendarDays, ChevronRight, Clock4, Dumbbell } from "lucide-react";
+import { CalendarDays, ChevronRight, Clock4, Dumbbell, History } from "lucide-react";
 
 import { AppShell } from "@/components/app-shell";
 import { AuthChip } from "@/components/auth-chip";
@@ -37,6 +37,12 @@ export default async function TodayPage() {
               {auth ? "Open setup guide" : "Open login"}
             </Link>
             <Link
+              href="/history"
+              className="rounded-full border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-700"
+            >
+              View history
+            </Link>
+            <Link
               href="/api/health"
               className="rounded-full border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-700"
             >
@@ -65,9 +71,16 @@ export default async function TodayPage() {
           <p className="mt-3 max-w-sm text-sm leading-6 text-slate-600">
             Run the session, log every set, recover your draft if the tab closes, and finish with a clean workout record.
           </p>
-          <div className="mt-4">
+          <div className="mt-4 flex items-center gap-4">
             <Link href="/setup" className="text-sm font-semibold text-sky-700 underline-offset-4 hover:underline">
               Open setup and live-mode checklist
+            </Link>
+            <Link
+              href="/history"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-slate-700 underline-offset-4 hover:underline"
+            >
+              <History className="size-4" />
+              View workout history
             </Link>
           </div>
         </section>
