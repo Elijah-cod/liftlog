@@ -8,7 +8,16 @@ import {
   useState,
 } from "react";
 import { useRouter } from "next/navigation";
-import { CheckCircle2, ChevronDown, ChevronUp, LoaderCircle, Plus, Save, X } from "lucide-react";
+import {
+  CheckCircle2,
+  ChevronDown,
+  ChevronUp,
+  LoaderCircle,
+  Plus,
+  RefreshCw,
+  Save,
+  X,
+} from "lucide-react";
 
 import { AppShell } from "@/components/app-shell";
 import { AuthChip } from "@/components/auth-chip";
@@ -265,8 +274,34 @@ export function ActiveWorkoutClient({
   const clearDraft = useWorkoutSessionStore((state) => state.clearDraft);
   const [expandedIds, setExpandedIds] = useState<string[]>(initialSession.exercises.map((exercise) => exercise.id));
   const [saveState, setSaveState] = useState<SaveState>("saved");
+  const [queuedRequestCount, setQueuedRequestCount] = useState(0);
+  const [inFlightRequestCount, setInFlightRequestCount] = useState(0);
+  const [failedRequestCount, setFailedRequestCount] = useState(0);
+  const [lastSyncedAt, setLastSyncedAt] = useState(initialSession.updatedAt);
+  const [lastErrorMessage, setLastErrorMessage] = useState<string | null>(null);
   const [finishConfirmOpen, setFinishConfirmOpen] = useState(false);
   const timersRef = useRef<Map<string, number>>(new Map());
+  const queuedKeysRef = useRef<Set<string>>(new Set());
+  const inFlightRequestCountRef = useRef(0);
+  const failedRequestsRef = useRef<Map<string, () => Promise<void>>>(new Map());
+
+  function syncUiState() {
+    const queued = queuedKeysRef.current.size;
+    const inFlight = inFlightRequestCountRef.current;
+    const failed = failedRequestsRef.current.size;
+
+    setQueuedRequestCount(queued);
+    setInFlightRequestCount(inFlight);
+    setFailedRequestCount(failed);
+    setSaveState(failed > 0 ? "error" : queued > 0 || inFlight > 0 ? "saving" : "saved");
+  }
+
+  function formatSyncTime(dateTime: string) {
+    return new Date(dateTime).toLocaleTimeString([], {
+      hour: "numeric",
+      minute: "2-digit",
+    });
+  }
 
   useEffect(() => {
     const draft = window.localStorage.getItem(`liftlog-session-${initialSession.id}`);
@@ -300,8 +335,11 @@ export function ActiveWorkoutClient({
     try {
       const serverSession = await getJson<WorkoutSessionDetail>(`/api/sessions/${initialSession.id}`);
       mergeServerSession(serverSession);
-      setSaveState("saved");
+      setLastSyncedAt(serverSession.updatedAt);
+      setLastErrorMessage(null);
+      syncUiState();
     } catch {
+      setLastErrorMessage("Unable to refresh the latest server state right now.");
       setSaveState("error");
     }
   }
@@ -316,15 +354,43 @@ export function ActiveWorkoutClient({
         try {
           const serverSession = await getJson<WorkoutSessionDetail>(`/api/sessions/${initialSession.id}`);
           mergeServerSession(serverSession);
-          setSaveState("saved");
+          setLastSyncedAt(serverSession.updatedAt);
+          setLastErrorMessage(null);
+          syncUiState();
         } catch {
           setSaveState("error");
+          setLastErrorMessage("Unable to confirm the latest sync state.");
         }
       })();
     }, 0);
 
     return () => window.clearTimeout(timerId);
   }, [hydrated, initialSession.id, mergeServerSession]);
+
+  async function executeRequest(key: string, callback: () => Promise<void>) {
+    failedRequestsRef.current.delete(key);
+    inFlightRequestCountRef.current += 1;
+    syncUiState();
+
+    try {
+      await callback();
+      setLastSyncedAt(new Date().toISOString());
+
+      if (failedRequestsRef.current.size === 0) {
+        setLastErrorMessage(null);
+      }
+    } catch (error) {
+      failedRequestsRef.current.set(key, callback);
+      setLastErrorMessage(
+        error instanceof Error ? error.message : "Unable to sync the latest changes.",
+      );
+      setSaveState("error");
+      throw error;
+    } finally {
+      inFlightRequestCountRef.current = Math.max(0, inFlightRequestCountRef.current - 1);
+      syncUiState();
+    }
+  }
 
   function queueRequest(key: string, callback: () => Promise<void>) {
     const previousTimer = timersRef.current.get(key);
@@ -333,18 +399,42 @@ export function ActiveWorkoutClient({
       window.clearTimeout(previousTimer);
     }
 
-    setSaveState("saving");
+    failedRequestsRef.current.delete(key);
+    queuedKeysRef.current.add(key);
+    syncUiState();
 
     const timerId = window.setTimeout(async () => {
+      queuedKeysRef.current.delete(key);
+      timersRef.current.delete(key);
+      syncUiState();
+
       try {
-        await callback();
-        setSaveState("saved");
+        await executeRequest(key, callback);
       } catch {
-        setSaveState("error");
+        return;
       }
     }, 350);
 
     timersRef.current.set(key, timerId);
+  }
+
+  async function retryFailedRequests() {
+    const failedEntries = [...failedRequestsRef.current.entries()];
+
+    if (failedEntries.length === 0) {
+      void refreshSession();
+      return;
+    }
+
+    for (const [key, callback] of failedEntries) {
+      try {
+        await executeRequest(key, callback);
+      } catch {
+        continue;
+      }
+    }
+
+    void refreshSession();
   }
 
   const sessionGroups = useMemo(
@@ -402,45 +492,50 @@ export function ActiveWorkoutClient({
 
   const handleAddSet = async (sessionExerciseId: string) => {
     addOptimisticSet(sessionExerciseId);
-    setSaveState("saving");
+    syncUiState();
 
     try {
-      const nextSession = await getJson<WorkoutSessionDetail>(
-        `/api/sessions/${session.id}/exercises/${sessionExerciseId}/sets`,
-        {
-          method: "POST",
-        },
-      );
-      mergeServerSession(nextSession);
-      setSaveState("saved");
+      await executeRequest(`add-set:${sessionExerciseId}`, async () => {
+        const nextSession = await getJson<WorkoutSessionDetail>(
+          `/api/sessions/${session.id}/exercises/${sessionExerciseId}/sets`,
+          {
+            method: "POST",
+          },
+        );
+        mergeServerSession(nextSession);
+      });
     } catch {
-      setSaveState("error");
       void refreshSession();
     }
   };
 
   const handleRemoveSet = async (setId: string) => {
     removeOptimisticSet(setId);
-    setSaveState("saving");
+    syncUiState();
 
     try {
-      const nextSession = await getJson<WorkoutSessionDetail>(`/api/sessions/${session.id}/sets/${setId}`, {
-        method: "DELETE",
+      await executeRequest(`remove-set:${setId}`, async () => {
+        const nextSession = await getJson<WorkoutSessionDetail>(
+          `/api/sessions/${session.id}/sets/${setId}`,
+          {
+            method: "DELETE",
+          },
+        );
+        mergeServerSession(nextSession);
       });
-      mergeServerSession(nextSession);
-      setSaveState("saved");
     } catch {
-      setSaveState("error");
       void refreshSession();
     }
   };
 
   const finishWorkout = async () => {
-    setSaveState("saving");
+    syncUiState();
 
     try {
-      await getJson<WorkoutSessionDetail>(`/api/sessions/${session.id}/finish`, {
-        method: "POST",
+      await executeRequest("finish", async () => {
+        await getJson<WorkoutSessionDetail>(`/api/sessions/${session.id}/finish`, {
+          method: "POST",
+        });
       });
       clearDraft();
       startTransition(() => {
@@ -501,24 +596,43 @@ export function ActiveWorkoutClient({
               <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Autosave</p>
               <p className="mt-1 text-sm font-medium text-slate-700">
                 {saveState === "saving"
-                  ? "Syncing workout..."
+                  ? queuedRequestCount + inFlightRequestCount > 1
+                    ? `Syncing ${queuedRequestCount + inFlightRequestCount} changes...`
+                    : "Syncing workout..."
                   : saveState === "error"
-                    ? "Changes saved locally. Retry on next sync."
-                    : "Workout draft is saved locally and synced."}
+                    ? failedRequestCount > 1
+                      ? `${failedRequestCount} changes are saved locally and still need sync.`
+                      : "A recent change is saved locally and still needs sync."
+                    : `Synced at ${formatSyncTime(lastSyncedAt)}. Local draft backup is active.`}
               </p>
+              {saveState === "error" && lastErrorMessage ? (
+                <p className="mt-1 text-xs text-rose-700">{lastErrorMessage}</p>
+              ) : null}
             </div>
-            <div
-              className={cn(
-                "inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold",
-                saveState === "error"
-                  ? "bg-rose-100 text-rose-700"
-                  : saveState === "saving"
-                    ? "bg-amber-100 text-amber-700"
-                    : "bg-emerald-100 text-emerald-700",
-              )}
-            >
-              <Save className="size-3.5" />
-              {saveState}
+            <div className="flex items-center gap-2">
+              {saveState === "error" ? (
+                <button
+                  type="button"
+                  onClick={() => void retryFailedRequests()}
+                  className="inline-flex items-center gap-2 rounded-full border border-rose-200 bg-white px-3 py-2 text-xs font-semibold text-rose-700 transition hover:bg-rose-50"
+                >
+                  <RefreshCw className="size-3.5" />
+                  Retry
+                </button>
+              ) : null}
+              <div
+                className={cn(
+                  "inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold",
+                  saveState === "error"
+                    ? "bg-rose-100 text-rose-700"
+                    : saveState === "saving"
+                      ? "bg-amber-100 text-amber-700"
+                      : "bg-emerald-100 text-emerald-700",
+                )}
+              >
+                <Save className="size-3.5" />
+                {saveState}
+              </div>
             </div>
           </div>
         </section>
