@@ -268,20 +268,75 @@ export default async function SetupPage({ searchParams }: SetupPageProps) {
             />
 
             <article className="rounded-[28px] border border-slate-200 bg-white p-5 shadow-[0_16px_40px_rgba(148,163,184,0.12)]">
-              <h2 className="text-lg font-semibold text-slate-950">Quick links</h2>
-              <div className="mt-4 flex flex-wrap gap-3">
-                <Link
-                  href="/login"
-                  className="rounded-full bg-slate-950 px-4 py-3 text-sm font-semibold text-white"
-                >
-                  Open login
-                </Link>
-                <Link
-                  href="/today"
-                  className="rounded-full border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-700"
-                >
-                  Open today
-                </Link>
+              <h2 className="text-lg font-semibold text-slate-950">5. Run the daily-flow smoke test</h2>
+              <p className="mt-2 text-sm leading-6 text-slate-600">
+                Walk the same route a real athlete would use. If anything feels confusing or unreliable here, that is the next bug or polish item worth fixing.
+              </p>
+
+              <div className="mt-5 space-y-3">
+                <div className="rounded-3xl border border-slate-200 bg-slate-50 px-4 py-4">
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Step 1</p>
+                  <p className="mt-2 text-sm text-slate-700">
+                    Confirm the runtime mode first so you know whether you are testing mock data or your live Supabase project.
+                  </p>
+                  <div className="mt-3 flex flex-wrap gap-3">
+                    <Link
+                      href="/api/health"
+                      className="rounded-full border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700"
+                    >
+                      Open health check
+                    </Link>
+                  </div>
+                </div>
+
+                <div className="rounded-3xl border border-slate-200 bg-slate-50 px-4 py-4">
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Step 2</p>
+                  <p className="mt-2 text-sm text-slate-700">
+                    Open today&apos;s page, move into the workout preview, and confirm the recent-session context looks correct before starting.
+                  </p>
+                  <div className="mt-3 flex flex-wrap gap-3">
+                    <Link
+                      href="/today"
+                      className="rounded-full border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700"
+                    >
+                      Open today
+                    </Link>
+                  </div>
+                </div>
+
+                <div className="rounded-3xl border border-slate-200 bg-slate-50 px-4 py-4">
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Step 3</p>
+                  <p className="mt-2 text-sm text-slate-700">
+                    Start a workout, log a few sets, add a note, reload once, and verify the autosave banner plus restored-draft messaging behave as expected.
+                  </p>
+                </div>
+
+                <div className="rounded-3xl border border-slate-200 bg-slate-50 px-4 py-4">
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Step 4</p>
+                  <p className="mt-2 text-sm text-slate-700">
+                    Finish the workout, verify the summary metadata, then open history and confirm the session appears with the right status and repeat-scheduling actions.
+                  </p>
+                  <div className="mt-3 flex flex-wrap gap-3">
+                    <Link
+                      href="/history"
+                      className="rounded-full border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700"
+                    >
+                      Open history
+                    </Link>
+                    <Link
+                      href="/login?next=/setup"
+                      className="rounded-full bg-slate-950 px-4 py-3 text-sm font-semibold text-white"
+                    >
+                      Open login
+                    </Link>
+                  </div>
+                </div>
+
+                {!runtime.isAuthenticated ? (
+                  <div className="rounded-3xl border border-amber-200 bg-amber-50 px-4 py-4 text-sm leading-6 text-amber-900">
+                    Live-mode smoke testing needs an authenticated session first. Sign in, then come back here to run the same checklist against Supabase-backed data.
+                  </div>
+                ) : null}
               </div>
             </article>
           </div>
