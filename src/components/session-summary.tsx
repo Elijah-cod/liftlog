@@ -109,13 +109,13 @@ export function SessionSummary({
                 <div className="space-y-5">
                   {group.exercises.map((exercise) => (
                     <div key={exercise.id}>
-                      <div className="flex items-start justify-between gap-3">
-                        <div>
-                          <h2 className="text-lg font-semibold text-slate-950">{exercise.name}</h2>
+                      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                        <div className="min-w-0">
+                          <h2 className="break-words text-lg font-semibold text-slate-950">{exercise.name}</h2>
                           <p className="text-sm text-slate-600">{exercise.subtitle}</p>
                         </div>
                         {exercise.blockRole ? (
-                          <span className="rounded-2xl bg-sky-100 px-3 py-1 text-sm font-semibold text-sky-700">
+                          <span className="self-start rounded-2xl bg-sky-100 px-3 py-1 text-sm font-semibold text-sky-700">
                             {exercise.blockRole}
                           </span>
                         ) : null}
@@ -129,11 +129,11 @@ export function SessionSummary({
                         {exercise.sets.map((set, index) => (
                           <div
                             key={set.id}
-                            className="grid grid-cols-[auto,1fr,auto] items-center gap-3 rounded-2xl bg-emerald-50/70 px-3 py-3"
+                            className="grid grid-cols-1 gap-3 rounded-2xl bg-emerald-50/70 px-3 py-3 sm:grid-cols-[auto,minmax(0,1fr),auto] sm:items-center"
                           >
                             <span className="text-sm font-semibold text-slate-700">{set.setLabel}</span>
-                            <span className="text-sm text-slate-700">{formatSetSummary(exercise, index)}</span>
-                            <span className="inline-flex items-center gap-1 rounded-full bg-white px-3 py-1 text-xs font-semibold text-emerald-700">
+                            <span className="min-w-0 text-sm text-slate-700">{formatSetSummary(exercise, index)}</span>
+                            <span className="inline-flex items-center gap-1 self-start rounded-full bg-white px-3 py-1 text-xs font-semibold text-emerald-700 sm:self-center">
                               <CheckCircle2 className="size-3.5" />
                               {set.completed ? "Done" : "Skipped"}
                             </span>
@@ -162,7 +162,7 @@ export function SessionSummary({
               />
             </div>
           ) : null}
-          <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
             <Link
               href="/today"
               className="flex items-center justify-center rounded-full border border-slate-200 px-5 py-4 text-sm font-semibold text-slate-700"

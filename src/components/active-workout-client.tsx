@@ -97,11 +97,83 @@ function SetRow({
   onToggleComplete: () => void;
   onRemoveSet: () => void;
 }) {
+  const previousPerformance = formatPreviousPerformance(exercise, index);
+
   return (
     <div className="rounded-[24px] bg-slate-50/80 px-3 py-3">
-      <div className="grid grid-cols-[auto,1.3fr,1fr,1fr,auto] items-center gap-2">
+      <div className="flex items-center justify-between gap-3 sm:hidden">
         <div className="text-sm font-semibold text-slate-700">{set.setLabel}</div>
-        <div className="text-sm text-slate-500">{formatPreviousPerformance(exercise, index)}</div>
+        <div className="min-w-0 text-right text-sm text-slate-500">{previousPerformance}</div>
+      </div>
+
+      <div className="mt-3 grid grid-cols-1 gap-3 sm:hidden">
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+              {exercise.loadType === "weighted" ? unitPreference : "Load"}
+            </p>
+            {exercise.loadType === "weighted" ? (
+              <NumberInput
+                value={set.weight}
+                onChange={(weight) => onChangeSet({ weight })}
+                placeholder={unitPreference}
+              />
+            ) : (
+              <div className="h-12 rounded-2xl border border-dashed border-slate-200 bg-white/70" />
+            )}
+          </div>
+          <div>
+            <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+              {exercise.loadType === "timed" ? "Duration" : "Reps"}
+            </p>
+            {exercise.loadType === "timed" ? (
+              <NumberInput
+                value={set.durationSeconds}
+                onChange={(durationSeconds) => onChangeSet({ durationSeconds })}
+                placeholder="sec"
+              />
+            ) : (
+              <NumberInput
+                value={set.reps}
+                onChange={(reps) => onChangeSet({ reps: reps === null ? null : Math.round(reps) })}
+                placeholder="reps"
+              />
+            )}
+          </div>
+        </div>
+        <div className="flex items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white px-3 py-2">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Done</p>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={onToggleComplete}
+              className={cn(
+                "flex size-11 items-center justify-center rounded-full border transition",
+                set.completed
+                  ? "border-emerald-200 bg-emerald-100 text-emerald-700"
+                  : "border-slate-300 bg-white text-slate-400 hover:border-sky-300 hover:text-sky-600",
+              )}
+              aria-label={set.completed ? "Mark set incomplete" : "Mark set complete"}
+            >
+              <CheckCircle2 className="size-5" />
+            </button>
+            {set.isExtraSet ? (
+              <button
+                type="button"
+                onClick={onRemoveSet}
+                className="flex size-9 items-center justify-center rounded-full bg-slate-50 text-slate-400 transition hover:text-rose-600"
+                aria-label="Remove extra set"
+              >
+                <X className="size-4" />
+              </button>
+            ) : null}
+          </div>
+        </div>
+      </div>
+
+      <div className="hidden grid-cols-[auto,minmax(0,1.3fr),1fr,1fr,auto] items-center gap-2 sm:grid">
+        <div className="text-sm font-semibold text-slate-700">{set.setLabel}</div>
+        <div className="min-w-0 text-sm text-slate-500">{previousPerformance}</div>
         <div>
           {exercise.loadType === "weighted" ? (
             <NumberInput value={set.weight} onChange={(weight) => onChangeSet({ weight })} placeholder={unitPreference} />
@@ -184,9 +256,9 @@ function ExercisePanel({
             .join("")}
         </div>
         <div className="min-w-0 flex-1">
-          <div className="flex items-start justify-between gap-3">
-            <div>
-              <h2 className="text-lg font-semibold leading-6 text-slate-950">{exercise.name}</h2>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+            <div className="min-w-0">
+              <h2 className="break-words text-lg font-semibold leading-6 text-slate-950">{exercise.name}</h2>
               <p className="mt-1 text-sm text-slate-600">{exercise.subtitle}</p>
             </div>
             <button
@@ -219,7 +291,7 @@ function ExercisePanel({
             />
           </div>
 
-          <div className="mt-4 grid grid-cols-[auto,1.3fr,1fr,1fr,auto] gap-2 px-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+          <div className="mt-4 hidden grid-cols-[auto,minmax(0,1.3fr),1fr,1fr,auto] gap-2 px-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500 sm:grid">
             <span>Set</span>
             <span>Previous</span>
             <span>{exercise.loadType === "weighted" ? unitPreference : "Load"}</span>
@@ -242,7 +314,7 @@ function ExercisePanel({
             ))}
           </div>
 
-          <div className="mt-4 grid grid-cols-2 gap-3">
+          <div className="mt-4 grid grid-cols-1 gap-3 lg:grid-cols-2">
             <RestTimer seconds={exercise.restSeconds} />
             <button
               type="button"

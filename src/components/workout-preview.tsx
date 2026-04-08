@@ -184,13 +184,15 @@ export function WorkoutPreview({ workout, viewerLabel, authMode }: WorkoutPrevie
                           .join("")}
                       </div>
                       <div className="min-w-0 flex-1">
-                        <div className="flex items-start justify-between gap-3">
-                          <div>
-                            <h2 className="text-lg font-semibold leading-6 text-slate-950">{exercise.name}</h2>
+                        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                          <div className="min-w-0">
+                            <h2 className="break-words text-lg font-semibold leading-6 text-slate-950">
+                              {exercise.name}
+                            </h2>
                             <p className="mt-1 text-sm text-slate-600">{exercise.subtitle}</p>
                           </div>
                           {exercise.blockRole ? (
-                            <span className="rounded-2xl bg-sky-100 px-3 py-1 text-sm font-semibold text-sky-700">
+                            <span className="self-start rounded-2xl bg-sky-100 px-3 py-1 text-sm font-semibold text-sky-700">
                               {exercise.blockRole}
                             </span>
                           ) : null}

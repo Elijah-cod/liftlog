@@ -39,16 +39,16 @@ export function RestTimer({ seconds }: RestTimerProps) {
   const label = useMemo(() => secondsToClock(remaining), [remaining]);
 
   return (
-    <div className="flex items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-3">
+    <div className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-3 sm:flex-row sm:items-center sm:justify-between">
       <div>
         <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Rest</p>
         <p className="mt-1 text-lg font-semibold text-slate-950">{label}</p>
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 self-stretch sm:self-auto">
         <button
           type="button"
           onClick={() => setRunning((current) => !current)}
-          className="flex size-10 items-center justify-center rounded-full bg-white text-slate-700 shadow-sm"
+          className="flex h-10 flex-1 items-center justify-center rounded-full bg-white text-slate-700 shadow-sm sm:size-10 sm:flex-none"
           aria-label={running ? "Pause timer" : "Start timer"}
         >
           {running ? <Pause className="size-4" /> : <Play className="size-4" />}
@@ -59,7 +59,7 @@ export function RestTimer({ seconds }: RestTimerProps) {
             setRemaining(seconds);
             setRunning(false);
           }}
-          className="flex size-10 items-center justify-center rounded-full bg-white text-slate-700 shadow-sm"
+          className="flex h-10 flex-1 items-center justify-center rounded-full bg-white text-slate-700 shadow-sm sm:size-10 sm:flex-none"
           aria-label="Reset timer"
         >
           <TimerReset className="size-4" />
@@ -68,4 +68,3 @@ export function RestTimer({ seconds }: RestTimerProps) {
     </div>
   );
 }
-
