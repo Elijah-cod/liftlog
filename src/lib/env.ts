@@ -27,6 +27,24 @@ export function getPublicEnv() {
   };
 }
 
+export function getAppUrl() {
+  const value = env.nextPublicAppUrl;
+
+  if (!value) {
+    return null;
+  }
+
+  try {
+    return new URL(value);
+  } catch {
+    return null;
+  }
+}
+
+export function hasServiceRoleConfigured() {
+  return Boolean(env.supabaseServiceRoleKey);
+}
+
 export function isLiveModeEnabled() {
   return isSupabaseConfigured;
 }

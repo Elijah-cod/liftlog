@@ -100,5 +100,10 @@ When env vars are present and the request has a valid Supabase session cookie, t
 ## Deployment notes
 
 - Use Vercel for the Next.js app and Supabase for Postgres/Auth.
+- Set `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, and `NEXT_PUBLIC_APP_URL` in your hosting provider before the first deploy.
+- Add `SUPABASE_SERVICE_ROLE_KEY` only if you want the in-app bootstrap actions available in production.
+- Point `NEXT_PUBLIC_APP_URL` at the final deployed URL so Supabase magic-link callbacks resolve correctly.
+- Run the Supabase migration before the first live login, then seed demo data either with `supabase/seed.sql` or from `/setup`.
+- After deployment, check `/api/health`, sign in, start a workout, log a few sets, reload once, and finish the session to verify the full path against your live project.
 - Keep the mock repository for local demos only.
 - Replace the seeded placeholder media once real exercise assets are available.

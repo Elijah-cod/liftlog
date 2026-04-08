@@ -1,9 +1,29 @@
 import type { Metadata } from "next";
+
+import { getAppUrl } from "@/lib/env";
 import "./globals.css";
 
+const appUrl = getAppUrl();
+
 export const metadata: Metadata = {
-  title: "LiftLog",
+  metadataBase: appUrl ?? undefined,
+  title: {
+    default: "LiftLog",
+    template: "%s | LiftLog",
+  },
   description: "Daily workout execution and logging for the web.",
+  applicationName: "LiftLog",
+  openGraph: {
+    title: "LiftLog",
+    description: "Daily workout execution and logging for the web.",
+    type: "website",
+    siteName: "LiftLog",
+  },
+  twitter: {
+    card: "summary",
+    title: "LiftLog",
+    description: "Daily workout execution and logging for the web.",
+  },
 };
 
 export default function RootLayout({
