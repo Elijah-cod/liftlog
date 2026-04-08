@@ -86,16 +86,16 @@ export default async function TodayPage() {
         </section>
 
         <section className="flex-1 px-4 py-5">
-          <article className="rounded-[32px] border border-slate-200 bg-white p-5 shadow-[0_20px_48px_rgba(148,163,184,0.18)]">
+          <article className="rounded-[32px] border border-slate-200 bg-white p-5 shadow-[0_20px_48px_rgba(148,163,184,0.18)] sm:p-6">
             <p className="text-sm font-medium text-sky-600">{formatWorkoutDate(workout.scheduledDate)}</p>
-            <div className="mt-3 flex items-start justify-between gap-4">
-              <div>
+            <div className="mt-3 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+              <div className="min-w-0">
                 <h2 className="font-display text-3xl font-semibold tracking-tight text-slate-950">
                   {workout.workoutName}
                 </h2>
                 <p className="mt-1 text-sm text-slate-600">{workout.workoutLabel}</p>
               </div>
-              <div className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-slate-600">
+              <div className="self-start rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-slate-600">
                 {workout.status}
               </div>
             </div>
