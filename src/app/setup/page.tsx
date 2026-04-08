@@ -116,16 +116,16 @@ export default async function SetupPage({ searchParams }: SetupPageProps) {
 
             <StepCard
               icon={<KeyRound className="size-5" />}
-              title="1. Configure environment variables"
-              body="Copy the example env file, then add your Supabase project URL, publishable key, and the app URL you will use for magic-link callbacks."
-              code={`cp .env.example .env.local`}
+              title="0. Use the supported Node runtime"
+              body="This app uses Next.js 16, so local development, typecheck, and production builds need Node 20.9 or newer. The repo includes an .nvmrc file so the quickest setup path is to switch before installing anything."
+              code={`nvm use || nvm install`}
             />
 
             <StepCard
-              icon={<Database className="size-5" />}
-              title="2. Apply schema and seed data"
-              body="Run the migration SQL in Supabase. If you have a service role key configured and you are signed in, you can also seed the authenticated athlete directly from this page."
-              code={`Migration: supabase/migrations/20260401130000_create_workout_logging.sql\nSeed: supabase/seed.sql`}
+              icon={<KeyRound className="size-5" />}
+              title="1. Configure environment variables"
+              body="Copy the example env file, then add your Supabase project URL, publishable key, and the app URL you will use for magic-link callbacks. Add the service role key too if you want one-click live bootstrap from this page."
+              code={`cp .env.example .env.local`}
             />
 
             {runtime.isAuthenticated ? (
@@ -247,16 +247,23 @@ export default async function SetupPage({ searchParams }: SetupPageProps) {
             ) : null}
 
             <StepCard
+              icon={<Database className="size-5" />}
+              title="2. Apply schema and seed data"
+              body="Run the migration SQL in Supabase. If you have a service role key configured and you are signed in, you can also seed the authenticated athlete directly from this page."
+              code={`Migration: supabase/migrations/20260401130000_create_workout_logging.sql\nSeed: supabase/seed.sql`}
+            />
+
+            <StepCard
               icon={<Rocket className="size-5" />}
-              title="3. Start the app and sign in"
-              body="Run the dev server, open the login page, and request a magic link. The callback route creates your profile row automatically the first time you return."
+              title="3. Install dependencies and sign in"
+              body="Install dependencies with the supported runtime, start the dev server, open the login page, and request a magic link. The callback route creates your profile row automatically the first time you return."
               code={`npm install\nnpm run dev`}
             />
 
             <StepCard
               icon={<TestTube2 className="size-5" />}
               title="4. Verify the runtime mode"
-              body="Use the health endpoint to confirm whether the app is in mock mode, configured-without-session mode, or fully live mode with an authenticated user."
+              body="Use the health endpoint to confirm whether the app is in mock mode, configured-without-session mode, or fully live mode with an authenticated user. Then run a short smoke test through today, preview, active logging, reload recovery, and history."
               code={`GET /api/health`}
             />
 

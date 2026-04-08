@@ -11,11 +11,24 @@ LiftLog is a mobile-first web MVP focused strictly on daily workout execution an
 - Supabase-ready schema and RLS migration files
 - Seeded mock repository so the app runs immediately before a real Supabase project is configured
 
+## Runtime requirements
+
+- Node.js `20.9+`
+- `.nvmrc` is included and currently pins `20.18.0`
+- `npm` for package install and scripts
+
+If you see Next.js complain about Node 18 during `typecheck` or `build`, switch runtimes first:
+
+```bash
+nvm use || nvm install
+```
+
 ## Getting Started
 
 Install dependencies and run the development server:
 
 ```bash
+nvm use || nvm install
 npm install
 npm run dev
 ```
@@ -33,12 +46,15 @@ npm run test
 npm run build
 ```
 
+`npm run typecheck` and `npm run build` both require the supported Node runtime above because this app uses Next.js 16.
+
 ## Supabase setup
 
 1. Copy `.env.example` to `.env.local`.
 2. Add your Supabase URL, publishable key, and app URL.
-3. Apply the SQL in [supabase/migrations/20260401130000_create_workout_logging.sql](/Users/elijah/Documents/Projects/liftlog/supabase/migrations/20260401130000_create_workout_logging.sql).
-4. Update and run [supabase/seed.sql](/Users/elijah/Documents/Projects/liftlog/supabase/seed.sql) with a real `auth.users` UUID.
+3. Add `SUPABASE_SERVICE_ROLE_KEY` if you want one-click live bootstrap from `/setup`.
+4. Apply the SQL in [20260401130000_create_workout_logging.sql](/Users/elijah/Documents/Projects/liftlog/supabase/migrations/20260401130000_create_workout_logging.sql).
+5. Update and run [seed.sql](/Users/elijah/Documents/Projects/liftlog/supabase/seed.sql) with a real `auth.users` UUID, or use `/setup` after login if the service role key is present.
 
 If Supabase env vars are missing, or there is no authenticated Supabase user yet, the app falls back to seeded mock data so the workout execution UI remains testable while auth is still being built.
 
@@ -57,6 +73,16 @@ When env vars are present and the request has a valid Supabase session cookie, t
 - `/setup` provides the in-app checklist for env vars, SQL setup, login, and smoke testing.
 - If `SUPABASE_SERVICE_ROLE_KEY` is configured, `/setup` can seed the authenticated athlete directly from inside the app.
 - `/setup` also includes a simple three-day schedule manager and a button to clear in-progress sessions for the authenticated athlete.
+
+## Smoke test
+
+1. Run `nvm use || nvm install`.
+2. Run `npm install` and `npm run dev`.
+3. Open `/today` and confirm mock mode works immediately.
+4. Configure `.env.local`, then open `/login` and complete the magic-link flow.
+5. Open `/setup`, seed live demo data, and assign today if needed.
+6. Start a workout, log a few sets, reload, and confirm the local draft restores.
+7. Finish the session and confirm it appears in `/history`.
 
 ## Recommended commit sequence
 
