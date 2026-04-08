@@ -38,6 +38,10 @@ interface ActiveWorkoutClientProps {
 }
 
 type SaveState = "saved" | "saving" | "error";
+type DraftRecoveryState = {
+  restoredAt: string;
+  localNewerThanServer: boolean;
+} | null;
 
 async function getJson<T>(input: RequestInfo, init?: RequestInit) {
   const response = await fetch(input, init);
@@ -279,6 +283,7 @@ export function ActiveWorkoutClient({
   const [failedRequestCount, setFailedRequestCount] = useState(0);
   const [lastSyncedAt, setLastSyncedAt] = useState(initialSession.updatedAt);
   const [lastErrorMessage, setLastErrorMessage] = useState<string | null>(null);
+  const [draftRecoveryState, setDraftRecoveryState] = useState<DraftRecoveryState>(null);
   const [finishConfirmOpen, setFinishConfirmOpen] = useState(false);
   const timersRef = useRef<Map<string, number>>(new Map());
   const queuedKeysRef = useRef<Set<string>>(new Set());
@@ -307,8 +312,25 @@ export function ActiveWorkoutClient({
     const draft = window.localStorage.getItem(`liftlog-session-${initialSession.id}`);
 
     if (draft) {
+      try {
+        const parsed = JSON.parse(draft) as WorkoutSessionDetail;
+        const localUpdatedAt = Date.parse(parsed.updatedAt);
+        const serverUpdatedAt = Date.parse(initialSession.updatedAt);
+
+        setDraftRecoveryState({
+          restoredAt: parsed.updatedAt,
+          localNewerThanServer:
+            Number.isFinite(localUpdatedAt) &&
+            Number.isFinite(serverUpdatedAt) &&
+            localUpdatedAt > serverUpdatedAt,
+        });
+      } catch {
+        setDraftRecoveryState(null);
+      }
+
       hydrateDraft(initialSession.id);
     } else {
+      setDraftRecoveryState(null);
       setSession(initialSession);
     }
   }, [hydrateDraft, initialSession, setSession]);
@@ -340,6 +362,35 @@ export function ActiveWorkoutClient({
       syncUiState();
     } catch {
       setLastErrorMessage("Unable to refresh the latest server state right now.");
+      setSaveState("error");
+    }
+  }
+
+  async function refreshFromServerAndDiscardLocalDraft() {
+    setSaveState("saving");
+    setLastErrorMessage(null);
+
+    try {
+      const serverSession = await getJson<WorkoutSessionDetail>(`/api/sessions/${initialSession.id}`);
+
+      for (const timerId of timersRef.current.values()) {
+        window.clearTimeout(timerId);
+      }
+
+      timersRef.current.clear();
+      queuedKeysRef.current.clear();
+      failedRequestsRef.current.clear();
+      inFlightRequestCountRef.current = 0;
+
+      clearDraft();
+      setSession(serverSession);
+      setDraftRecoveryState(null);
+      setLastSyncedAt(serverSession.updatedAt);
+      syncUiState();
+    } catch (error) {
+      setLastErrorMessage(
+        error instanceof Error ? error.message : "Unable to refresh the server copy.",
+      );
       setSaveState("error");
     }
   }
@@ -635,6 +686,39 @@ export function ActiveWorkoutClient({
               </div>
             </div>
           </div>
+          {draftRecoveryState ? (
+            <div
+              className={cn(
+                "mt-3 rounded-2xl border px-4 py-3",
+                draftRecoveryState.localNewerThanServer
+                  ? "border-amber-200 bg-amber-50"
+                  : "border-sky-200 bg-sky-50",
+              )}
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+                    Restored Local Draft
+                  </p>
+                  <p className="mt-1 text-sm font-medium text-slate-800">
+                    Restored changes from {formatSyncTime(draftRecoveryState.restoredAt)} on this device.
+                  </p>
+                  <p className="mt-1 text-xs leading-5 text-slate-600">
+                    {draftRecoveryState.localNewerThanServer
+                      ? "This local draft is newer than the current server copy. Keep logging here, or refresh from server if you want to discard the local version."
+                      : "This draft was recovered after reload. You can refresh from server if you want to discard the local copy and pull the latest server state."}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => void refreshFromServerAndDiscardLocalDraft()}
+                  className="shrink-0 rounded-full border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50"
+                >
+                  Refresh From Server
+                </button>
+              </div>
+            </div>
+          ) : null}
         </section>
 
         <section className="flex-1 overflow-y-auto px-4 py-4">
