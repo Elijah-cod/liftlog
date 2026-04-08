@@ -49,7 +49,7 @@ export function WorkoutPreview({ workout, viewerLabel, authMode }: WorkoutPrevie
       <div className="flex h-full flex-col">
         <section className="border-b border-slate-200/70 px-6 pb-6 pt-8">
           <p className="text-sm font-medium text-sky-600">{formatWorkoutDate(workout.scheduledDate)}</p>
-          <div className="mt-3 flex items-start justify-between gap-4">
+          <div className="mt-3 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div>
               <h1 className="font-display text-3xl font-semibold tracking-tight text-slate-950">
                 {workout.workoutName}
@@ -67,7 +67,7 @@ export function WorkoutPreview({ workout, viewerLabel, authMode }: WorkoutPrevie
                   ? "In Progress"
                   : "Queued"}
           </div>
-          <div className="mt-6 grid grid-cols-3 gap-3">
+          <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
             <div className="rounded-3xl border border-slate-200 bg-white/90 p-4">
               <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
                 <Dumbbell className="size-3.5" />
@@ -92,7 +92,7 @@ export function WorkoutPreview({ workout, viewerLabel, authMode }: WorkoutPrevie
 
           {workout.recentSession ? (
             <div className="mt-5 rounded-[28px] border border-slate-200 bg-white/90 p-4">
-              <div className="flex items-start justify-between gap-3">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
                     Last performed
@@ -111,7 +111,7 @@ export function WorkoutPreview({ workout, viewerLabel, authMode }: WorkoutPrevie
                 </span>
               </div>
 
-              <div className="mt-4 grid grid-cols-3 gap-3">
+              <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
                 <div className="rounded-2xl bg-slate-50 px-3 py-3">
                   <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
                     Duration

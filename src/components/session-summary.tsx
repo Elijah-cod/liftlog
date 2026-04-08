@@ -40,7 +40,7 @@ export function SessionSummary({
     <AppShell>
       <div className="flex h-full flex-col">
         <section className="border-b border-slate-200/70 px-6 pb-6 pt-8">
-          <div className="flex items-start justify-between gap-4">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-sm font-semibold text-emerald-700">
               {isComplete ? <CheckCircle2 className="size-4" /> : <Clock3 className="size-4" />}
               {isComplete ? "Completed Workout" : "Partial Workout"}
@@ -54,7 +54,7 @@ export function SessionSummary({
           <p className="mt-2 text-sm text-slate-600">
             Logged {session.progress.completedSets} of {session.progress.totalSets} sets
           </p>
-          <div className="mt-6 grid grid-cols-2 gap-3">
+          <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
             <div className="rounded-3xl bg-slate-50 px-4 py-4">
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Duration</p>
               <p className="mt-2 text-lg font-semibold text-slate-950">
@@ -162,7 +162,7 @@ export function SessionSummary({
               />
             </div>
           ) : null}
-          <div className="mt-3 grid grid-cols-2 gap-3">
+          <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
             <Link
               href="/today"
               className="flex items-center justify-center rounded-full border border-slate-200 px-5 py-4 text-sm font-semibold text-slate-700"

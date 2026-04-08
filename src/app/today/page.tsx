@@ -29,22 +29,22 @@ export default async function TodayPage() {
               ? "Your live account is authenticated, but there is no scheduled workout for today yet. Use the setup guide to seed a schedule, or add one directly in Supabase."
               : "The MVP is focused on workout execution, so this screen stays intentionally simple until schedule management is added later."}
           </p>
-          <div className="mt-6 flex items-center justify-center gap-3">
+          <div className="mt-6 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
             <Link
               href={auth ? "/setup" : "/login"}
-              className="rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white"
+              className="rounded-full bg-slate-950 px-5 py-3 text-center text-sm font-semibold text-white"
             >
               {auth ? "Open setup guide" : "Open login"}
             </Link>
             <Link
               href="/history"
-              className="rounded-full border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-700"
+              className="rounded-full border border-slate-200 px-5 py-3 text-center text-sm font-semibold text-slate-700"
             >
               View history
             </Link>
             <Link
               href="/api/health"
-              className="rounded-full border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-700"
+              className="rounded-full border border-slate-200 px-5 py-3 text-center text-sm font-semibold text-slate-700"
             >
               Check health
             </Link>
@@ -58,7 +58,7 @@ export default async function TodayPage() {
     <AppShell>
       <div className="flex h-full flex-col">
         <section className="border-b border-slate-200/70 px-6 pb-6 pt-8">
-          <div className="flex items-start justify-between gap-4">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div className="inline-flex items-center gap-2 rounded-full border border-sky-200 bg-sky-50 px-3 py-1 text-sm font-semibold text-sky-700">
               <Clock4 className="size-4" />
               Daily execution MVP
@@ -71,7 +71,7 @@ export default async function TodayPage() {
           <p className="mt-3 max-w-sm text-sm leading-6 text-slate-600">
             Run the session, log every set, recover your draft if the tab closes, and finish with a clean workout record.
           </p>
-          <div className="mt-4 flex items-center gap-4">
+          <div className="mt-4 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-4">
             <Link href="/setup" className="text-sm font-semibold text-sky-700 underline-offset-4 hover:underline">
               Open setup and live-mode checklist
             </Link>
@@ -100,7 +100,7 @@ export default async function TodayPage() {
               </div>
             </div>
 
-            <div className="mt-6 grid grid-cols-2 gap-3">
+            <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
               <div className="rounded-3xl bg-slate-50 px-4 py-4">
                 <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
                   <Dumbbell className="size-3.5" />

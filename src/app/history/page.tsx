@@ -117,7 +117,7 @@ export default async function HistoryPage({ searchParams }: HistoryPageProps) {
             </div>
             <AuthChip label={viewerLabel} mode={authMode} showSignOut={authMode === "live"} />
           </div>
-          <div className="mt-6 flex items-end justify-between gap-4">
+          <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <h1 className="font-display text-4xl font-semibold tracking-tight text-slate-950">
                 Workout history
@@ -149,7 +149,7 @@ export default async function HistoryPage({ searchParams }: HistoryPageProps) {
               </div>
             ) : null}
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
               <div className="rounded-[28px] border border-slate-200 bg-white px-4 py-4 shadow-[0_16px_40px_rgba(148,163,184,0.12)]">
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
                   Sessions shown
@@ -232,7 +232,7 @@ export default async function HistoryPage({ searchParams }: HistoryPageProps) {
                     key={session.id}
                     className="rounded-[28px] border border-slate-200 bg-white p-5 shadow-[0_16px_40px_rgba(148,163,184,0.12)]"
                   >
-                    <div className="flex items-start justify-between gap-4">
+                    <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                       <div>
                         <p className="text-sm font-medium text-sky-600">
                           {formatWorkoutDate(session.scheduledDate)}
@@ -252,7 +252,7 @@ export default async function HistoryPage({ searchParams }: HistoryPageProps) {
                       </span>
                     </div>
 
-                    <div className="mt-5 grid grid-cols-2 gap-3">
+                    <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
                       <div className="rounded-2xl bg-slate-50 px-4 py-4">
                         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
                           Exercises
@@ -271,7 +271,7 @@ export default async function HistoryPage({ searchParams }: HistoryPageProps) {
                       </div>
                     </div>
 
-                    <div className="mt-3 grid grid-cols-2 gap-3">
+                    <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
                       <div className="rounded-2xl bg-slate-50 px-4 py-4">
                         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
                           Duration
@@ -293,13 +293,13 @@ export default async function HistoryPage({ searchParams }: HistoryPageProps) {
                       </div>
                     </div>
 
-                    <div className="mt-5 flex items-center justify-between gap-3">
-                      <p className="text-sm text-slate-500">
+                    <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                      <p className="max-w-[24rem] text-sm leading-6 text-slate-500">
                         Updated {formatDistanceToNow(parseISO(session.updatedAt), { addSuffix: true })}
                       </p>
                       <Link
                         href={getSessionHref(session)}
-                        className="inline-flex items-center gap-2 rounded-full bg-slate-950 px-4 py-3 text-sm font-semibold text-white"
+                        className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-slate-950 px-4 py-3 text-sm font-semibold text-white sm:w-auto"
                       >
                         {session.status === "active" || session.status === "draft"
                           ? "Resume session"

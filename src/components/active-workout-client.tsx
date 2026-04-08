@@ -603,14 +603,14 @@ export function ActiveWorkoutClient({
     <AppShell>
       <div className="flex h-full flex-col">
         <section className="border-b border-slate-200/80 px-5 pb-5 pt-8">
-          <div className="flex items-start justify-between gap-4">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div>
               <p className="text-sm font-medium text-sky-600">{formatWorkoutDate(session.scheduledDate)}</p>
               <h1 className="mt-2 font-display text-3xl font-semibold tracking-tight text-slate-950">
                 {session.workoutName}
               </h1>
             </div>
-            <div className="flex flex-col items-end gap-2">
+            <div className="flex flex-col gap-2 sm:items-end">
               <AuthChip label={viewerLabel} mode={authMode} showSignOut={authMode === "live"} />
               <button
                 type="button"
@@ -628,7 +628,7 @@ export function ActiveWorkoutClient({
                 }}
                 disabled={hasBlockingSyncIssue}
                 className={cn(
-                  "rounded-full px-4 py-3 text-sm font-semibold text-white shadow-[0_16px_32px_rgba(14,116,255,0.35)]",
+                  "w-full rounded-full px-4 py-3 text-sm font-semibold text-white shadow-[0_16px_32px_rgba(14,116,255,0.35)] sm:w-auto",
                   hasBlockingSyncIssue
                     ? "cursor-not-allowed bg-slate-300 shadow-none"
                     : "bg-sky-600",
@@ -637,7 +637,7 @@ export function ActiveWorkoutClient({
                 Finish
               </button>
               {hasBlockingSyncIssue ? (
-                <p className="max-w-[11rem] text-right text-[11px] font-medium leading-4 text-slate-500">
+                <p className="max-w-[16rem] text-[11px] font-medium leading-4 text-slate-500 sm:text-right">
                   {failedRequestCount > 0
                     ? "Retry or refresh sync issues before finishing."
                     : "Wait for current changes to finish syncing."}
@@ -661,7 +661,7 @@ export function ActiveWorkoutClient({
               />
             </div>
           </div>
-          <div className="mt-4 flex items-center justify-between rounded-2xl bg-slate-50 px-4 py-3">
+          <div className="mt-4 flex flex-col gap-3 rounded-2xl bg-slate-50 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Autosave</p>
               <p className="mt-1 text-sm font-medium text-slate-700">
@@ -684,7 +684,7 @@ export function ActiveWorkoutClient({
                 <button
                   type="button"
                   onClick={() => void retryFailedRequests()}
-                  className="inline-flex items-center gap-2 rounded-full border border-rose-200 bg-white px-3 py-2 text-xs font-semibold text-rose-700 transition hover:bg-rose-50"
+                  className="inline-flex items-center justify-center gap-2 rounded-full border border-rose-200 bg-white px-3 py-2 text-xs font-semibold text-rose-700 transition hover:bg-rose-50"
                 >
                   <RefreshCw className="size-3.5" />
                   Retry
@@ -714,7 +714,7 @@ export function ActiveWorkoutClient({
                   : "border-sky-200 bg-sky-50",
               )}
             >
-              <div className="flex items-start justify-between gap-3">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <div>
                   <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
                     Restored Local Draft
@@ -731,7 +731,7 @@ export function ActiveWorkoutClient({
                 <button
                   type="button"
                   onClick={() => void refreshFromServerAndDiscardLocalDraft()}
-                  className="shrink-0 rounded-full border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50"
+                  className="rounded-full border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50 sm:shrink-0"
                 >
                   Refresh From Server
                 </button>

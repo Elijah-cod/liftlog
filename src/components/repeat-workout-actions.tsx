@@ -21,21 +21,23 @@ export function RepeatWorkoutActions({
     return (
       <Link
         href="/setup"
-        className="rounded-full border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-700"
+        className="inline-flex w-full items-center justify-center rounded-full border border-slate-200 px-4 py-3 text-center text-sm font-semibold text-slate-700"
       >
         Use live mode to schedule again
       </Link>
     );
   }
 
-  const containerClassName = compact ? "flex flex-wrap gap-2" : "grid grid-cols-2 gap-3";
+  const containerClassName = compact
+    ? "grid grid-cols-1 gap-2 sm:grid-cols-2"
+    : "grid grid-cols-1 gap-3 sm:grid-cols-2";
   const buttonClassName = compact
-    ? "rounded-full border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700"
-    : "flex items-center justify-center rounded-full border border-slate-200 bg-white px-5 py-4 text-sm font-semibold text-slate-700";
+    ? "flex w-full items-center justify-center rounded-full border border-slate-200 bg-white px-4 py-3 text-center text-sm font-semibold text-slate-700"
+    : "flex w-full items-center justify-center rounded-full border border-slate-200 bg-white px-5 py-4 text-center text-sm font-semibold text-slate-700";
 
   return (
     <div className={containerClassName}>
-      <form action={scheduleWorkoutAgain}>
+      <form action={scheduleWorkoutAgain} className="w-full">
         <input type="hidden" name="templateId" value={templateId} />
         <input type="hidden" name="workoutName" value={workoutName} />
         <input type="hidden" name="redirectTo" value={redirectTo} />
@@ -44,7 +46,7 @@ export function RepeatWorkoutActions({
           Schedule for today
         </button>
       </form>
-      <form action={scheduleWorkoutAgain}>
+      <form action={scheduleWorkoutAgain} className="w-full">
         <input type="hidden" name="templateId" value={templateId} />
         <input type="hidden" name="workoutName" value={workoutName} />
         <input type="hidden" name="redirectTo" value={redirectTo} />
