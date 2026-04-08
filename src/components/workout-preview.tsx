@@ -1,10 +1,30 @@
 import Link from "next/link";
-import { ChevronRight, Dumbbell, Play, Sparkles } from "lucide-react";
+import { ChevronRight, Clock3, Dumbbell, Play, Sparkles } from "lucide-react";
 
 import { AppShell } from "@/components/app-shell";
 import { AuthChip } from "@/components/auth-chip";
-import { buildExerciseGroups, formatWorkoutDate } from "@/lib/session-utils";
-import type { ScheduledWorkoutPreview } from "@/lib/types";
+import {
+  buildExerciseGroups,
+  formatSessionDateTime,
+  formatSessionDuration,
+  formatWorkoutDate,
+} from "@/lib/session-utils";
+import type { ScheduledWorkoutPreview, SessionStatus } from "@/lib/types";
+
+function getRecentStatusLabel(status: SessionStatus) {
+  switch (status) {
+    case "completed":
+      return "Completed";
+    case "partial":
+      return "Partial";
+    case "active":
+      return "In progress";
+    case "draft":
+      return "Draft";
+    default:
+      return "Recent";
+  }
+}
 
 interface WorkoutPreviewProps {
   workout: ScheduledWorkoutPreview;
@@ -69,6 +89,76 @@ export function WorkoutPreview({ workout, viewerLabel, authMode }: WorkoutPrevie
               <p className="mt-3 text-lg font-semibold text-slate-950">{workout.workoutLabel}</p>
             </div>
           </div>
+
+          {workout.recentSession ? (
+            <div className="mt-5 rounded-[28px] border border-slate-200 bg-white/90 p-4">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                    Last performed
+                  </p>
+                  <p className="mt-2 text-lg font-semibold text-slate-950">
+                    {formatWorkoutDate(workout.recentSession.scheduledDate)}
+                  </p>
+                  <p className="mt-1 text-sm text-slate-600">
+                    {formatSessionDateTime(
+                      workout.recentSession.completedAt ?? workout.recentSession.updatedAt,
+                    )}
+                  </p>
+                </div>
+                <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-slate-700">
+                  {getRecentStatusLabel(workout.recentSession.status)}
+                </span>
+              </div>
+
+              <div className="mt-4 grid grid-cols-3 gap-3">
+                <div className="rounded-2xl bg-slate-50 px-3 py-3">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+                    Duration
+                  </p>
+                  <p className="mt-2 text-base font-semibold text-slate-950">
+                    {formatSessionDuration(
+                      workout.recentSession.startedAt,
+                      workout.recentSession.completedAt ?? workout.recentSession.updatedAt,
+                    )}
+                  </p>
+                </div>
+                <div className="rounded-2xl bg-slate-50 px-3 py-3">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+                    Exercises
+                  </p>
+                  <p className="mt-2 text-base font-semibold text-slate-950">
+                    {workout.recentSession.completedExercises}/{workout.recentSession.totalExercises}
+                  </p>
+                </div>
+                <div className="rounded-2xl bg-slate-50 px-3 py-3">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+                    Sets
+                  </p>
+                  <p className="mt-2 text-base font-semibold text-slate-950">
+                    {workout.recentSession.completedSets}/{workout.recentSession.totalSets}
+                  </p>
+                </div>
+              </div>
+
+              <Link
+                href={`/sessions/${workout.recentSession.sessionId}/complete`}
+                className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-sky-700 underline-offset-4 hover:underline"
+              >
+                <Clock3 className="size-4" />
+                Open last summary
+              </Link>
+            </div>
+          ) : (
+            <div className="mt-5 rounded-[28px] border border-dashed border-slate-300 bg-white/70 px-4 py-4">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                Last performed
+              </p>
+              <p className="mt-2 text-sm text-slate-600">
+                No completed history yet for this workout template. Your first finished session will show up here.
+              </p>
+            </div>
+          )}
         </section>
 
         <section className="flex-1 overflow-y-auto px-4 py-4">

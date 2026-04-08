@@ -266,6 +266,7 @@ export function createMockDatabase(): MockDatabase {
         };
       }),
       activeSessionId: null,
+      recentSession: null,
     };
   });
 

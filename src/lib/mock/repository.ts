@@ -6,6 +6,7 @@ import type {
   SessionExercise,
   TodayWorkoutSummary,
   WorkoutHistoryEntry,
+  WorkoutPreviewRecentSession,
   WorkoutSessionDetail,
   WorkoutSet,
 } from "@/lib/types";
@@ -51,6 +52,21 @@ function touchSession(session: WorkoutSessionDetail) {
 
   session.updatedAt = updatedAt;
   session.progress = buildSessionWithProgress(session).progress;
+}
+
+function mapRecentSession(session: WorkoutSessionDetail): WorkoutPreviewRecentSession {
+  return {
+    sessionId: session.id,
+    scheduledDate: session.scheduledDate,
+    status: session.status,
+    startedAt: session.startedAt,
+    completedAt: session.completedAt,
+    updatedAt: session.updatedAt,
+    completedExercises: session.progress.completedExercises,
+    totalExercises: session.progress.totalExercises,
+    completedSets: session.progress.completedSets,
+    totalSets: session.progress.totalSets,
+  };
 }
 
 function createActiveSession(preview: ScheduledWorkoutPreview) {
@@ -186,7 +202,24 @@ export const mockWorkoutRepository = {
   },
 
   async getScheduledWorkoutPreview(id: string) {
-    return getDb().scheduledWorkouts.find((entry) => entry.id === id) ?? null;
+    const preview = getDb().scheduledWorkouts.find((entry) => entry.id === id);
+
+    if (!preview) {
+      return null;
+    }
+
+    const recentSession = [...getDb().sessions]
+      .filter(
+        (session) =>
+          session.templateId === preview.templateId &&
+          (session.status === "completed" || session.status === "partial"),
+      )
+      .sort((left, right) => right.updatedAt.localeCompare(left.updatedAt))[0];
+
+    return {
+      ...preview,
+      recentSession: recentSession ? mapRecentSession(recentSession) : null,
+    };
   },
 
   async startWorkoutSession(id: string) {

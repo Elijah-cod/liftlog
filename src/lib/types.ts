@@ -85,6 +85,19 @@ export interface WorkoutPreviewExercise {
   mediaPath: string;
 }
 
+export interface WorkoutPreviewRecentSession {
+  sessionId: string;
+  scheduledDate: string;
+  status: SessionStatus;
+  startedAt: string;
+  completedAt: string | null;
+  updatedAt: string;
+  completedExercises: number;
+  totalExercises: number;
+  completedSets: number;
+  totalSets: number;
+}
+
 export interface ScheduledWorkoutPreview {
   id: string;
   templateId: string;
@@ -94,6 +107,7 @@ export interface ScheduledWorkoutPreview {
   status: "scheduled" | "in_progress" | "completed" | "partial";
   exercises: WorkoutPreviewExercise[];
   activeSessionId: string | null;
+  recentSession: WorkoutPreviewRecentSession | null;
 }
 
 export interface TodayWorkoutSummary {

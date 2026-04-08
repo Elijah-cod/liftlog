@@ -50,4 +50,13 @@ describe("mock workout repository", () => {
     expect(recent.every((session) => session.workoutName.includes("Workout A"))).toBe(true);
     expect(recent[0]?.updatedAt >= recent[recent.length - 1]!.updatedAt).toBe(true);
   });
+
+  it("includes recent workout context on the scheduled workout preview", async () => {
+    const today = await mockWorkoutRepository.getTodayWorkout();
+    const preview = await mockWorkoutRepository.getScheduledWorkoutPreview(today!.scheduledWorkoutId);
+
+    expect(preview?.recentSession).not.toBeNull();
+    expect(preview?.recentSession?.status).toBe("completed");
+    expect(preview?.recentSession?.completedSets).toBeGreaterThan(0);
+  });
 });

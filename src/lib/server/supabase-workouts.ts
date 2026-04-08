@@ -8,6 +8,7 @@ import type {
   LoadType,
   ScheduledWorkoutPreview,
   SessionExercise,
+  WorkoutPreviewRecentSession,
   WorkoutSessionDetail,
   WorkoutSet,
 } from "@/lib/types";
@@ -358,6 +359,52 @@ async function getLatestSessionForScheduledWorkout(
   return requireData(data, error, "Unable to load scheduled workout session state")?.[0] ?? null;
 }
 
+function mapRecentPreviewSession(session: WorkoutSessionDetail): WorkoutPreviewRecentSession {
+  return {
+    sessionId: session.id,
+    scheduledDate: session.scheduledDate,
+    status: session.status,
+    startedAt: session.startedAt,
+    completedAt: session.completedAt,
+    updatedAt: session.updatedAt,
+    completedExercises: session.progress.completedExercises,
+    totalExercises: session.progress.totalExercises,
+    completedSets: session.progress.completedSets,
+    totalSets: session.progress.totalSets,
+  };
+}
+
+async function getLatestRecentSessionForTemplate(
+  client: DbClient,
+  userId: string,
+  templateId: string,
+  excludeScheduledWorkoutId?: string,
+) {
+  let query = client
+    .from("workout_sessions")
+    .select("id")
+    .eq("profile_id", userId)
+    .eq("workout_template_id", templateId)
+    .in("status", ["completed", "partial"])
+    .order("updated_at", { ascending: false })
+    .limit(1);
+
+  if (excludeScheduledWorkoutId) {
+    query = query.neq("scheduled_workout_id", excludeScheduledWorkoutId);
+  }
+
+  const { data, error } = await query.returns<Array<{ id: string }>>();
+  const sessionId = requireData(data, error, "Unable to load recent template session")?.[0]?.id;
+
+  if (!sessionId) {
+    return null;
+  }
+
+  const detail = await buildSessionDetail(client, userId, sessionId);
+
+  return detail ? mapRecentPreviewSession(detail) : null;
+}
+
 async function getScheduledWorkoutPreviewByFilter(
   client: DbClient,
   userId: string,
@@ -406,6 +453,12 @@ async function getScheduledWorkoutPreviewByFilter(
 
   const templateExercises = await getTemplateExercises(client, scheduledWorkout.workout_template_id);
   const latestSession = await getLatestSessionForScheduledWorkout(client, userId, scheduledWorkout.id);
+  const recentSession = await getLatestRecentSessionForTemplate(
+    client,
+    userId,
+    scheduledWorkout.workout_template_id,
+    scheduledWorkout.id,
+  );
 
   const status =
     latestSession?.status === "completed"
@@ -425,6 +478,7 @@ async function getScheduledWorkoutPreviewByFilter(
     status,
     exercises: templateExercises.map(mapPreviewExercise),
     activeSessionId: latestSession?.id ?? null,
+    recentSession,
   } satisfies ScheduledWorkoutPreview;
 }
 
