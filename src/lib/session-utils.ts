@@ -1,4 +1,4 @@
-import { addDays, format, isSameDay, parseISO, subDays } from "date-fns";
+import { addDays, differenceInSeconds, format, isSameDay, parseISO, subDays } from "date-fns";
 
 import type {
   MetricTrend,
@@ -116,6 +116,34 @@ export function formatWorkoutDate(date: string, now = new Date()) {
   }
 
   return format(parsedDate, "EEEE, MMM d");
+}
+
+export function formatSessionDateTime(dateTime: string) {
+  return format(parseISO(dateTime), "MMM d, h:mm a");
+}
+
+export function formatSessionDuration(startedAt: string, endedAt: string | null) {
+  const seconds = Math.max(
+    0,
+    differenceInSeconds(endedAt ? parseISO(endedAt) : parseISO(startedAt), parseISO(startedAt)),
+  );
+
+  if (seconds < 60) {
+    return "<1m";
+  }
+
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+
+  if (hours === 0) {
+    return `${minutes}m`;
+  }
+
+  return minutes === 0 ? `${hours}h` : `${hours}h ${minutes}m`;
+}
+
+export function countExercisesWithNotes(exercises: SessionExercise[]) {
+  return exercises.filter((exercise) => exercise.notes.trim().length > 0).length;
 }
 
 export function formatSetSummary(exercise: SessionExercise, setIndex: number) {

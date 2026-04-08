@@ -1,4 +1,9 @@
-import { buildProgress, compareMetricTrend } from "@/lib/session-utils";
+import {
+  buildProgress,
+  compareMetricTrend,
+  countExercisesWithNotes,
+  formatSessionDuration,
+} from "@/lib/session-utils";
 import type { SessionExercise } from "@/lib/types";
 
 function makeExercise(overrides?: Partial<SessionExercise>): SessionExercise {
@@ -71,5 +76,22 @@ describe("session utils", () => {
     expect(compareMetricTrend(10, 10)).toBe("flat");
     expect(compareMetricTrend(null, 10)).toBeNull();
   });
-});
 
+  it("formats session duration for short and long sessions", () => {
+    expect(formatSessionDuration("2026-04-08T08:00:00.000Z", "2026-04-08T08:45:00.000Z")).toBe(
+      "45m",
+    );
+    expect(formatSessionDuration("2026-04-08T08:00:00.000Z", "2026-04-08T10:15:00.000Z")).toBe(
+      "2h 15m",
+    );
+  });
+
+  it("counts exercises that include notes", () => {
+    expect(
+      countExercisesWithNotes([
+        makeExercise({ notes: "Felt strong on set 2" }),
+        makeExercise({ id: "exercise-2", notes: "   " }),
+      ]),
+    ).toBe(1);
+  });
+});

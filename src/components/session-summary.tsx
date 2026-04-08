@@ -3,7 +3,14 @@ import { CheckCircle2, Clock3 } from "lucide-react";
 
 import { AppShell } from "@/components/app-shell";
 import { AuthChip } from "@/components/auth-chip";
-import { buildExerciseGroups, formatSetSummary, formatWorkoutDate } from "@/lib/session-utils";
+import {
+  buildExerciseGroups,
+  countExercisesWithNotes,
+  formatSessionDateTime,
+  formatSessionDuration,
+  formatSetSummary,
+  formatWorkoutDate,
+} from "@/lib/session-utils";
 import type { WorkoutSessionDetail } from "@/lib/types";
 
 interface SessionSummaryProps {
@@ -15,6 +22,8 @@ interface SessionSummaryProps {
 export function SessionSummary({ session, viewerLabel, authMode }: SessionSummaryProps) {
   const groups = buildExerciseGroups(session.exercises);
   const isComplete = session.status === "completed";
+  const noteCount = countExercisesWithNotes(session.exercises);
+  const endedAt = session.completedAt ?? session.updatedAt;
 
   return (
     <AppShell>
@@ -34,6 +43,32 @@ export function SessionSummary({ session, viewerLabel, authMode }: SessionSummar
           <p className="mt-2 text-sm text-slate-600">
             Logged {session.progress.completedSets} of {session.progress.totalSets} sets
           </p>
+          <div className="mt-6 grid grid-cols-2 gap-3">
+            <div className="rounded-3xl bg-slate-50 px-4 py-4">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Duration</p>
+              <p className="mt-2 text-lg font-semibold text-slate-950">
+                {formatSessionDuration(session.startedAt, endedAt)}
+              </p>
+            </div>
+            <div className="rounded-3xl bg-slate-50 px-4 py-4">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Notes</p>
+              <p className="mt-2 text-lg font-semibold text-slate-950">{noteCount}</p>
+            </div>
+            <div className="rounded-3xl bg-slate-50 px-4 py-4">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Started</p>
+              <p className="mt-2 text-sm font-semibold text-slate-950">
+                {formatSessionDateTime(session.startedAt)}
+              </p>
+            </div>
+            <div className="rounded-3xl bg-slate-50 px-4 py-4">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                {isComplete ? "Finished" : "Saved"}
+              </p>
+              <p className="mt-2 text-sm font-semibold text-slate-950">
+                {formatSessionDateTime(endedAt)}
+              </p>
+            </div>
+          </div>
         </section>
 
         <section className="flex-1 overflow-y-auto px-4 py-4">

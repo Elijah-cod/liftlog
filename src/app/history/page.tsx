@@ -4,7 +4,11 @@ import { ArrowUpRight, History, Search } from "lucide-react";
 
 import { AppShell } from "@/components/app-shell";
 import { AuthChip } from "@/components/auth-chip";
-import { formatWorkoutDate } from "@/lib/session-utils";
+import {
+  formatSessionDateTime,
+  formatSessionDuration,
+  formatWorkoutDate,
+} from "@/lib/session-utils";
 import { requirePageAuth } from "@/lib/server/auth";
 import { getWorkoutRepository } from "@/lib/server/workouts";
 import type { SessionStatus, WorkoutHistoryEntry } from "@/lib/types";
@@ -86,6 +90,12 @@ export default async function HistoryPage({ searchParams }: HistoryPageProps) {
   });
   const authMode = auth ? "live" : "mock";
   const viewerLabel = auth?.user.email ?? "Mock athlete";
+  const completedCount = sessions.filter((session) => session.status === "completed").length;
+  const resumableCount = sessions.filter(
+    (session) => session.status === "active" || session.status === "draft",
+  ).length;
+  const partialCount = sessions.filter((session) => session.status === "partial").length;
+  const loggedSetCount = sessions.reduce((total, session) => total + session.completedSets, 0);
 
   return (
     <AppShell>
@@ -118,6 +128,39 @@ export default async function HistoryPage({ searchParams }: HistoryPageProps) {
 
         <section className="flex-1 overflow-y-auto px-4 py-5">
           <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-3">
+              <div className="rounded-[28px] border border-slate-200 bg-white px-4 py-4 shadow-[0_16px_40px_rgba(148,163,184,0.12)]">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                  Sessions shown
+                </p>
+                <p className="mt-2 text-2xl font-semibold text-slate-950">{sessions.length}</p>
+              </div>
+              <div className="rounded-[28px] border border-slate-200 bg-white px-4 py-4 shadow-[0_16px_40px_rgba(148,163,184,0.12)]">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                  Completed
+                </p>
+                <p className="mt-2 text-2xl font-semibold text-slate-950">{completedCount}</p>
+              </div>
+              <div className="rounded-[28px] border border-slate-200 bg-white px-4 py-4 shadow-[0_16px_40px_rgba(148,163,184,0.12)]">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                  Need review
+                </p>
+                <p className="mt-2 text-2xl font-semibold text-slate-950">{partialCount}</p>
+              </div>
+              <div className="rounded-[28px] border border-slate-200 bg-white px-4 py-4 shadow-[0_16px_40px_rgba(148,163,184,0.12)]">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                  Sets logged
+                </p>
+                <p className="mt-2 text-2xl font-semibold text-slate-950">{loggedSetCount}</p>
+              </div>
+            </div>
+
+            {resumableCount > 0 ? (
+              <div className="rounded-3xl border border-sky-200 bg-sky-50 px-4 py-3 text-sm text-sky-900">
+                {resumableCount} session{resumableCount === 1 ? "" : "s"} can still be resumed from this list.
+              </div>
+            ) : null}
+
             <form
               action="/history"
               className="rounded-[28px] border border-slate-200 bg-white p-4 shadow-[0_16px_40px_rgba(148,163,184,0.12)]"
@@ -203,6 +246,28 @@ export default async function HistoryPage({ searchParams }: HistoryPageProps) {
                         </p>
                         <p className="mt-2 text-lg font-semibold text-slate-950">
                           {session.completedSets}/{session.totalSets}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="mt-3 grid grid-cols-2 gap-3">
+                      <div className="rounded-2xl bg-slate-50 px-4 py-4">
+                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                          Duration
+                        </p>
+                        <p className="mt-2 text-lg font-semibold text-slate-950">
+                          {formatSessionDuration(
+                            session.startedAt,
+                            session.completedAt ?? session.updatedAt,
+                          )}
+                        </p>
+                      </div>
+                      <div className="rounded-2xl bg-slate-50 px-4 py-4">
+                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                          {session.completedAt ? "Finished" : "Last active"}
+                        </p>
+                        <p className="mt-2 text-sm font-semibold text-slate-950">
+                          {formatSessionDateTime(session.completedAt ?? session.updatedAt)}
                         </p>
                       </div>
                     </div>
