@@ -170,6 +170,7 @@ export const mockWorkoutRepository = {
       .slice(0, limit)
       .map((session) => ({
         id: session.id,
+        templateId: session.templateId,
         scheduledDate: session.scheduledDate,
         workoutName: session.workoutName,
         workoutLabel: session.workoutLabel,

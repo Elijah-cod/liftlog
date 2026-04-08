@@ -149,6 +149,18 @@ export async function assignTemplateToDate(
     throw new Error(`Unable to resolve template: ${templateError?.message ?? "unknown"}`);
   }
 
+  return assignTemplateIdToDate(auth, date, template.id);
+}
+
+export async function assignTemplateIdToDate(
+  auth: AuthenticatedSupabaseContext,
+  date: string,
+  templateId: string,
+) {
+  if (!templateId) {
+    throw new Error("Template is required");
+  }
+
   const { data: existingSchedule, error: existingError } = await auth.client
     .from("scheduled_workouts")
     .select("id, workout_template_id")
@@ -160,7 +172,7 @@ export async function assignTemplateToDate(
     throw new Error(`Unable to load existing schedule: ${existingError.message}`);
   }
 
-  if (existingSchedule && existingSchedule.workout_template_id !== template.id) {
+  if (existingSchedule && existingSchedule.workout_template_id !== templateId) {
     const { data: sessions, error: sessionsError } = await auth.client
       .from("workout_sessions")
       .select("id")
@@ -180,7 +192,7 @@ export async function assignTemplateToDate(
   const { error } = await auth.client.from("scheduled_workouts").upsert(
     {
       profile_id: auth.user.id,
-      workout_template_id: template.id,
+      workout_template_id: templateId,
       scheduled_date: date,
     },
     {
@@ -204,4 +216,3 @@ export async function clearInProgressSessions(auth: AuthenticatedSupabaseContext
     throw new Error(`Unable to clear in-progress sessions: ${error.message}`);
   }
 }
-

@@ -4,6 +4,7 @@ import { ArrowUpRight, History, Search } from "lucide-react";
 
 import { AppShell } from "@/components/app-shell";
 import { AuthChip } from "@/components/auth-chip";
+import { RepeatWorkoutActions } from "@/components/repeat-workout-actions";
 import {
   formatSessionDateTime,
   formatSessionDuration,
@@ -73,6 +74,10 @@ interface HistoryPageProps {
   searchParams: Promise<{
     status?: string;
     q?: string;
+    scheduled?: string;
+    slot?: string;
+    workout?: string;
+    actionError?: string;
   }>;
 }
 
@@ -84,6 +89,10 @@ export default async function HistoryPage({ searchParams }: HistoryPageProps) {
   const status = STATUS_OPTIONS.some((option) => option.value === params.status)
     ? (params.status as (typeof STATUS_OPTIONS)[number]["value"])
     : "all";
+  const scheduled = params.scheduled === "1";
+  const scheduledSlot = params.slot === "tomorrow" ? "tomorrow" : "today";
+  const scheduledWorkoutName = typeof params.workout === "string" ? params.workout : "Workout";
+  const actionError = typeof params.actionError === "string" ? params.actionError : "";
   const sessions = await repository.listRecentSessions({
     status,
     query,
@@ -128,6 +137,18 @@ export default async function HistoryPage({ searchParams }: HistoryPageProps) {
 
         <section className="flex-1 overflow-y-auto px-4 py-5">
           <div className="space-y-4">
+            {scheduled ? (
+              <div className="rounded-3xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-900">
+                {scheduledWorkoutName} was scheduled for {scheduledSlot}.
+              </div>
+            ) : null}
+
+            {actionError ? (
+              <div className="rounded-3xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-900">
+                {actionError}
+              </div>
+            ) : null}
+
             <div className="grid grid-cols-2 gap-3">
               <div className="rounded-[28px] border border-slate-200 bg-white px-4 py-4 shadow-[0_16px_40px_rgba(148,163,184,0.12)]">
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
@@ -286,6 +307,23 @@ export default async function HistoryPage({ searchParams }: HistoryPageProps) {
                         <ArrowUpRight className="size-4" />
                       </Link>
                     </div>
+
+                    {session.status === "completed" || session.status === "partial" ? (
+                      <div className="mt-4 border-t border-slate-200 pt-4">
+                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                          Repeat this workout
+                        </p>
+                        <div className="mt-3">
+                          <RepeatWorkoutActions
+                            authMode={authMode}
+                            templateId={session.templateId}
+                            workoutName={session.workoutName}
+                            redirectTo={buildFilterHref(status, query)}
+                            compact
+                          />
+                        </div>
+                      </div>
+                    ) : null}
                   </article>
                 ))}
               </div>

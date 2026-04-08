@@ -110,6 +110,7 @@ export interface TodayWorkoutSummary {
 
 export interface WorkoutHistoryEntry {
   id: string;
+  templateId: string;
   scheduledDate: string;
   workoutName: string;
   workoutLabel: string;

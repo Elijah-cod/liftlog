@@ -3,6 +3,7 @@ import { CheckCircle2, Clock3 } from "lucide-react";
 
 import { AppShell } from "@/components/app-shell";
 import { AuthChip } from "@/components/auth-chip";
+import { RepeatWorkoutActions } from "@/components/repeat-workout-actions";
 import {
   buildExerciseGroups,
   countExercisesWithNotes,
@@ -17,9 +18,19 @@ interface SessionSummaryProps {
   session: WorkoutSessionDetail;
   viewerLabel: string;
   authMode: "mock" | "live";
+  actionState?: {
+    scheduled?: boolean;
+    slot?: string;
+    actionError?: string;
+  };
 }
 
-export function SessionSummary({ session, viewerLabel, authMode }: SessionSummaryProps) {
+export function SessionSummary({
+  session,
+  viewerLabel,
+  authMode,
+  actionState,
+}: SessionSummaryProps) {
   const groups = buildExerciseGroups(session.exercises);
   const isComplete = session.status === "completed";
   const noteCount = countExercisesWithNotes(session.exercises);
@@ -73,6 +84,18 @@ export function SessionSummary({ session, viewerLabel, authMode }: SessionSummar
 
         <section className="flex-1 overflow-y-auto px-4 py-4">
           <div className="space-y-4">
+            {actionState?.scheduled ? (
+              <div className="rounded-3xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-900">
+                {session.workoutName} was scheduled for {actionState.slot === "tomorrow" ? "tomorrow" : "today"}.
+              </div>
+            ) : null}
+
+            {actionState?.actionError ? (
+              <div className="rounded-3xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-900">
+                {actionState.actionError}
+              </div>
+            ) : null}
+
             {groups.map((group) => (
               <article
                 key={group.id}
@@ -126,7 +149,20 @@ export function SessionSummary({ session, viewerLabel, authMode }: SessionSummar
         </section>
 
         <div className="border-t border-slate-200/70 bg-white/85 px-4 py-4">
-          <div className="grid grid-cols-2 gap-3">
+          {isComplete || session.status === "partial" ? (
+            <div>
+              <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+                Repeat this workout
+              </p>
+              <RepeatWorkoutActions
+                authMode={authMode}
+                templateId={session.templateId}
+                workoutName={session.workoutName}
+                redirectTo={`/sessions/${session.id}/complete`}
+              />
+            </div>
+          ) : null}
+          <div className="mt-3 grid grid-cols-2 gap-3">
             <Link
               href="/today"
               className="flex items-center justify-center rounded-full border border-slate-200 px-5 py-4 text-sm font-semibold text-slate-700"

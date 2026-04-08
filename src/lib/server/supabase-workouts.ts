@@ -689,6 +689,7 @@ export function createSupabaseWorkoutRepository(
         .filter((session): session is WorkoutSessionDetail => Boolean(session))
         .map((session) => ({
           id: session.id,
+          templateId: session.templateId,
           scheduledDate: session.scheduledDate,
           workoutName: session.workoutName,
           workoutLabel: session.workoutLabel,
