@@ -505,6 +505,8 @@ export function ActiveWorkoutClient({
   }
 
   const incompleteWork = session.progress.completedExercises !== session.progress.totalExercises;
+  const hasPendingSyncWork = queuedRequestCount + inFlightRequestCount > 0;
+  const hasBlockingSyncIssue = hasPendingSyncWork || failedRequestCount > 0;
 
   const handleSetChange = (
     sessionExerciseId: string,
@@ -613,6 +615,10 @@ export function ActiveWorkoutClient({
               <button
                 type="button"
                 onClick={() => {
+                  if (hasBlockingSyncIssue) {
+                    return;
+                  }
+
                   if (incompleteWork) {
                     setFinishConfirmOpen(true);
                     return;
@@ -620,10 +626,23 @@ export function ActiveWorkoutClient({
 
                   void finishWorkout();
                 }}
-                className="rounded-full bg-sky-600 px-4 py-3 text-sm font-semibold text-white shadow-[0_16px_32px_rgba(14,116,255,0.35)]"
+                disabled={hasBlockingSyncIssue}
+                className={cn(
+                  "rounded-full px-4 py-3 text-sm font-semibold text-white shadow-[0_16px_32px_rgba(14,116,255,0.35)]",
+                  hasBlockingSyncIssue
+                    ? "cursor-not-allowed bg-slate-300 shadow-none"
+                    : "bg-sky-600",
+                )}
               >
                 Finish
               </button>
+              {hasBlockingSyncIssue ? (
+                <p className="max-w-[11rem] text-right text-[11px] font-medium leading-4 text-slate-500">
+                  {failedRequestCount > 0
+                    ? "Retry or refresh sync issues before finishing."
+                    : "Wait for current changes to finish syncing."}
+                </p>
+              ) : null}
             </div>
           </div>
           <div className="mt-5">
