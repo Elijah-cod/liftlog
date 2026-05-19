@@ -39,16 +39,16 @@ export function RestTimer({ seconds }: RestTimerProps) {
   const label = useMemo(() => secondsToClock(remaining), [remaining]);
 
   return (
-    <div className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-3 py-3 sm:flex-row sm:items-center sm:justify-between">
+    <div className="flex flex-col gap-3 rounded-2xl border border-amber-100 bg-[linear-gradient(135deg,#fffdf4,#fff7ed)] px-3 py-3 shadow-sm sm:flex-row sm:items-center sm:justify-between">
       <div>
-        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Rest</p>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-amber-700">Rest</p>
         <p className="mt-1 text-lg font-semibold text-slate-950">{label}</p>
       </div>
       <div className="flex items-center gap-2 self-stretch sm:self-auto">
         <button
           type="button"
           onClick={() => setRunning((current) => !current)}
-          className="flex h-10 flex-1 items-center justify-center rounded-full bg-white text-slate-700 shadow-sm sm:size-10 sm:flex-none"
+          className="flex h-10 flex-1 items-center justify-center rounded-full bg-white text-amber-700 shadow-sm transition hover:-translate-y-0.5 hover:brightness-105 sm:size-10 sm:flex-none"
           aria-label={running ? "Pause timer" : "Start timer"}
         >
           {running ? <Pause className="size-4" /> : <Play className="size-4" />}
@@ -59,7 +59,7 @@ export function RestTimer({ seconds }: RestTimerProps) {
             setRemaining(seconds);
             setRunning(false);
           }}
-          className="flex h-10 flex-1 items-center justify-center rounded-full bg-white text-slate-700 shadow-sm sm:size-10 sm:flex-none"
+          className="flex h-10 flex-1 items-center justify-center rounded-full bg-white text-amber-700 shadow-sm transition hover:-translate-y-0.5 hover:brightness-105 sm:size-10 sm:flex-none"
           aria-label="Reset timer"
         >
           <TimerReset className="size-4" />

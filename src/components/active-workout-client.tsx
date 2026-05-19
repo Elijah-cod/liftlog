@@ -44,6 +44,42 @@ type DraftRecoveryState = {
   localNewerThanServer: boolean;
 } | null;
 
+function getSetRowClasses(set: WorkoutSet) {
+  if (set.completed) {
+    return "border-emerald-100 bg-[linear-gradient(135deg,#ecfdf5,#f0fdf4)]";
+  }
+
+  if (set.isExtraSet) {
+    return "border-violet-100 bg-[linear-gradient(135deg,#f5f3ff,#eef2ff)]";
+  }
+
+  return "border-sky-100 bg-[linear-gradient(135deg,#ffffff,#eff6ff)]";
+}
+
+function getSetBadgeClasses(set: WorkoutSet) {
+  if (set.completed) {
+    return "border-emerald-200 bg-white text-emerald-700";
+  }
+
+  if (set.isExtraSet) {
+    return "border-violet-200 bg-white text-violet-700";
+  }
+
+  return "border-sky-200 bg-white text-sky-700";
+}
+
+function getSetStatusLabel(set: WorkoutSet) {
+  if (set.completed) {
+    return "Done";
+  }
+
+  if (set.isExtraSet) {
+    return "Extra";
+  }
+
+  return "Pending";
+}
+
 async function getJson<T>(input: RequestInfo, init?: RequestInit) {
   const response = await fetch(input, init);
   const payload = (await response.json()) as ApiResponse<T>;
@@ -101,9 +137,24 @@ function SetRow({
   const previousPerformance = formatPreviousPerformance(exercise, index);
 
   return (
-    <div className="rounded-[24px] border border-white/70 bg-[linear-gradient(135deg,#ffffff,#eff6ff)] px-3 py-3 shadow-sm">
+    <div
+      className={cn(
+        "rounded-[24px] border px-3 py-3 shadow-sm transition-colors",
+        getSetRowClasses(set),
+      )}
+    >
       <div className="flex items-center justify-between gap-3 sm:hidden">
-        <div className="text-sm font-semibold text-slate-700">{set.setLabel}</div>
+        <div className="flex items-center gap-2">
+          <div className="text-sm font-semibold text-slate-700">{set.setLabel}</div>
+          <span
+            className={cn(
+              "rounded-full border px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.16em]",
+              getSetBadgeClasses(set),
+            )}
+          >
+            {getSetStatusLabel(set)}
+          </span>
+        </div>
         <div className="min-w-0 text-right text-sm text-slate-500">{previousPerformance}</div>
       </div>
 
@@ -142,8 +193,10 @@ function SetRow({
             )}
           </div>
         </div>
-        <div className="flex items-center justify-between gap-3 rounded-2xl border border-sky-100 bg-[linear-gradient(135deg,#ffffff,#eff6ff)] px-3 py-2">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-sky-700">Done</p>
+        <div className="flex items-center justify-between gap-3 rounded-2xl border border-white/70 bg-white/70 px-3 py-2">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-600">
+            {set.completed ? "Completed" : set.isExtraSet ? "Extra set" : "Ready to log"}
+          </p>
           <div className="flex items-center gap-2">
             <button
               type="button"
@@ -173,7 +226,17 @@ function SetRow({
       </div>
 
       <div className="hidden grid-cols-[auto,minmax(0,1.3fr),1fr,1fr,auto] items-center gap-2 sm:grid">
-        <div className="text-sm font-semibold text-slate-700">{set.setLabel}</div>
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-semibold text-slate-700">{set.setLabel}</span>
+          <span
+            className={cn(
+              "rounded-full border px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.16em]",
+              getSetBadgeClasses(set),
+            )}
+          >
+            {getSetStatusLabel(set)}
+          </span>
+        </div>
         <div className="min-w-0 text-sm text-slate-500">{previousPerformance}</div>
         <div>
           {exercise.loadType === "weighted" ? (
@@ -245,6 +308,8 @@ function ExercisePanel({
   onChangeNote: (value: string) => void;
 }) {
   const complete = exercise.sets.every((set) => set.completed);
+  const completedSetCount = exercise.sets.filter((set) => set.completed).length;
+  const extraSetCount = exercise.sets.filter((set) => set.isExtraSet).length;
 
   return (
     <article className="rounded-[30px] border border-white/80 bg-white/85 px-4 py-4 shadow-[0_18px_40px_rgba(96,165,250,0.12)]">
@@ -260,6 +325,16 @@ function ExercisePanel({
             <div className="min-w-0">
               <h2 className="break-words text-lg font-semibold leading-6 text-slate-950">{exercise.name}</h2>
               <p className="mt-1 text-sm text-slate-600">{exercise.subtitle}</p>
+              <div className="mt-2 flex flex-wrap items-center gap-2">
+                <span className="rounded-full border border-sky-100 bg-white/90 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-sky-700">
+                  {completedSetCount}/{exercise.sets.length} sets logged
+                </span>
+                {extraSetCount > 0 ? (
+                  <span className="rounded-full border border-violet-100 bg-white/90 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-violet-700">
+                    {extraSetCount} extra
+                  </span>
+                ) : null}
+              </div>
             </div>
             <button
               type="button"
