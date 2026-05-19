@@ -44,7 +44,7 @@ export function SessionSummary({
           <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-[linear-gradient(135deg,#ecfdf5,#dcfce7)] px-3 py-1 text-sm font-semibold text-emerald-700 shadow-sm">
               {isComplete ? <CheckCircle2 className="size-4" /> : <Clock3 className="size-4" />}
-              {isComplete ? "Completed Workout" : "Partial Workout"}
+              {isComplete ? "Workout Complete" : "Partial Save"}
             </div>
             <AuthChip label={viewerLabel} mode={authMode} showSignOut={authMode === "live"} />
           </div>
@@ -87,7 +87,7 @@ export function SessionSummary({
           <div className="space-y-4">
             {actionState?.scheduled ? (
               <div className="rounded-3xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-900">
-                {session.workoutName} was scheduled for {actionState.slot === "tomorrow" ? "tomorrow" : "today"}.
+                {session.workoutName} is back on the calendar for {actionState.slot === "tomorrow" ? "tomorrow" : "today"}.
               </div>
             ) : null}
 
@@ -163,7 +163,7 @@ export function SessionSummary({
           {isComplete || session.status === "partial" ? (
             <div>
               <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
-                Repeat this workout
+                Schedule this workout again
               </p>
               <RepeatWorkoutActions
                 authMode={authMode}

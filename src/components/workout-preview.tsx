@@ -15,7 +15,7 @@ import type { ScheduledWorkoutPreview, SessionStatus } from "@/lib/types";
 function getRecentStatusLabel(status: SessionStatus) {
   switch (status) {
     case "completed":
-      return "Completed";
+      return "Finished";
     case "partial":
       return "Partial";
     case "active":
@@ -61,12 +61,12 @@ export function WorkoutPreview({ workout, viewerLabel, authMode }: WorkoutPrevie
           </div>
           <div className="mt-4 inline-flex rounded-full border border-sky-200/80 bg-[linear-gradient(135deg,#f0f9ff,#dbeafe)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.22em] text-sky-700 shadow-sm">
             {workout.status === "completed"
-              ? "Complete"
+              ? "Finished"
               : workout.status === "partial"
                 ? "Partial"
                 : workout.status === "in_progress"
-                  ? "In Progress"
-                  : "Queued"}
+                  ? "Live"
+                  : "Ready"}
           </div>
           <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
             <div className="rounded-3xl border border-sky-100 bg-[linear-gradient(135deg,#eff6ff,#dbeafe)] p-4 shadow-sm">
@@ -147,7 +147,7 @@ export function WorkoutPreview({ workout, viewerLabel, authMode }: WorkoutPrevie
                 className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-sky-700 underline-offset-4 hover:underline"
               >
                 <Clock3 className="size-4" />
-                Open last summary
+                Review last summary
               </Link>
             </div>
           ) : (
@@ -156,7 +156,7 @@ export function WorkoutPreview({ workout, viewerLabel, authMode }: WorkoutPrevie
                 Last performed
               </p>
               <p className="mt-2 text-sm text-slate-600">
-                No completed history yet for this workout template. Your first finished session will show up here.
+                No finished history yet for this training block. Your first completed session will show up here.
               </p>
             </div>
           )}
@@ -217,7 +217,7 @@ export function WorkoutPreview({ workout, viewerLabel, authMode }: WorkoutPrevie
             prefetch
           >
             <Play className="size-4" />
-            {workout.activeSessionId ? "Resume Workout" : "Start Workout"}
+            {workout.activeSessionId ? "Resume Session" : "Start Workout"}
             <ChevronRight className="size-4" />
           </Link>
         </div>

@@ -27,7 +27,7 @@ export default async function TodayPage() {
           <p className="mt-3 text-sm leading-6 text-slate-600">
             {auth
               ? "Your live account is authenticated, but there is no scheduled workout for today yet. Use the setup guide to seed a schedule, or add one directly in Supabase."
-              : "The MVP is focused on workout execution, so this screen stays intentionally simple until schedule management is added later."}
+              : "You can explore the full logging flow in mock mode right away, then connect Supabase when you are ready for live data."}
           </p>
           <div className="mt-6 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
             <Link
@@ -61,7 +61,7 @@ export default async function TodayPage() {
           <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div className="inline-flex items-center gap-2 rounded-full border border-sky-200/80 bg-[linear-gradient(135deg,#f0f9ff,#dbeafe)] px-3 py-1 text-sm font-semibold text-sky-700 shadow-sm">
               <Clock4 className="size-4" />
-              Daily execution MVP
+              Daily training flow
             </div>
             <AuthChip label={viewerLabel} mode={authMode} showSignOut={authMode === "live"} />
           </div>
@@ -69,7 +69,7 @@ export default async function TodayPage() {
             LiftLog
           </h1>
           <p className="mt-3 max-w-sm text-sm leading-6 text-slate-600">
-            Run the session, log every set, recover your draft if the tab closes, and finish with a clean workout record.
+            Start the day with a clear plan, log every set with confidence, and finish with a workout record you can actually use.
           </p>
           <div className="mt-4 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-4">
             <Link href="/setup" className="text-sm font-semibold text-sky-700 underline-offset-4 hover:underline">
@@ -97,7 +97,13 @@ export default async function TodayPage() {
                 <p className="mt-1 text-sm text-slate-600">{workout.workoutLabel}</p>
               </div>
               <div className="self-start rounded-full border border-fuchsia-200/80 bg-[linear-gradient(135deg,#fdf2f8,#fae8ff)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-fuchsia-700 shadow-sm">
-                {workout.status}
+                {workout.status === "scheduled"
+                  ? "Ready"
+                  : workout.status === "in_progress"
+                    ? "Live"
+                    : workout.status === "completed"
+                      ? "Done"
+                      : "Partial"}
               </div>
             </div>
 
@@ -110,7 +116,7 @@ export default async function TodayPage() {
                 <p className="mt-3 text-2xl font-semibold text-slate-950">{workout.totalExercises}</p>
               </div>
               <div className="rounded-3xl border border-emerald-100 bg-[linear-gradient(135deg,#ecfdf5,#dcfce7)] px-4 py-4 shadow-sm">
-                <div className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">State</div>
+                <div className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">Today</div>
                 <p className="mt-3 text-2xl font-semibold capitalize text-slate-950">{workout.status}</p>
               </div>
             </div>
@@ -123,7 +129,7 @@ export default async function TodayPage() {
               }
               className="mt-6 flex w-full items-center justify-center gap-2 rounded-full bg-[linear-gradient(135deg,#2563eb,#0ea5e9 55%,#8b5cf6)] px-5 py-4 text-base font-semibold text-white shadow-[0_18px_40px_rgba(59,130,246,0.35)] transition hover:-translate-y-0.5 hover:brightness-105"
             >
-              {workout.activeSessionId ? "Resume Workout" : "Open Workout"}
+              {workout.activeSessionId ? "Resume Session" : "Open Workout"}
               <ChevronRight className="size-4" />
             </Link>
           </article>

@@ -19,14 +19,14 @@ const STATUS_OPTIONS = [
   { value: "all", label: "All" },
   { value: "completed", label: "Completed" },
   { value: "partial", label: "Partial" },
-  { value: "active", label: "Active" },
+  { value: "active", label: "Live" },
   { value: "draft", label: "Drafts" },
 ] as const;
 
 function getStatusLabel(status: SessionStatus) {
   switch (status) {
     case "completed":
-      return "Completed";
+      return "Finished";
     case "partial":
       return "Partial";
     case "active":
@@ -113,17 +113,17 @@ export default async function HistoryPage({ searchParams }: HistoryPageProps) {
           <div className="flex items-start justify-between gap-4">
             <div className="inline-flex items-center gap-2 rounded-full border border-sky-200 bg-[linear-gradient(135deg,#f0f9ff,#dbeafe)] px-3 py-1 text-sm font-semibold text-sky-700 shadow-sm">
               <History className="size-4" />
-              Recent sessions
+              Training archive
             </div>
             <AuthChip label={viewerLabel} mode={authMode} showSignOut={authMode === "live"} />
           </div>
           <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <h1 className="font-display text-4xl font-semibold tracking-tight text-slate-950">
-                Workout history
+                Session history
               </h1>
               <p className="mt-3 max-w-md text-sm leading-6 text-slate-600">
-                Review completed and partial sessions, or jump back into anything still in progress.
+                Review finished sessions, revisit partial saves, or jump back into anything still in progress.
               </p>
             </div>
             <Link
@@ -158,13 +158,13 @@ export default async function HistoryPage({ searchParams }: HistoryPageProps) {
               </div>
               <div className="rounded-[28px] border border-emerald-100 bg-[linear-gradient(135deg,#ecfdf5,#d1fae5)] px-4 py-4 shadow-sm">
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">
-                  Completed
+                  Finished
                 </p>
                 <p className="mt-2 text-2xl font-semibold text-slate-950">{completedCount}</p>
               </div>
               <div className="rounded-[28px] border border-amber-100 bg-[linear-gradient(135deg,#fff7ed,#fde68a33)] px-4 py-4 shadow-sm">
                 <p className="text-xs font-semibold uppercase tracking-[0.18em] text-amber-700">
-                  Need review
+                  Partial
                 </p>
                 <p className="mt-2 text-2xl font-semibold text-slate-950">{partialCount}</p>
               </div>
@@ -178,7 +178,7 @@ export default async function HistoryPage({ searchParams }: HistoryPageProps) {
 
             {resumableCount > 0 ? (
               <div className="rounded-3xl border border-sky-200 bg-sky-50 px-4 py-3 text-sm text-sky-900">
-                {resumableCount} session{resumableCount === 1 ? "" : "s"} can still be resumed from this list.
+                {resumableCount} session{resumableCount === 1 ? "" : "s"} can still be resumed from this screen.
               </div>
             ) : null}
 
@@ -192,7 +192,7 @@ export default async function HistoryPage({ searchParams }: HistoryPageProps) {
                   type="search"
                   name="q"
                   defaultValue={query}
-                  placeholder="Search workout name or label"
+                  placeholder="Search by workout name or training focus"
                   className="w-full bg-transparent text-sm text-slate-950 outline-none placeholder:text-slate-400"
                 />
                 {status !== "all" ? <input type="hidden" name="status" value={status} /> : null}
@@ -303,7 +303,7 @@ export default async function HistoryPage({ searchParams }: HistoryPageProps) {
                       >
                         {session.status === "active" || session.status === "draft"
                           ? "Resume session"
-                          : "Open summary"}
+                          : "View summary"}
                         <ArrowUpRight className="size-4" />
                       </Link>
                     </div>
@@ -311,7 +311,7 @@ export default async function HistoryPage({ searchParams }: HistoryPageProps) {
                     {session.status === "completed" || session.status === "partial" ? (
                       <div className="mt-4 border-t border-slate-200 pt-4">
                         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
-                          Repeat this workout
+                          Schedule this workout again
                         </p>
                         <div className="mt-3">
                           <RepeatWorkoutActions
@@ -334,7 +334,7 @@ export default async function HistoryPage({ searchParams }: HistoryPageProps) {
                 </div>
                 <h2 className="mt-5 text-xl font-semibold text-slate-950">No matching sessions yet</h2>
                 <p className="mt-2 text-sm leading-6 text-slate-600">
-                  Start and finish a workout to build your session history, or clear the search and status filters.
+                  Finish a workout to build your archive, or clear the search and status filters.
                 </p>
                 <div className="mt-5 flex items-center justify-center gap-3">
                   <Link

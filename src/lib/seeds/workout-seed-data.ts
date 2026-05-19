@@ -141,8 +141,8 @@ export const exerciseSeeds: ExerciseSeed[] = [
 export const templateSeeds: TemplateSeed[] = [
   {
     id: "workout-a",
-    workoutName: "Workout A",
-    workoutLabel: "Upper",
+    workoutName: "Upper Forge",
+    workoutLabel: "Push, Pull & Core",
     exercises: [
       { id: "a-1", exerciseDefinitionId: "flat-dumbbell-press", plannedSets: 3, restSeconds: 120, sortOrder: 1 },
       { id: "a-2", exerciseDefinitionId: "lat-pulldowns", plannedSets: 3, restSeconds: 90, sortOrder: 2, blockKey: "a-s1", blockRole: "A" },
@@ -153,8 +153,8 @@ export const templateSeeds: TemplateSeed[] = [
   },
   {
     id: "workout-b",
-    workoutName: "Workout B",
-    workoutLabel: "Lower",
+    workoutName: "Lower Drive",
+    workoutLabel: "Squat, Hinge & Core",
     exercises: [
       { id: "b-1", exerciseDefinitionId: "barbell-back-squat", plannedSets: 3, restSeconds: 120, sortOrder: 1 },
       { id: "b-2", exerciseDefinitionId: "barbell-deadlift", plannedSets: 3, restSeconds: 120, sortOrder: 2 },
@@ -165,8 +165,8 @@ export const templateSeeds: TemplateSeed[] = [
   },
   {
     id: "workout-c",
-    workoutName: "Workout C",
-    workoutLabel: "Pull",
+    workoutName: "Hybrid Pull",
+    workoutLabel: "Chest, Back & Arms",
     exercises: [
       { id: "c-1", exerciseDefinitionId: "low-incline-dumbbell-press", plannedSets: 3, restSeconds: 120, sortOrder: 1 },
       { id: "c-2", exerciseDefinitionId: "seated-mid-chest-cable-fly", plannedSets: 3, restSeconds: 90, sortOrder: 2 },
@@ -177,4 +177,3 @@ export const templateSeeds: TemplateSeed[] = [
     ],
   },
 ];
-

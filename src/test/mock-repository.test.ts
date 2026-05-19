@@ -41,13 +41,13 @@ describe("mock workout repository", () => {
   it("lists recent sessions with status and text filters", async () => {
     const recent = await mockWorkoutRepository.listRecentSessions({
       status: "completed",
-      query: "Workout A",
+      query: "Upper Forge",
       limit: 10,
     });
 
     expect(recent.length).toBeGreaterThan(0);
     expect(recent.every((session) => session.status === "completed")).toBe(true);
-    expect(recent.every((session) => session.workoutName.includes("Workout A"))).toBe(true);
+    expect(recent.every((session) => session.workoutName.includes("Upper Forge"))).toBe(true);
     expect(recent[0]?.updatedAt >= recent[recent.length - 1]!.updatedAt).toBe(true);
   });
 
