@@ -39,9 +39,9 @@ export function SessionSummary({
   return (
     <AppShell>
       <div className="flex h-full flex-col">
-        <section className="border-b border-slate-200/70 px-6 pb-6 pt-8">
+        <section className="border-b border-white/70 px-6 pb-6 pt-8">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-            <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-sm font-semibold text-emerald-700">
+            <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-[linear-gradient(135deg,#ecfdf5,#dcfce7)] px-3 py-1 text-sm font-semibold text-emerald-700 shadow-sm">
               {isComplete ? <CheckCircle2 className="size-4" /> : <Clock3 className="size-4" />}
               {isComplete ? "Completed Workout" : "Partial Workout"}
             </div>
@@ -55,23 +55,23 @@ export function SessionSummary({
             Logged {session.progress.completedSets} of {session.progress.totalSets} sets
           </p>
           <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
-            <div className="rounded-3xl bg-slate-50 px-4 py-4">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Duration</p>
+            <div className="rounded-3xl border border-sky-100 bg-[linear-gradient(135deg,#eff6ff,#dbeafe)] px-4 py-4 shadow-sm">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-sky-700">Duration</p>
               <p className="mt-2 text-lg font-semibold text-slate-950">
                 {formatSessionDuration(session.startedAt, endedAt)}
               </p>
             </div>
-            <div className="rounded-3xl bg-slate-50 px-4 py-4">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Notes</p>
+            <div className="rounded-3xl border border-fuchsia-100 bg-[linear-gradient(135deg,#fdf4ff,#fae8ff)] px-4 py-4 shadow-sm">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-fuchsia-700">Notes</p>
               <p className="mt-2 text-lg font-semibold text-slate-950">{noteCount}</p>
             </div>
-            <div className="rounded-3xl bg-slate-50 px-4 py-4">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Started</p>
+            <div className="rounded-3xl border border-amber-100 bg-[linear-gradient(135deg,#fff7ed,#fde68a33)] px-4 py-4 shadow-sm">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-amber-700">Started</p>
               <p className="mt-2 text-sm font-semibold text-slate-950">
                 {formatSessionDateTime(session.startedAt)}
               </p>
             </div>
-            <div className="rounded-3xl bg-slate-50 px-4 py-4">
+            <div className="rounded-3xl border border-emerald-100 bg-[linear-gradient(135deg,#ecfdf5,#d1fae5)] px-4 py-4 shadow-sm">
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
                 {isComplete ? "Finished" : "Saved"}
               </p>
@@ -99,10 +99,10 @@ export function SessionSummary({
             {groups.map((group) => (
               <article
                 key={group.id}
-                className="rounded-[28px] border border-slate-200/80 bg-white px-4 py-4 shadow-[0_16px_40px_rgba(148,163,184,0.14)]"
+                className="rounded-[28px] border border-white/80 bg-white/85 px-4 py-4 shadow-[0_18px_40px_rgba(96,165,250,0.12)]"
               >
                 {group.exercises.length > 1 ? (
-                  <div className="mb-4 inline-flex rounded-full border border-sky-200 bg-sky-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-sky-700">
+                  <div className="mb-4 inline-flex rounded-full border border-fuchsia-200 bg-[linear-gradient(135deg,#fdf4ff,#fae8ff)] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-fuchsia-700">
                     Superset
                   </div>
                 ) : null}
@@ -115,13 +115,13 @@ export function SessionSummary({
                           <p className="text-sm text-slate-600">{exercise.subtitle}</p>
                         </div>
                         {exercise.blockRole ? (
-                          <span className="self-start rounded-2xl bg-sky-100 px-3 py-1 text-sm font-semibold text-sky-700">
+                          <span className="self-start rounded-2xl bg-[linear-gradient(135deg,#eff6ff,#ede9fe)] px-3 py-1 text-sm font-semibold text-violet-700">
                             {exercise.blockRole}
                           </span>
                         ) : null}
                       </div>
                       {exercise.notes ? (
-                        <div className="mt-3 rounded-2xl bg-slate-50 px-3 py-2 text-sm text-slate-600">
+                        <div className="mt-3 rounded-2xl border border-amber-100 bg-[linear-gradient(135deg,#fffdf4,#fff7ed)] px-3 py-2 text-sm text-slate-600">
                           {exercise.notes}
                         </div>
                       ) : null}
@@ -129,7 +129,7 @@ export function SessionSummary({
                         {exercise.sets.map((set, index) => (
                           <div
                             key={set.id}
-                            className="grid grid-cols-1 gap-3 rounded-2xl bg-emerald-50/70 px-3 py-3 sm:grid-cols-[auto,minmax(0,1fr),auto] sm:items-center"
+                            className="grid grid-cols-1 gap-3 rounded-2xl border border-emerald-100 bg-[linear-gradient(135deg,#ecfdf5,#f0fdf4)] px-3 py-3 sm:grid-cols-[auto,minmax(0,1fr),auto] sm:items-center"
                           >
                             <span className="text-sm font-semibold text-slate-700">{set.setLabel}</span>
                             <span className="min-w-0 text-sm text-slate-700">{formatSetSummary(exercise, index)}</span>
@@ -148,7 +148,7 @@ export function SessionSummary({
           </div>
         </section>
 
-        <div className="border-t border-slate-200/70 bg-white/85 px-4 py-4">
+        <div className="border-t border-white/70 bg-white/80 px-4 py-4 backdrop-blur">
           {isComplete || session.status === "partial" ? (
             <div>
               <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
@@ -165,13 +165,13 @@ export function SessionSummary({
           <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
             <Link
               href="/today"
-              className="flex items-center justify-center rounded-full border border-slate-200 px-5 py-4 text-sm font-semibold text-slate-700"
+              className="flex items-center justify-center rounded-full border border-sky-200 bg-[linear-gradient(135deg,#ffffff,#eff6ff)] px-5 py-4 text-sm font-semibold text-sky-700 shadow-sm"
             >
               Back to today
             </Link>
             <Link
               href="/history"
-              className="flex items-center justify-center rounded-full bg-slate-950 px-5 py-4 text-sm font-semibold text-white"
+              className="flex items-center justify-center rounded-full bg-[linear-gradient(135deg,#2563eb,#0ea5e9 55%,#8b5cf6)] px-5 py-4 text-sm font-semibold text-white shadow-[0_18px_40px_rgba(59,130,246,0.35)] transition hover:-translate-y-0.5 hover:brightness-105"
             >
               View history
             </Link>

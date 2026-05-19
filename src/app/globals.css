@@ -1,10 +1,11 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f2f6fb;
-  --foreground: #0f172a;
-  --muted: #5b6472;
+  --background: #f6f8ff;
+  --foreground: #0b1330;
+  --muted: #55607a;
   --card: #ffffff;
+  --ring: #6ee7f9;
 }
 
 @theme inline {
@@ -27,7 +28,11 @@ html {
 }
 
 body {
-  background: var(--background);
+  background:
+    radial-gradient(circle at top left, rgba(56, 189, 248, 0.16), transparent 28%),
+    radial-gradient(circle at top right, rgba(244, 114, 182, 0.14), transparent 22%),
+    radial-gradient(circle at bottom left, rgba(34, 197, 94, 0.12), transparent 24%),
+    linear-gradient(180deg, #f9fbff 0%, var(--background) 52%, #eef4ff 100%);
   color: var(--foreground);
   font-family: var(--font-sans);
   line-height: 1.5;
@@ -55,7 +60,7 @@ textarea {
 }
 
 :where(a, button, input, textarea):focus-visible {
-  outline: 2px solid #7dd3fc;
+  outline: 2px solid var(--ring);
   outline-offset: 3px;
 }
 
@@ -66,4 +71,19 @@ textarea {
 ::selection {
   background: #bfdbfe;
   color: #082f49;
+}
+
+.vibrant-glow {
+  box-shadow:
+    0 24px 70px rgba(15, 23, 42, 0.12),
+    0 0 0 1px rgba(255, 255, 255, 0.35),
+    0 0 40px rgba(96, 165, 250, 0.1);
+}
+
+.hero-accent {
+  background:
+    radial-gradient(circle at 18% 18%, rgba(56, 189, 248, 0.18), transparent 28%),
+    radial-gradient(circle at 82% 20%, rgba(244, 114, 182, 0.16), transparent 24%),
+    radial-gradient(circle at 50% 100%, rgba(34, 197, 94, 0.12), transparent 28%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.94) 0%, rgba(244, 247, 255, 0.96) 100%);
 }

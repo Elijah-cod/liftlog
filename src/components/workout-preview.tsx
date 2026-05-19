@@ -47,7 +47,7 @@ export function WorkoutPreview({ workout, viewerLabel, authMode }: WorkoutPrevie
   return (
     <AppShell>
       <div className="flex h-full flex-col">
-        <section className="border-b border-slate-200/70 px-6 pb-6 pt-8">
+        <section className="border-b border-white/70 px-6 pb-6 pt-8">
           <p className="text-sm font-medium text-sky-600">{formatWorkoutDate(workout.scheduledDate)}</p>
           <div className="mt-3 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div>
@@ -58,7 +58,7 @@ export function WorkoutPreview({ workout, viewerLabel, authMode }: WorkoutPrevie
             </div>
             <AuthChip label={viewerLabel} mode={authMode} showSignOut={authMode === "live"} />
           </div>
-          <div className="mt-4 inline-flex rounded-full border border-sky-200 bg-sky-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.22em] text-sky-700">
+          <div className="mt-4 inline-flex rounded-full border border-sky-200/80 bg-[linear-gradient(135deg,#f0f9ff,#dbeafe)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.22em] text-sky-700 shadow-sm">
             {workout.status === "completed"
               ? "Complete"
               : workout.status === "partial"
@@ -68,15 +68,15 @@ export function WorkoutPreview({ workout, viewerLabel, authMode }: WorkoutPrevie
                   : "Queued"}
           </div>
           <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
-            <div className="rounded-3xl border border-slate-200 bg-white/90 p-4">
-              <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+            <div className="rounded-3xl border border-sky-100 bg-[linear-gradient(135deg,#eff6ff,#dbeafe)] p-4 shadow-sm">
+              <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-sky-700">
                 <Dumbbell className="size-3.5" />
                 Exercises
               </div>
               <p className="mt-3 text-2xl font-semibold text-slate-950">{workout.exercises.length}</p>
             </div>
-            <div className="rounded-3xl border border-slate-200 bg-white/90 p-4">
-              <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+            <div className="rounded-3xl border border-fuchsia-100 bg-[linear-gradient(135deg,#fdf4ff,#fae8ff)] p-4 shadow-sm">
+              <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-fuchsia-700">
                 <Sparkles className="size-3.5" />
                 Supersets
               </div>
@@ -84,14 +84,14 @@ export function WorkoutPreview({ workout, viewerLabel, authMode }: WorkoutPrevie
                 {groups.filter((group) => group.exercises.length > 1).length}
               </p>
             </div>
-            <div className="rounded-3xl border border-slate-200 bg-white/90 p-4">
-              <div className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Focus</div>
+            <div className="rounded-3xl border border-emerald-100 bg-[linear-gradient(135deg,#ecfdf5,#dcfce7)] p-4 shadow-sm">
+              <div className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700">Focus</div>
               <p className="mt-3 text-lg font-semibold text-slate-950">{workout.workoutLabel}</p>
             </div>
           </div>
 
           {workout.recentSession ? (
-            <div className="mt-5 rounded-[28px] border border-slate-200 bg-white/90 p-4">
+            <div className="mt-5 rounded-[28px] border border-white/80 bg-white/85 p-4 shadow-[0_18px_40px_rgba(96,165,250,0.12)]">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
@@ -106,14 +106,14 @@ export function WorkoutPreview({ workout, viewerLabel, authMode }: WorkoutPrevie
                     )}
                   </p>
                 </div>
-                <span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-slate-700">
+                <span className="rounded-full border border-violet-200 bg-[linear-gradient(135deg,#eef2ff,#ede9fe)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-violet-700">
                   {getRecentStatusLabel(workout.recentSession.status)}
                 </span>
               </div>
 
               <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
-                <div className="rounded-2xl bg-slate-50 px-3 py-3">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+                <div className="rounded-2xl border border-sky-100 bg-[linear-gradient(135deg,#eff6ff,#ffffff)] px-3 py-3">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-sky-700">
                     Duration
                   </p>
                   <p className="mt-2 text-base font-semibold text-slate-950">
@@ -123,16 +123,16 @@ export function WorkoutPreview({ workout, viewerLabel, authMode }: WorkoutPrevie
                     )}
                   </p>
                 </div>
-                <div className="rounded-2xl bg-slate-50 px-3 py-3">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+                <div className="rounded-2xl border border-emerald-100 bg-[linear-gradient(135deg,#ecfdf5,#ffffff)] px-3 py-3">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-emerald-700">
                     Exercises
                   </p>
                   <p className="mt-2 text-base font-semibold text-slate-950">
                     {workout.recentSession.completedExercises}/{workout.recentSession.totalExercises}
                   </p>
                 </div>
-                <div className="rounded-2xl bg-slate-50 px-3 py-3">
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+                <div className="rounded-2xl border border-fuchsia-100 bg-[linear-gradient(135deg,#fdf4ff,#ffffff)] px-3 py-3">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-fuchsia-700">
                     Sets
                   </p>
                   <p className="mt-2 text-base font-semibold text-slate-950">
@@ -150,8 +150,8 @@ export function WorkoutPreview({ workout, viewerLabel, authMode }: WorkoutPrevie
               </Link>
             </div>
           ) : (
-            <div className="mt-5 rounded-[28px] border border-dashed border-slate-300 bg-white/70 px-4 py-4">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+            <div className="mt-5 rounded-[28px] border border-dashed border-sky-200 bg-[linear-gradient(135deg,#ffffff,#eff6ff)] px-4 py-4">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-sky-700">
                 Last performed
               </p>
               <p className="mt-2 text-sm text-slate-600">
@@ -166,17 +166,17 @@ export function WorkoutPreview({ workout, viewerLabel, authMode }: WorkoutPrevie
             {groups.map((group) => (
               <article
                 key={group.id}
-                className="rounded-[28px] border border-slate-200/80 bg-white px-4 py-4 shadow-[0_16px_40px_rgba(148,163,184,0.14)]"
+                className="rounded-[28px] border border-white/80 bg-white/85 px-4 py-4 shadow-[0_18px_40px_rgba(96,165,250,0.12)]"
               >
                 {group.exercises.length > 1 ? (
-                  <div className="mb-3 inline-flex items-center rounded-full border border-sky-200 bg-sky-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-sky-700">
+                  <div className="mb-3 inline-flex items-center rounded-full border border-fuchsia-200 bg-[linear-gradient(135deg,#fdf4ff,#fae8ff)] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-fuchsia-700">
                     Superset
                   </div>
                 ) : null}
                 <div className="space-y-4">
                   {group.exercises.map((exercise) => (
                     <div key={exercise.id} className="flex gap-4">
-                      <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#dbeafe,#eef4ff)] text-xs font-semibold text-sky-700">
+                      <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#dbeafe,#e0f2fe_55%,#f5d0fe)] text-xs font-semibold text-sky-700 shadow-sm">
                         {exercise.name
                           .split(" ")
                           .slice(0, 2)
@@ -192,7 +192,7 @@ export function WorkoutPreview({ workout, viewerLabel, authMode }: WorkoutPrevie
                             <p className="mt-1 text-sm text-slate-600">{exercise.subtitle}</p>
                           </div>
                           {exercise.blockRole ? (
-                            <span className="self-start rounded-2xl bg-sky-100 px-3 py-1 text-sm font-semibold text-sky-700">
+                            <span className="self-start rounded-2xl bg-[linear-gradient(135deg,#eff6ff,#ede9fe)] px-3 py-1 text-sm font-semibold text-violet-700">
                               {exercise.blockRole}
                             </span>
                           ) : null}
@@ -206,14 +206,14 @@ export function WorkoutPreview({ workout, viewerLabel, authMode }: WorkoutPrevie
           </div>
         </section>
 
-        <div className="border-t border-slate-200/70 bg-white/85 px-4 py-4">
+        <div className="border-t border-white/70 bg-white/80 px-4 py-4 backdrop-blur">
           <Link
             href={
               workout.activeSessionId
                 ? `/sessions/${workout.activeSessionId}`
                 : `/workouts/${workout.id}/start`
             }
-            className="flex w-full items-center justify-center gap-2 rounded-full bg-sky-600 px-5 py-4 text-base font-semibold text-white shadow-[0_18px_40px_rgba(14,116,255,0.35)] transition hover:bg-sky-500"
+            className="flex w-full items-center justify-center gap-2 rounded-full bg-[linear-gradient(135deg,#2563eb,#0ea5e9 55%,#8b5cf6)] px-5 py-4 text-base font-semibold text-white shadow-[0_18px_40px_rgba(59,130,246,0.35)] transition hover:-translate-y-0.5 hover:brightness-105"
             prefetch
           >
             <Play className="size-4" />

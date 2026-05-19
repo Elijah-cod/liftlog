@@ -109,9 +109,9 @@ export default async function HistoryPage({ searchParams }: HistoryPageProps) {
   return (
     <AppShell>
       <div className="flex h-full flex-col">
-        <section className="border-b border-slate-200/70 px-6 pb-6 pt-8">
+        <section className="border-b border-white/70 px-6 pb-6 pt-8">
           <div className="flex items-start justify-between gap-4">
-            <div className="inline-flex items-center gap-2 rounded-full border border-sky-200 bg-sky-50 px-3 py-1 text-sm font-semibold text-sky-700">
+            <div className="inline-flex items-center gap-2 rounded-full border border-sky-200 bg-[linear-gradient(135deg,#f0f9ff,#dbeafe)] px-3 py-1 text-sm font-semibold text-sky-700 shadow-sm">
               <History className="size-4" />
               Recent sessions
             </div>
@@ -128,7 +128,7 @@ export default async function HistoryPage({ searchParams }: HistoryPageProps) {
             </div>
             <Link
               href="/today"
-              className="rounded-full border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700"
+              className="rounded-full border border-sky-200 bg-[linear-gradient(135deg,#ffffff,#eff6ff)] px-4 py-3 text-sm font-semibold text-sky-700 shadow-sm transition hover:-translate-y-0.5 hover:bg-white"
             >
               Back to today
             </Link>
@@ -150,26 +150,26 @@ export default async function HistoryPage({ searchParams }: HistoryPageProps) {
             ) : null}
 
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
-              <div className="rounded-[28px] border border-slate-200 bg-white px-4 py-4 shadow-[0_16px_40px_rgba(148,163,184,0.12)]">
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+              <div className="rounded-[28px] border border-sky-100 bg-[linear-gradient(135deg,#eff6ff,#dbeafe)] px-4 py-4 shadow-sm">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-sky-700">
                   Sessions shown
                 </p>
                 <p className="mt-2 text-2xl font-semibold text-slate-950">{sessions.length}</p>
               </div>
-              <div className="rounded-[28px] border border-slate-200 bg-white px-4 py-4 shadow-[0_16px_40px_rgba(148,163,184,0.12)]">
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+              <div className="rounded-[28px] border border-emerald-100 bg-[linear-gradient(135deg,#ecfdf5,#d1fae5)] px-4 py-4 shadow-sm">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">
                   Completed
                 </p>
                 <p className="mt-2 text-2xl font-semibold text-slate-950">{completedCount}</p>
               </div>
-              <div className="rounded-[28px] border border-slate-200 bg-white px-4 py-4 shadow-[0_16px_40px_rgba(148,163,184,0.12)]">
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+              <div className="rounded-[28px] border border-amber-100 bg-[linear-gradient(135deg,#fff7ed,#fde68a33)] px-4 py-4 shadow-sm">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-amber-700">
                   Need review
                 </p>
                 <p className="mt-2 text-2xl font-semibold text-slate-950">{partialCount}</p>
               </div>
-              <div className="rounded-[28px] border border-slate-200 bg-white px-4 py-4 shadow-[0_16px_40px_rgba(148,163,184,0.12)]">
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+              <div className="rounded-[28px] border border-fuchsia-100 bg-[linear-gradient(135deg,#fdf4ff,#fae8ff)] px-4 py-4 shadow-sm">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-fuchsia-700">
                   Sets logged
                 </p>
                 <p className="mt-2 text-2xl font-semibold text-slate-950">{loggedSetCount}</p>

@@ -100,7 +100,7 @@ function SetRow({
   const previousPerformance = formatPreviousPerformance(exercise, index);
 
   return (
-    <div className="rounded-[24px] bg-slate-50/80 px-3 py-3">
+    <div className="rounded-[24px] border border-white/70 bg-[linear-gradient(135deg,#ffffff,#eff6ff)] px-3 py-3 shadow-sm">
       <div className="flex items-center justify-between gap-3 sm:hidden">
         <div className="text-sm font-semibold text-slate-700">{set.setLabel}</div>
         <div className="min-w-0 text-right text-sm text-slate-500">{previousPerformance}</div>
@@ -141,8 +141,8 @@ function SetRow({
             )}
           </div>
         </div>
-        <div className="flex items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-white px-3 py-2">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Done</p>
+        <div className="flex items-center justify-between gap-3 rounded-2xl border border-sky-100 bg-[linear-gradient(135deg,#ffffff,#eff6ff)] px-3 py-2">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-sky-700">Done</p>
           <div className="flex items-center gap-2">
             <button
               type="button"
@@ -150,8 +150,8 @@ function SetRow({
               className={cn(
                 "flex size-11 items-center justify-center rounded-full border transition",
                 set.completed
-                  ? "border-emerald-200 bg-emerald-100 text-emerald-700"
-                  : "border-slate-300 bg-white text-slate-400 hover:border-sky-300 hover:text-sky-600",
+                  ? "border-emerald-200 bg-[linear-gradient(135deg,#ecfdf5,#d1fae5)] text-emerald-700"
+                  : "border-sky-200 bg-white text-slate-400 hover:border-sky-300 hover:text-sky-600",
               )}
               aria-label={set.completed ? "Mark set incomplete" : "Mark set complete"}
             >
@@ -161,7 +161,7 @@ function SetRow({
               <button
                 type="button"
                 onClick={onRemoveSet}
-                className="flex size-9 items-center justify-center rounded-full bg-slate-50 text-slate-400 transition hover:text-rose-600"
+                className="flex size-9 items-center justify-center rounded-full bg-white text-slate-400 transition hover:text-rose-600"
                 aria-label="Remove extra set"
               >
                 <X className="size-4" />
@@ -199,8 +199,8 @@ function SetRow({
             className={cn(
               "flex size-11 items-center justify-center rounded-full border transition",
               set.completed
-                ? "border-emerald-200 bg-emerald-100 text-emerald-700"
-                : "border-slate-300 bg-white text-slate-400 hover:border-sky-300 hover:text-sky-600",
+                ? "border-emerald-200 bg-[linear-gradient(135deg,#ecfdf5,#d1fae5)] text-emerald-700"
+                : "border-sky-200 bg-white text-slate-400 hover:border-sky-300 hover:text-sky-600",
             )}
             aria-label={set.completed ? "Mark set incomplete" : "Mark set complete"}
           >
@@ -246,9 +246,9 @@ function ExercisePanel({
   const complete = exercise.sets.every((set) => set.completed);
 
   return (
-    <article className="rounded-[30px] border border-slate-200 bg-white px-4 py-4 shadow-[0_18px_40px_rgba(148,163,184,0.14)]">
+    <article className="rounded-[30px] border border-white/80 bg-white/85 px-4 py-4 shadow-[0_18px_40px_rgba(96,165,250,0.12)]">
       <div className="flex items-start gap-4">
-        <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#dbeafe,#eef4ff)] text-xs font-semibold text-sky-700">
+        <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#dbeafe,#e0f2fe_55%,#f5d0fe)] text-xs font-semibold text-sky-700 shadow-sm">
           {exercise.name
             .split(" ")
             .slice(0, 2)
@@ -264,14 +264,14 @@ function ExercisePanel({
             <button
               type="button"
               onClick={() => onExpandedChange(!expanded)}
-              className="flex size-10 items-center justify-center rounded-full bg-slate-100 text-slate-600"
+              className="flex size-10 items-center justify-center rounded-full bg-[linear-gradient(135deg,#eff6ff,#ede9fe)] text-violet-700 shadow-sm"
               aria-label={expanded ? "Collapse exercise" : "Expand exercise"}
             >
               {expanded ? <ChevronUp className="size-4" /> : <ChevronDown className="size-4" />}
             </button>
           </div>
           {complete ? (
-            <div className="mt-3 inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-sm font-semibold text-emerald-700">
+            <div className="mt-3 inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-[linear-gradient(135deg,#ecfdf5,#dcfce7)] px-3 py-1 text-sm font-semibold text-emerald-700 shadow-sm">
               <CheckCircle2 className="size-4" />
               Done
             </div>
@@ -287,7 +287,7 @@ function ExercisePanel({
               value={exercise.notes}
               onChange={(event) => onChangeNote(event.target.value)}
               placeholder="Add notes for this exercise"
-              className="mt-2 h-20 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 outline-none transition focus:border-sky-400 focus:ring-4 focus:ring-sky-100"
+              className="mt-2 h-20 w-full rounded-2xl border border-amber-100 bg-[linear-gradient(135deg,#fffdf4,#fff7ed)] px-4 py-3 text-sm text-slate-700 outline-none transition focus:border-sky-400 focus:ring-4 focus:ring-sky-100"
             />
           </div>
 
@@ -319,7 +319,7 @@ function ExercisePanel({
             <button
               type="button"
               onClick={onAddSet}
-              className="flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100"
+              className="flex items-center justify-center gap-2 rounded-2xl border border-fuchsia-100 bg-[linear-gradient(135deg,#fdf4ff,#fae8ff)] px-4 py-3 text-sm font-semibold text-fuchsia-700 transition hover:-translate-y-0.5 hover:brightness-105"
             >
               <Plus className="size-4" />
               Add Set
@@ -674,7 +674,7 @@ export function ActiveWorkoutClient({
   return (
     <AppShell>
       <div className="flex h-full flex-col">
-        <section className="border-b border-slate-200/80 px-5 pb-5 pt-8">
+        <section className="border-b border-white/70 px-5 pb-5 pt-8">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div>
               <p className="text-sm font-medium text-sky-600">{formatWorkoutDate(session.scheduledDate)}</p>
@@ -700,10 +700,10 @@ export function ActiveWorkoutClient({
                 }}
                 disabled={hasBlockingSyncIssue}
                 className={cn(
-                  "w-full rounded-full px-4 py-3 text-sm font-semibold text-white shadow-[0_16px_32px_rgba(14,116,255,0.35)] sm:w-auto",
+                  "w-full rounded-full bg-[linear-gradient(135deg,#2563eb,#0ea5e9 55%,#8b5cf6)] px-4 py-3 text-sm font-semibold text-white shadow-[0_16px_32px_rgba(59,130,246,0.35)] transition hover:-translate-y-0.5 hover:brightness-105 sm:w-auto",
                   hasBlockingSyncIssue
-                    ? "cursor-not-allowed bg-slate-300 shadow-none"
-                    : "bg-sky-600",
+                    ? "cursor-not-allowed bg-slate-300 shadow-none hover:translate-y-0 hover:brightness-100"
+                    : "",
                 )}
               >
                 Finish
@@ -724,16 +724,16 @@ export function ActiveWorkoutClient({
               </span>
               <span>{Math.round((session.progress.completedExercises / session.progress.totalExercises) * 100)}%</span>
             </div>
-            <div className="mt-2 h-2 overflow-hidden rounded-full bg-slate-200">
+            <div className="mt-2 h-2 overflow-hidden rounded-full bg-sky-100">
               <div
-                className="h-full rounded-full bg-sky-500 transition-all"
+                className="h-full rounded-full bg-[linear-gradient(90deg,#2563eb,#0ea5e9 55%,#8b5cf6)] transition-all"
                 style={{
                   width: `${(session.progress.completedExercises / session.progress.totalExercises) * 100}%`,
                 }}
               />
             </div>
           </div>
-          <div className="mt-4 flex flex-col gap-3 rounded-2xl bg-slate-50 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="mt-4 flex flex-col gap-3 rounded-2xl border border-sky-100 bg-[linear-gradient(135deg,#eff6ff,#ffffff)] px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Autosave</p>
               <p className="mt-1 text-sm font-medium text-slate-700">

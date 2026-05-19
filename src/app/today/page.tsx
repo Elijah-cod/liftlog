@@ -57,9 +57,9 @@ export default async function TodayPage() {
   return (
     <AppShell>
       <div className="flex h-full flex-col">
-        <section className="border-b border-slate-200/70 px-6 pb-6 pt-8">
+        <section className="border-b border-white/70 px-6 pb-6 pt-8">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-            <div className="inline-flex items-center gap-2 rounded-full border border-sky-200 bg-sky-50 px-3 py-1 text-sm font-semibold text-sky-700">
+            <div className="inline-flex items-center gap-2 rounded-full border border-sky-200/80 bg-[linear-gradient(135deg,#f0f9ff,#dbeafe)] px-3 py-1 text-sm font-semibold text-sky-700 shadow-sm">
               <Clock4 className="size-4" />
               Daily execution MVP
             </div>
@@ -86,7 +86,8 @@ export default async function TodayPage() {
         </section>
 
         <section className="flex-1 px-4 py-5">
-          <article className="rounded-[32px] border border-slate-200 bg-white p-5 shadow-[0_20px_48px_rgba(148,163,184,0.18)] sm:p-6">
+          <article className="overflow-hidden rounded-[32px] border border-white/80 bg-white/80 p-5 shadow-[0_24px_58px_rgba(96,165,250,0.16)] backdrop-blur sm:p-6">
+            <div className="absolute" />
             <p className="text-sm font-medium text-sky-600">{formatWorkoutDate(workout.scheduledDate)}</p>
             <div className="mt-3 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
               <div className="min-w-0">
@@ -95,21 +96,21 @@ export default async function TodayPage() {
                 </h2>
                 <p className="mt-1 text-sm text-slate-600">{workout.workoutLabel}</p>
               </div>
-              <div className="self-start rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-slate-600">
+              <div className="self-start rounded-full border border-fuchsia-200/80 bg-[linear-gradient(135deg,#fdf2f8,#fae8ff)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-fuchsia-700 shadow-sm">
                 {workout.status}
               </div>
             </div>
 
             <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
-              <div className="rounded-3xl bg-slate-50 px-4 py-4">
-                <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
+              <div className="rounded-3xl border border-sky-100 bg-[linear-gradient(135deg,#eff6ff,#dbeafe)] px-4 py-4 shadow-sm">
+                <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-sky-700">
                   <Dumbbell className="size-3.5" />
                   Exercises
                 </div>
                 <p className="mt-3 text-2xl font-semibold text-slate-950">{workout.totalExercises}</p>
               </div>
-              <div className="rounded-3xl bg-slate-50 px-4 py-4">
-                <div className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">State</div>
+              <div className="rounded-3xl border border-emerald-100 bg-[linear-gradient(135deg,#ecfdf5,#dcfce7)] px-4 py-4 shadow-sm">
+                <div className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">State</div>
                 <p className="mt-3 text-2xl font-semibold capitalize text-slate-950">{workout.status}</p>
               </div>
             </div>
@@ -120,7 +121,7 @@ export default async function TodayPage() {
                   ? `/sessions/${workout.activeSessionId}`
                   : `/workouts/${workout.scheduledWorkoutId}`
               }
-              className="mt-6 flex w-full items-center justify-center gap-2 rounded-full bg-sky-600 px-5 py-4 text-base font-semibold text-white shadow-[0_18px_40px_rgba(14,116,255,0.35)] transition hover:bg-sky-500"
+              className="mt-6 flex w-full items-center justify-center gap-2 rounded-full bg-[linear-gradient(135deg,#2563eb,#0ea5e9 55%,#8b5cf6)] px-5 py-4 text-base font-semibold text-white shadow-[0_18px_40px_rgba(59,130,246,0.35)] transition hover:-translate-y-0.5 hover:brightness-105"
             >
               {workout.activeSessionId ? "Resume Workout" : "Open Workout"}
               <ChevronRight className="size-4" />
