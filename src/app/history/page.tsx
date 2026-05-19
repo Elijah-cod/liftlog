@@ -138,13 +138,13 @@ export default async function HistoryPage({ searchParams }: HistoryPageProps) {
         <section className="flex-1 overflow-y-auto px-4 py-5">
           <div className="space-y-4">
             {scheduled ? (
-              <div className="rounded-3xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-900">
+              <div className="feedback-success rounded-3xl px-4 py-3 text-sm">
                 {scheduledWorkoutName} was scheduled for {scheduledSlot}.
               </div>
             ) : null}
 
             {actionError ? (
-              <div className="rounded-3xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-900">
+              <div className="feedback-error rounded-3xl px-4 py-3 text-sm">
                 {actionError}
               </div>
             ) : null}
@@ -184,9 +184,9 @@ export default async function HistoryPage({ searchParams }: HistoryPageProps) {
 
             <form
               action="/history"
-              className="rounded-[28px] border border-slate-200 bg-white p-4 shadow-[0_16px_40px_rgba(148,163,184,0.12)]"
+              className="surface-panel rounded-[28px] p-4"
             >
-              <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
+              <div className="soft-field flex items-center gap-3 rounded-2xl px-4 py-3">
                 <Search className="size-4 text-slate-500" />
                 <input
                   type="search"
@@ -228,10 +228,7 @@ export default async function HistoryPage({ searchParams }: HistoryPageProps) {
             {sessions.length > 0 ? (
               <div className="space-y-3">
                 {sessions.map((session) => (
-                  <article
-                    key={session.id}
-                    className="rounded-[28px] border border-slate-200 bg-white p-5 shadow-[0_16px_40px_rgba(148,163,184,0.12)]"
-                  >
+                  <article key={session.id} className="surface-panel rounded-[28px] p-5">
                     <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                       <div>
                         <p className="text-sm font-medium text-sky-600">
@@ -299,7 +296,7 @@ export default async function HistoryPage({ searchParams }: HistoryPageProps) {
                       </p>
                       <Link
                         href={getSessionHref(session)}
-                        className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-slate-950 px-4 py-3 text-sm font-semibold text-white sm:w-auto"
+                        className="action-button interactive-lift inline-flex w-full items-center justify-center gap-2 rounded-full px-4 py-3 text-sm font-semibold text-white sm:w-auto"
                       >
                         {session.status === "active" || session.status === "draft"
                           ? "Resume session"
@@ -328,7 +325,7 @@ export default async function HistoryPage({ searchParams }: HistoryPageProps) {
                 ))}
               </div>
             ) : (
-              <div className="rounded-[28px] border border-dashed border-slate-300 bg-white/70 px-6 py-10 text-center">
+              <div className="surface-panel-muted rounded-[28px] border-dashed px-6 py-10 text-center">
                 <div className="mx-auto flex size-14 items-center justify-center rounded-full bg-slate-100 text-slate-500">
                   <History className="size-6" />
                 </div>
@@ -339,13 +336,13 @@ export default async function HistoryPage({ searchParams }: HistoryPageProps) {
                 <div className="mt-5 flex items-center justify-center gap-3">
                   <Link
                     href="/today"
-                    className="rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white"
+                    className="action-button interactive-lift rounded-full px-5 py-3 text-sm font-semibold text-white"
                   >
                     Go to today
                   </Link>
                   <Link
                     href="/history"
-                    className="rounded-full border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-700"
+                    className="secondary-button interactive-lift rounded-full px-5 py-3 text-sm font-semibold text-slate-700"
                   >
                     Reset filters
                   </Link>

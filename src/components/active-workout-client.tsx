@@ -9,10 +9,12 @@ import {
 } from "react";
 import { useRouter } from "next/navigation";
 import {
+  ArrowUpRight,
   CheckCircle2,
   ChevronDown,
   ChevronUp,
   LoaderCircle,
+  NotebookPen,
   Plus,
   RefreshCw,
   Save,
@@ -112,7 +114,7 @@ function NumberInput({
         const nextValue = event.target.value.trim();
         onChange(nextValue === "" ? null : Number(nextValue));
       }}
-      className="h-12 w-full rounded-2xl border border-slate-200 bg-white px-3 text-center text-base font-semibold text-slate-950 outline-none transition focus:border-sky-400 focus:ring-4 focus:ring-sky-100 disabled:cursor-not-allowed disabled:bg-slate-100"
+      className="soft-field h-12 w-full rounded-[18px] px-3 text-center text-base font-semibold text-slate-950 outline-none transition focus:border-sky-400 focus:ring-4 focus:ring-sky-100 disabled:cursor-not-allowed disabled:bg-slate-100"
     />
   );
 }
@@ -171,7 +173,7 @@ function SetRow({
                 placeholder={unitPreference}
               />
             ) : (
-              <div className="h-12 rounded-2xl border border-dashed border-slate-200 bg-white/70" />
+              <div className="h-12 rounded-[18px] border border-dashed border-slate-200 bg-white/70" />
             )}
           </div>
           <div>
@@ -193,7 +195,7 @@ function SetRow({
             )}
           </div>
         </div>
-        <div className="flex items-center justify-between gap-3 rounded-2xl border border-white/70 bg-white/70 px-3 py-2">
+        <div className="flex items-center justify-between gap-3 rounded-2xl border border-white/70 bg-white/75 px-3 py-2">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-600">
             {set.completed ? "Completed" : set.isExtraSet ? "Extra set" : "Ready to log"}
           </p>
@@ -242,7 +244,7 @@ function SetRow({
           {exercise.loadType === "weighted" ? (
             <NumberInput value={set.weight} onChange={(weight) => onChangeSet({ weight })} placeholder={unitPreference} />
           ) : (
-            <div className="h-12 rounded-2xl border border-dashed border-slate-200 bg-white/70" />
+            <div className="h-12 rounded-[18px] border border-dashed border-slate-200 bg-white/70" />
           )}
         </div>
         <div>
@@ -312,7 +314,7 @@ function ExercisePanel({
   const extraSetCount = exercise.sets.filter((set) => set.isExtraSet).length;
 
   return (
-    <article className="rounded-[30px] border border-white/80 bg-white/85 px-4 py-4 shadow-[0_18px_40px_rgba(96,165,250,0.12)]">
+    <article className="surface-panel rounded-[30px] px-4 py-4">
       <div className="flex items-start gap-4">
         <ExerciseMediaTile
           name={exercise.name}
@@ -339,7 +341,7 @@ function ExercisePanel({
             <button
               type="button"
               onClick={() => onExpandedChange(!expanded)}
-              className="flex size-10 items-center justify-center rounded-full bg-[linear-gradient(135deg,#eff6ff,#ede9fe)] text-violet-700 shadow-sm"
+              className="quiet-button interactive-lift flex size-10 items-center justify-center rounded-full text-violet-700 shadow-sm"
               aria-label={expanded ? "Collapse exercise" : "Expand exercise"}
             >
               {expanded ? <ChevronUp className="size-4" /> : <ChevronDown className="size-4" />}
@@ -357,12 +359,27 @@ function ExercisePanel({
       {expanded ? (
         <>
           <div className="mt-4">
-            <label className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Notes</label>
+            <div className="flex items-start gap-3 rounded-[22px] border border-violet-100 bg-[linear-gradient(135deg,#f5f3ff,#eef2ff)] px-3 py-3">
+              <div className="mt-0.5 flex size-8 items-center justify-center rounded-full bg-white text-violet-700 shadow-sm">
+                <NotebookPen className="size-3.5" />
+              </div>
+              <div>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-violet-700">
+                  Accessory change
+                </p>
+                <p className="mt-1 text-sm leading-6 text-slate-600">
+                  If you swap an exercise because equipment is busy, note the substitute here so the session still reads clearly later.
+                </p>
+              </div>
+            </div>
+            <label className="mt-4 block text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
+              Notes
+            </label>
             <textarea
               value={exercise.notes}
               onChange={(event) => onChangeNote(event.target.value)}
               placeholder="Add notes for this exercise"
-              className="mt-2 h-20 w-full rounded-2xl border border-amber-100 bg-[linear-gradient(135deg,#fffdf4,#fff7ed)] px-4 py-3 text-sm text-slate-700 outline-none transition focus:border-sky-400 focus:ring-4 focus:ring-sky-100"
+              className="mt-2 h-20 w-full rounded-[18px] border border-amber-100 bg-[linear-gradient(135deg,#fffdf4,#fff7ed)] px-4 py-3 text-sm text-slate-700 outline-none transition focus:border-sky-400 focus:ring-4 focus:ring-sky-100"
             />
           </div>
 
@@ -394,7 +411,7 @@ function ExercisePanel({
             <button
               type="button"
               onClick={onAddSet}
-              className="flex items-center justify-center gap-2 rounded-2xl border border-fuchsia-100 bg-[linear-gradient(135deg,#fdf4ff,#fae8ff)] px-4 py-3 text-sm font-semibold text-fuchsia-700 transition hover:-translate-y-0.5 hover:brightness-105"
+              className="interactive-lift flex items-center justify-center gap-2 rounded-[20px] border border-fuchsia-100 bg-[linear-gradient(135deg,#fdf4ff,#fae8ff)] px-4 py-3 text-sm font-semibold text-fuchsia-700"
             >
               <Plus className="size-4" />
               Add Set
@@ -654,6 +671,10 @@ export function ActiveWorkoutClient({
   const incompleteWork = session.progress.completedExercises !== session.progress.totalExercises;
   const hasPendingSyncWork = queuedRequestCount + inFlightRequestCount > 0;
   const hasBlockingSyncIssue = hasPendingSyncWork || failedRequestCount > 0;
+  const progressPercent =
+    session.progress.totalExercises > 0
+      ? Math.round((session.progress.completedExercises / session.progress.totalExercises) * 100)
+      : 0;
 
   const handleSetChange = (
     sessionExerciseId: string,
@@ -751,11 +772,18 @@ export function ActiveWorkoutClient({
       <div className="flex h-full flex-col">
         <section className="border-b border-white/70 px-5 pb-5 pt-8">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-            <div>
-              <p className="text-sm font-medium text-sky-600">{formatWorkoutDate(session.scheduledDate)}</p>
-              <h1 className="mt-2 font-display text-3xl font-semibold tracking-tight text-slate-950">
+            <div className="min-w-0">
+              <div className="eyebrow-chip">
+                <Save className="size-3.5" />
+                Active session
+              </div>
+              <p className="mt-4 text-sm font-medium text-sky-700">{formatWorkoutDate(session.scheduledDate)}</p>
+              <h1 className="mt-2 font-display text-3xl font-semibold tracking-tight text-slate-950 text-balance">
                 {session.workoutName}
               </h1>
+              <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600 text-pretty">
+                Keep the current set close, keep the log trustworthy, and leave yourself a readable record if the session changes on the fly.
+              </p>
             </div>
             <div className="flex flex-col gap-2 sm:items-end">
               <AuthChip label={viewerLabel} mode={authMode} showSignOut={authMode === "live"} />
@@ -775,7 +803,7 @@ export function ActiveWorkoutClient({
                 }}
                 disabled={hasBlockingSyncIssue}
                 className={cn(
-                  "w-full rounded-full bg-[linear-gradient(135deg,#2563eb,#0ea5e9 55%,#8b5cf6)] px-4 py-3 text-sm font-semibold text-white shadow-[0_16px_32px_rgba(59,130,246,0.35)] transition hover:-translate-y-0.5 hover:brightness-105 sm:w-auto",
+                  "action-button interactive-lift w-full rounded-full px-4 py-3 text-sm font-semibold text-white sm:w-auto",
                   hasBlockingSyncIssue
                     ? "cursor-not-allowed bg-slate-300 shadow-none hover:translate-y-0 hover:brightness-100"
                     : "",
@@ -792,23 +820,39 @@ export function ActiveWorkoutClient({
               ) : null}
             </div>
           </div>
-          <div className="mt-5">
+          <div className="surface-panel mt-5 rounded-[28px] px-4 py-4">
             <div className="flex items-center justify-between text-sm font-medium text-slate-600">
               <span>
                 {session.progress.completedExercises}/{session.progress.totalExercises} completed
               </span>
-              <span>{Math.round((session.progress.completedExercises / session.progress.totalExercises) * 100)}%</span>
+              <span>{progressPercent}%</span>
             </div>
-            <div className="mt-2 h-2 overflow-hidden rounded-full bg-sky-100">
+            <div className="mt-3 h-2 overflow-hidden rounded-full bg-sky-100">
               <div
                 className="h-full rounded-full bg-[linear-gradient(90deg,#2563eb,#0ea5e9 55%,#8b5cf6)] transition-all"
                 style={{
-                  width: `${(session.progress.completedExercises / session.progress.totalExercises) * 100}%`,
+                  width: `${progressPercent}%`,
                 }}
               />
             </div>
+            <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
+              <div className="metric-panel rounded-[20px] border border-sky-100 bg-[linear-gradient(135deg,#eff6ff,#dbeafe)] px-3 py-3">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-sky-700">Exercises</p>
+                <p className="mt-2 text-lg font-semibold text-slate-950">{session.progress.totalExercises}</p>
+              </div>
+              <div className="metric-panel rounded-[20px] border border-emerald-100 bg-[linear-gradient(135deg,#ecfdf5,#dcfce7)] px-3 py-3">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-emerald-700">Finished</p>
+                <p className="mt-2 text-lg font-semibold text-slate-950">{session.progress.completedExercises}</p>
+              </div>
+              <div className="metric-panel rounded-[20px] border border-violet-100 bg-[linear-gradient(135deg,#f5f3ff,#eef2ff)] px-3 py-3">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-violet-700">Rest cue</p>
+                <p className="mt-2 text-lg font-semibold text-slate-950">
+                  {secondsToClock(session.exercises[0]?.restSeconds ?? 0)}
+                </p>
+              </div>
+            </div>
           </div>
-          <div className="mt-4 flex flex-col gap-3 rounded-2xl border border-sky-100 bg-[linear-gradient(135deg,#eff6ff,#ffffff)] px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="surface-panel mt-4 flex flex-col gap-3 rounded-[24px] px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Autosave</p>
               <p className="mt-1 text-sm font-medium text-slate-700">
@@ -831,7 +875,7 @@ export function ActiveWorkoutClient({
                 <button
                   type="button"
                   onClick={() => void retryFailedRequests()}
-                  className="inline-flex items-center justify-center gap-2 rounded-full border border-rose-200 bg-white px-3 py-2 text-xs font-semibold text-rose-700 transition hover:bg-rose-50"
+                  className="interactive-lift inline-flex items-center justify-center gap-2 rounded-full border border-rose-200 bg-white px-3 py-2 text-xs font-semibold text-rose-700"
                 >
                   <RefreshCw className="size-3.5" />
                   Retry
@@ -855,7 +899,7 @@ export function ActiveWorkoutClient({
           {draftRecoveryState ? (
             <div
               className={cn(
-                "mt-3 rounded-2xl border px-4 py-3",
+                "mt-3 rounded-[24px] border px-4 py-3",
                 draftRecoveryState.localNewerThanServer
                   ? "border-amber-200 bg-amber-50"
                   : "border-sky-200 bg-sky-50",
@@ -878,7 +922,7 @@ export function ActiveWorkoutClient({
                 <button
                   type="button"
                   onClick={() => void refreshFromServerAndDiscardLocalDraft()}
-                  className="rounded-full border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition hover:bg-slate-50 sm:shrink-0"
+                  className="secondary-button interactive-lift rounded-full px-3 py-2 text-xs font-semibold text-slate-700 sm:shrink-0"
                 >
                   Refresh From Server
                 </button>
@@ -923,9 +967,17 @@ export function ActiveWorkoutClient({
           </div>
         </section>
 
-        <div className="border-t border-slate-200/70 bg-white/85 px-4 py-4 text-xs text-slate-500">
-          Rest timers reset per exercise. Draft recovery is active. Current rest reference:{" "}
-          {secondsToClock(session.exercises[0]?.restSeconds ?? 0)}
+        <div className="sticky bottom-0 border-t border-slate-200/70 bg-white/85 px-4 py-4 backdrop-blur">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-xs leading-5 text-slate-500">
+              Rest timers reset per exercise. Draft recovery is active. Current rest reference:{" "}
+              {secondsToClock(session.exercises[0]?.restSeconds ?? 0)}
+            </p>
+            <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700">
+              <ArrowUpRight className="size-3.5 text-slate-400" />
+              Finish when sync is clear
+            </div>
+          </div>
         </div>
       </div>
 
@@ -940,7 +992,7 @@ export function ActiveWorkoutClient({
               <button
                 type="button"
                 onClick={() => setFinishConfirmOpen(false)}
-                className="rounded-full border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-700"
+                className="secondary-button interactive-lift rounded-full px-4 py-3 text-sm font-semibold text-slate-700"
               >
                 Keep Logging
               </button>
@@ -950,7 +1002,7 @@ export function ActiveWorkoutClient({
                   setFinishConfirmOpen(false);
                   void finishWorkout();
                 }}
-                className="rounded-full bg-slate-950 px-4 py-3 text-sm font-semibold text-white"
+                className="action-button interactive-lift rounded-full px-4 py-3 text-sm font-semibold text-white"
               >
                 Save Partial
               </button>

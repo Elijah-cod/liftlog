@@ -148,14 +148,14 @@ export default async function SetupPage({ searchParams }: SetupPageProps) {
                   <div className="mt-3 flex flex-wrap gap-3">
                     <Link
                       href={runtime.isAuthenticated ? "/today" : "/login?next=/today"}
-                      className="rounded-full bg-[linear-gradient(135deg,oklch(0.57_0.21_257),oklch(0.62_0.22_302))] px-4 py-3 text-sm font-semibold text-white shadow-[0_18px_40px_rgba(79,70,229,0.22)]"
+                      className="action-button interactive-lift rounded-full px-4 py-3 text-sm font-semibold text-white"
                     >
                       {runtime.isAuthenticated ? "Open today’s workout" : "Sign in to continue"}
                     </Link>
                     {!runtime.isAuthenticated ? (
                       <Link
                         href="/today"
-                        className="rounded-full border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700"
+                        className="secondary-button interactive-lift rounded-full px-4 py-3 text-sm font-semibold text-slate-700"
                       >
                         Stay in demo mode
                       </Link>
@@ -199,7 +199,7 @@ export default async function SetupPage({ searchParams }: SetupPageProps) {
                 {seeded ? (
                   <div className="mt-4">
                     <SetupBanner variant="success">
-                      Your starter athlete data is ready. Open today&apos;s page to confirm the workout lineup.
+                      Your starter athlete data is ready. Open today's page to confirm the workout lineup.
                     </SetupBanner>
                   </div>
                 ) : null}
@@ -214,7 +214,7 @@ export default async function SetupPage({ searchParams }: SetupPageProps) {
                   <form action={seedLiveDemoData} className="mt-5">
                     <button
                       type="submit"
-                      className="rounded-full bg-[linear-gradient(135deg,oklch(0.57_0.21_257),oklch(0.62_0.22_302))] px-5 py-3 text-sm font-semibold text-white shadow-[0_18px_40px_rgba(79,70,229,0.22)]"
+                      className="action-button interactive-lift rounded-full px-5 py-3 text-sm font-semibold text-white"
                     >
                       Load starter data into my live account
                     </button>
@@ -377,7 +377,7 @@ export default async function SetupPage({ searchParams }: SetupPageProps) {
                 <div className="rounded-3xl border border-slate-200 bg-slate-50 px-4 py-4">
                   <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Step 2</p>
                   <p className="mt-2 text-sm text-slate-700">
-                    Open today&apos;s page, move into the workout preview, and confirm the recent-session context looks right before you start.
+                    Open today's page, move into the workout preview, and confirm the recent-session context looks right before you start.
                   </p>
                   <div className="mt-3 flex flex-wrap gap-3">
                     <Link

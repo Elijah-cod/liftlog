@@ -1,0 +1,277 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-05-19T11:10:00Z",
+  "title": "Design System: LiftLog",
+  "extensions": {
+    "colorMeta": {
+      "action-blue": {
+        "role": "primary",
+        "displayName": "Action Blue",
+        "canonical": "#2563eb",
+        "tonalRamp": ["#11204b", "#16306e", "#1b4295", "#2563eb", "#4f82f0", "#7fa7f5", "#bbd3fb", "#edf4ff"]
+      },
+      "action-cyan": {
+        "role": "secondary",
+        "displayName": "Action Cyan",
+        "canonical": "#0ea5e9",
+        "tonalRamp": ["#082c38", "#0b4556", "#0d6276", "#0ea5e9", "#45bff0", "#7ad4f5", "#bbeafb", "#eefbff"]
+      },
+      "accent-violet": {
+        "role": "tertiary",
+        "displayName": "Accent Violet",
+        "canonical": "#8b5cf6",
+        "tonalRamp": ["#24133e", "#3a1e63", "#532b8e", "#8b5cf6", "#a987f8", "#c6b0fb", "#e7defe", "#f7f2ff"]
+      },
+      "success-emerald": {
+        "role": "support",
+        "displayName": "Progress Emerald",
+        "canonical": "#10b981",
+        "tonalRamp": ["#062a20", "#0b4533", "#0f6a4d", "#10b981", "#36d49c", "#70e5bc", "#b7f5dc", "#ecfdf5"]
+      },
+      "rest-amber": {
+        "role": "support",
+        "displayName": "Rest Amber",
+        "canonical": "#f59e0b",
+        "tonalRamp": ["#3c2208", "#65380c", "#93520d", "#f59e0b", "#f7b846", "#fad184", "#fde8bc", "#fffbeb"]
+      },
+      "surface-page": {
+        "role": "neutral",
+        "displayName": "Page Mist",
+        "canonical": "#f6f8ff",
+        "tonalRamp": ["#0b1330", "#1a2952", "#33436c", "#55607a", "#8993a7", "#bcc5d5", "#e5eaf5", "#f6f8ff"]
+      },
+      "surface-card": {
+        "role": "neutral",
+        "displayName": "Card White",
+        "canonical": "#ffffff",
+        "tonalRamp": ["#111827", "#243041", "#425266", "#69788c", "#9aa6b5", "#c6cfda", "#e9eef5", "#ffffff"]
+      },
+      "surface-tint": {
+        "role": "neutral",
+        "displayName": "Tint Wash",
+        "canonical": "#eff6ff",
+        "tonalRamp": ["#0e1e36", "#183256", "#274a7d", "#4d73aa", "#7fa4d2", "#b0cbed", "#dceafc", "#eff6ff"]
+      },
+      "text-strong": {
+        "role": "neutral",
+        "displayName": "Ink Slate",
+        "canonical": "#0b1330",
+        "tonalRamp": ["#0b1330", "#16204a", "#233064", "#34447d", "#55607a", "#8691a6", "#c0c8d8", "#edf1f8"]
+      },
+      "text-muted": {
+        "role": "neutral",
+        "displayName": "Breathing Slate",
+        "canonical": "#55607a",
+        "tonalRamp": ["#171d29", "#263043", "#36435e", "#55607a", "#7b879b", "#aab3c2", "#d7dde7", "#f2f5f9"]
+      },
+      "border-soft": {
+        "role": "neutral",
+        "displayName": "Soft Border",
+        "canonical": "#e2e8f0",
+        "tonalRamp": ["#1d2635", "#2f3d50", "#47596f", "#6c7b90", "#97a5b8", "#c4cfdb", "#e2e8f0", "#f8fbfe"]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Page titles and main workout names."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Card titles and major secondary headings."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Module headers inside denser cards."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Working copy, instructions, and summaries."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Metadata chips, filters, and compact status text."
+      }
+    },
+    "shadows": [
+      {
+        "name": "shell-glow",
+        "value": "0 24px 70px rgba(15, 23, 42, 0.12), 0 0 0 1px rgba(255, 255, 255, 0.35), 0 0 40px rgba(96, 165, 250, 0.1)",
+        "purpose": "Outer app frame and hero shell."
+      },
+      {
+        "name": "card-lift",
+        "value": "0 16px 40px rgba(148, 163, 184, 0.12)",
+        "purpose": "Default card elevation."
+      },
+      {
+        "name": "action-lift",
+        "value": "0 18px 40px rgba(59, 130, 246, 0.35)",
+        "purpose": "Primary call-to-action emphasis."
+      },
+      {
+        "name": "badge-lift",
+        "value": "0 10px 24px rgba(15, 23, 42, 0.18)",
+        "purpose": "Floating icon badges and compact circular controls."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-hover",
+        "value": "cubic-bezier(0.22, 1, 0.36, 1)",
+        "purpose": "Default easing for hover lift and brightness transitions."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "xl",
+        "value": "1280px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The single most important action in a panel, used for opening or resuming a workout.",
+      "html": "<button class=\"ds-btn-primary\">Open Workout</button>",
+      "css": ".ds-btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:56px;padding:16px 20px;border:none;border-radius:9999px;background:linear-gradient(135deg,#2563eb,#0ea5e9 55%,#8b5cf6);color:#ffffff;font-family:\"Avenir Next\",\"Segoe UI\",\"Helvetica Neue\",sans-serif;font-size:16px;font-weight:600;line-height:1;box-shadow:0 18px 40px rgba(59,130,246,0.35);transition:transform 180ms cubic-bezier(0.22,1,0.36,1),filter 180ms cubic-bezier(0.22,1,0.36,1),box-shadow 180ms cubic-bezier(0.22,1,0.36,1);cursor:pointer}.ds-btn-primary:hover{transform:translateY(-2px);filter:brightness(1.03)}.ds-btn-primary:focus-visible{outline:2px solid #6ee7f9;outline-offset:3px}.ds-btn-primary:active{transform:translateY(0);filter:brightness(0.98)}"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "A supportive secondary action for back-navigation, setup, and lower-pressure tasks.",
+      "html": "<button class=\"ds-btn-secondary\">Back to Today</button>",
+      "css": ".ds-btn-secondary{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:12px 16px;border:1px solid #e2e8f0;border-radius:9999px;background:linear-gradient(135deg,#ffffff,#eff6ff);color:#2563eb;font-family:\"Avenir Next\",\"Segoe UI\",\"Helvetica Neue\",sans-serif;font-size:14px;font-weight:600;line-height:1;box-shadow:0 1px 2px rgba(15,23,42,0.08);transition:transform 180ms cubic-bezier(0.22,1,0.36,1),background 180ms cubic-bezier(0.22,1,0.36,1),border-color 180ms cubic-bezier(0.22,1,0.36,1);cursor:pointer}.ds-btn-secondary:hover{transform:translateY(-2px);background:#ffffff;border-color:#cbd5e1}.ds-btn-secondary:focus-visible{outline:2px solid #6ee7f9;outline-offset:3px}.ds-btn-secondary:active{transform:translateY(0)}"
+    },
+    {
+      "name": "Status Chip",
+      "kind": "chip",
+      "refersTo": "chip-status",
+      "description": "Compact metadata chip for workout state, auth mode, and progress cues.",
+      "html": "<span class=\"ds-chip-status\">READY</span>",
+      "css": ".ds-chip-status{display:inline-flex;align-items:center;justify-content:center;padding:4px 12px;border:1px solid #bfdbfe;border-radius:9999px;background:linear-gradient(135deg,#f0f9ff,#dbeafe);color:#2563eb;font-family:\"Avenir Next\",\"Segoe UI\",\"Helvetica Neue\",sans-serif;font-size:12px;font-weight:600;line-height:1.2;letter-spacing:0.18em;text-transform:uppercase;box-shadow:0 1px 2px rgba(15,23,42,0.06)}"
+    },
+    {
+      "name": "Search Input",
+      "kind": "input",
+      "refersTo": "input-search",
+      "description": "The lightweight search field used on history and utility screens.",
+      "html": "<label class=\"ds-input-search\"><svg class=\"ds-input-icon\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><circle cx=\"11\" cy=\"11\" r=\"7\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\"></circle><path d=\"M20 20L16.65 16.65\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\"></path></svg><input type=\"search\" placeholder=\"Search by workout name\" /></label>",
+      "css": ".ds-input-search{display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid #e2e8f0;border-radius:16px;background:#f8fafc;color:#0b1330;box-shadow:0 1px 2px rgba(15,23,42,0.04)}.ds-input-search:focus-within{outline:2px solid #6ee7f9;outline-offset:3px;background:#ffffff}.ds-input-icon{width:16px;height:16px;color:#64748b;flex:none}.ds-input-search input{width:100%;border:none;background:transparent;color:#0b1330;font-family:\"Avenir Next\",\"Segoe UI\",\"Helvetica Neue\",sans-serif;font-size:14px;line-height:1.5;outline:none}.ds-input-search input::placeholder{color:#94a3b8}"
+    },
+    {
+      "name": "Elevated Card",
+      "kind": "card",
+      "refersTo": "card-elevated",
+      "description": "The default container for summaries, history rows, and workout preview blocks.",
+      "html": "<article class=\"ds-card\"><p class=\"ds-card-kicker\">Today</p><h3 class=\"ds-card-title\">Upper Body Session</h3><p class=\"ds-card-body\">Start the day with a clear plan and keep every set easy to log.</p></article>",
+      "css": ".ds-card{padding:20px;border:1px solid rgba(255,255,255,0.8);border-radius:28px;background:rgba(255,255,255,0.85);box-shadow:0 16px 40px rgba(148,163,184,0.12);backdrop-filter:blur(12px);color:#0b1330}.ds-card-kicker{margin:0;font-family:\"Avenir Next\",\"Segoe UI\",\"Helvetica Neue\",sans-serif;font-size:14px;font-weight:500;line-height:1.5;color:#2563eb}.ds-card-title{margin:12px 0 0;font-family:\"Avenir Next Condensed\",\"Trebuchet MS\",\"Avenir Next\",sans-serif;font-size:30px;font-weight:600;line-height:1.1;letter-spacing:-0.025em}.ds-card-body{margin:8px 0 0;font-family:\"Avenir Next\",\"Segoe UI\",\"Helvetica Neue\",sans-serif;font-size:14px;line-height:1.5;color:#55607a}"
+    },
+    {
+      "name": "Filter Pill",
+      "kind": "nav",
+      "refersTo": "chip-status",
+      "description": "The in-page filter control used on history and archive screens.",
+      "html": "<nav class=\"ds-filter-row\"><a class=\"ds-filter-pill is-active\" href=\"#\">Completed</a><a class=\"ds-filter-pill\" href=\"#\">Partial</a></nav>",
+      "css": ".ds-filter-row{display:flex;flex-wrap:wrap;gap:8px}.ds-filter-pill{display:inline-flex;align-items:center;justify-content:center;padding:8px 16px;border:1px solid #e2e8f0;border-radius:9999px;background:#ffffff;color:#55607a;font-family:\"Avenir Next\",\"Segoe UI\",\"Helvetica Neue\",sans-serif;font-size:14px;font-weight:600;line-height:1;text-decoration:none;transition:border-color 180ms cubic-bezier(0.22,1,0.36,1),color 180ms cubic-bezier(0.22,1,0.36,1),transform 180ms cubic-bezier(0.22,1,0.36,1)}.ds-filter-pill:hover{border-color:#cbd5e1;color:#0b1330;transform:translateY(-1px)}.ds-filter-pill:focus-visible{outline:2px solid #6ee7f9;outline-offset:3px}.ds-filter-pill.is-active{background:#0b1330;border-color:#0b1330;color:#ffffff}"
+    },
+    {
+      "name": "Exercise Media Tile",
+      "kind": "custom",
+      "refersTo": "card-elevated",
+      "description": "The signature exercise tile that gives quick identity without tipping into gamification.",
+      "html": "<div class=\"ds-exercise-tile\"><span class=\"ds-exercise-chip\">Push</span><p class=\"ds-exercise-name\">Incline Press</p><span class=\"ds-exercise-badge\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M4 10h3l2-2h6l2 2h3v4h-3l-2 2H9l-2-2H4z\" fill=\"currentColor\"></path></svg></span></div>",
+      "css": ".ds-exercise-tile{position:relative;overflow:hidden;min-height:96px;padding:8px;border:1px solid rgba(191,219,254,0.8);border-radius:22px;background:linear-gradient(135deg,#eff6ff,#dbeafe 55%,#f5d0fe);box-shadow:0 1px 2px rgba(15,23,42,0.06)}.ds-exercise-tile::before{content:\"\";position:absolute;left:-12px;top:10px;width:40px;height:40px;border-radius:9999px;background:rgba(125,211,252,0.55);filter:blur(20px)}.ds-exercise-tile::after{content:\"\";position:absolute;right:-8px;bottom:10px;width:48px;height:48px;border-radius:9999px;background:rgba(244,114,182,0.4);filter:blur(22px)}.ds-exercise-chip{position:relative;display:inline-flex;padding:4px 8px;border:1px solid #bfdbfe;border-radius:9999px;background:rgba(255,255,255,0.8);color:#2563eb;font-family:\"Avenir Next\",\"Segoe UI\",\"Helvetica Neue\",sans-serif;font-size:10px;font-weight:600;line-height:1.2;letter-spacing:0.18em;text-transform:uppercase;box-shadow:0 1px 2px rgba(15,23,42,0.06)}.ds-exercise-name{position:relative;margin:28px 28px 0 0;color:#082f49;font-family:\"Avenir Next\",\"Segoe UI\",\"Helvetica Neue\",sans-serif;font-size:12px;font-weight:600;line-height:1.35}.ds-exercise-badge{position:absolute;right:10px;bottom:10px;display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:9999px;background:linear-gradient(135deg,#2563eb,#0ea5e9);color:#ffffff;box-shadow:0 10px 24px rgba(15,23,42,0.18)}.ds-exercise-badge svg{width:14px;height:14px}"
+    },
+    {
+      "name": "App Shell",
+      "kind": "custom",
+      "refersTo": "card-elevated",
+      "description": "The outer frame that makes the app feel protected, soft, and mobile-close.",
+      "html": "<div class=\"ds-app-shell\"><div class=\"ds-app-shell-inner\"><div class=\"ds-app-shell-demo\">Today's workout</div></div></div>",
+      "css": ".ds-app-shell{padding:10px;border:1px solid rgba(255,255,255,0.8);border-radius:32px;background:rgba(255,255,255,0.7);backdrop-filter:blur(20px);box-shadow:0 24px 70px rgba(15,23,42,0.12),0 0 0 1px rgba(255,255,255,0.35),0 0 40px rgba(96,165,250,0.1)}.ds-app-shell-inner{overflow:hidden;border-radius:28px;background:radial-gradient(circle at 18% 18%, rgba(56,189,248,0.18), transparent 28%),radial-gradient(circle at 82% 20%, rgba(244,114,182,0.16), transparent 24%),radial-gradient(circle at 50% 100%, rgba(34,197,94,0.12), transparent 28%),linear-gradient(180deg, rgba(255,255,255,0.94) 0%, rgba(244,247,255,0.96) 100%)}.ds-app-shell-demo{padding:24px;font-family:\"Avenir Next Condensed\",\"Trebuchet MS\",\"Avenir Next\",sans-serif;font-size:30px;font-weight:600;line-height:1.1;letter-spacing:-0.025em;color:#0b1330}"
+    },
+    {
+      "name": "Auth Chip",
+      "kind": "chip",
+      "refersTo": "chip-status",
+      "description": "The small identity and mode marker used to show who is training and whether the app is live or mock-backed.",
+      "html": "<div class=\"ds-auth-row\"><span class=\"ds-auth-chip\">Mock athlete</span><button class=\"ds-signout-chip\">Sign out</button></div>",
+      "css": ".ds-auth-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.ds-auth-chip{display:inline-flex;align-items:center;justify-content:center;max-width:100%;padding:4px 12px;border:1px solid #bfdbfe;border-radius:9999px;background:linear-gradient(135deg,#f0f9ff,#dbeafe);color:#2563eb;font-family:\"Avenir Next\",\"Segoe UI\",\"Helvetica Neue\",sans-serif;font-size:12px;font-weight:600;line-height:1.2;letter-spacing:0.16em;text-transform:uppercase;box-shadow:0 1px 2px rgba(15,23,42,0.06)}.ds-signout-chip{padding:8px 12px;border:1px solid rgba(255,255,255,0.7);border-radius:9999px;background:linear-gradient(135deg,#ffffff,#f8fafc);color:#475569;font-family:\"Avenir Next\",\"Segoe UI\",\"Helvetica Neue\",sans-serif;font-size:12px;font-weight:600;line-height:1;box-shadow:0 1px 2px rgba(15,23,42,0.06);transition:transform 180ms cubic-bezier(0.22,1,0.36,1),background 180ms cubic-bezier(0.22,1,0.36,1);cursor:pointer}.ds-signout-chip:hover{transform:translateY(-2px);background:#ffffff}.ds-signout-chip:focus-visible{outline:2px solid #6ee7f9;outline-offset:3px}"
+    },
+    {
+      "name": "Metric Card",
+      "kind": "card",
+      "refersTo": "card-elevated",
+      "description": "The compact stat block used for duration, notes, sets, and workout summary counts.",
+      "html": "<div class=\"ds-metric-card\"><p class=\"ds-metric-label\">Duration</p><p class=\"ds-metric-value\">54 min</p></div>",
+      "css": ".ds-metric-card{padding:16px;border:1px solid #dbeafe;border-radius:24px;background:linear-gradient(135deg,#eff6ff,#dbeafe);box-shadow:0 1px 2px rgba(15,23,42,0.06)}.ds-metric-label{margin:0;font-family:\"Avenir Next\",\"Segoe UI\",\"Helvetica Neue\",sans-serif;font-size:12px;font-weight:600;line-height:1.2;letter-spacing:0.18em;text-transform:uppercase;color:#2563eb}.ds-metric-value{margin:12px 0 0;font-family:\"Avenir Next\",\"Segoe UI\",\"Helvetica Neue\",sans-serif;font-size:24px;font-weight:600;line-height:1.2;color:#0b1330}"
+    },
+    {
+      "name": "Rest Timer",
+      "kind": "custom",
+      "refersTo": "card-elevated",
+      "description": "The recovery component that turns timing into a gentle nudge instead of a loud countdown.",
+      "html": "<div class=\"ds-rest-timer\"><div><p class=\"ds-rest-label\">Rest</p><p class=\"ds-rest-value\">01:30</p></div><div class=\"ds-rest-actions\"><button class=\"ds-rest-icon\" aria-label=\"Start timer\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M8 6l10 6-10 6z\" fill=\"currentColor\"></path></svg></button><button class=\"ds-rest-icon\" aria-label=\"Reset timer\"><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M12 5a7 7 0 107 7\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\"></path><path d=\"M15 3h4v4\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\"></path></svg></button></div></div>",
+      "css": ".ds-rest-timer{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px;border:1px solid #fde68a;border-radius:16px;background:linear-gradient(135deg,#fffdf4,#fff7ed);box-shadow:0 1px 2px rgba(15,23,42,0.06)}.ds-rest-label{margin:0;font-family:\"Avenir Next\",\"Segoe UI\",\"Helvetica Neue\",sans-serif;font-size:11px;font-weight:600;line-height:1.2;letter-spacing:0.18em;text-transform:uppercase;color:#b45309}.ds-rest-value{margin:6px 0 0;font-family:\"Avenir Next\",\"Segoe UI\",\"Helvetica Neue\",sans-serif;font-size:18px;font-weight:600;line-height:1.2;color:#0b1330}.ds-rest-actions{display:flex;gap:8px}.ds-rest-icon{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border:none;border-radius:9999px;background:#ffffff;color:#b45309;box-shadow:0 1px 2px rgba(15,23,42,0.06);transition:transform 180ms cubic-bezier(0.22,1,0.36,1),filter 180ms cubic-bezier(0.22,1,0.36,1);cursor:pointer}.ds-rest-icon:hover{transform:translateY(-2px);filter:brightness(1.03)}.ds-rest-icon:focus-visible{outline:2px solid #6ee7f9;outline-offset:3px}.ds-rest-icon svg{width:16px;height:16px}"
+    },
+    {
+      "name": "Feedback Panel",
+      "kind": "custom",
+      "refersTo": "card-elevated",
+      "description": "The compact state message used for success, warnings, and action feedback.",
+      "html": "<div class=\"ds-feedback-panel is-success\">Upper body day is back on the calendar for tomorrow.</div>",
+      "css": ".ds-feedback-panel{padding:12px 16px;border:1px solid #fecdd3;border-radius:24px;background:#fff1f2;color:#881337;font-family:\"Avenir Next\",\"Segoe UI\",\"Helvetica Neue\",sans-serif;font-size:14px;line-height:1.5}.ds-feedback-panel.is-success{border-color:#a7f3d0;background:#ecfdf5;color:#065f46}.ds-feedback-panel.is-warning{border-color:#fde68a;background:#fffbeb;color:#92400e}.ds-feedback-panel:focus-visible{outline:2px solid #6ee7f9;outline-offset:3px}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Personal Progress Journal",
+    "overview": "LiftLog should feel like a training notebook opened in clean daylight, a page you trust, a pace you can keep. It is not trying to psych the user up or impress them with performance theater. It should meet a self-coached lifter at working height: phone in hand, between sets, attention split, needing calm structure more than stimulation.\n\nThe system gets its warmth from pale page tones, soft halos, and rounded containers that feel more like protective sleeves than glossy cards. Blue carries action, emerald and amber explain state, and violet appears as a small note of optimism rather than spectacle. The atmosphere should feel like quiet forward motion: fresh, breathable, and gently disciplined.\n\nThis system explicitly rejects anything overbearing, macho, performative, hyper-gamified, bloated, clinical, or cold. If a screen feels like a challenge app, a supplement ad, an enterprise dashboard, or a medical intake form, it is off-brand.",
+    "keyCharacteristics": [
+      "Daylit surfaces with selective color energy.",
+      "Rounded, hand-friendly controls sized for live use during a workout.",
+      "Encouraging tone carried by clarity, not hype.",
+      "Ambient depth that keeps the UI soft, breathable, and trustworthy."
+    ],
+    "rules": [
+      {
+        "name": "The Encouragement-Not-Hype Rule",
+        "body": "Blue leads the product voice. Emerald and amber explain state, but they never take over a screen. If the palette starts feeling competitive, loud, or game-like, pull color back to Page Mist and Tint Wash.",
+        "section": "colors"
+      },
+      {
+        "name": "The Journal Cover Rule",
+        "body": "Display type appears to anchor a screen, not to sell it. If a heading sounds like a campaign slogan, the typography is being asked to do the wrong job.",
+        "section": "typography"
+      },
+      {
+        "name": "The Quiet Lift Rule",
+        "body": "Shadows must diffuse outward and disappear into the page. If the UI starts to look dense, metallic, or 2014-app glossy, the blur is too small and the opacity is too high.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do keep the primary action in a pill-shaped control (9999px) and reserve the blue-cyan-violet gradient for the single most important action in a pane.",
+      "Do use Page Mist (#f6f8ff), Tint Wash (#eff6ff), emerald washes, and amber washes to explain state before introducing stronger saturation.",
+      "Do keep labels short, uppercase only when they behave like metadata, and tracked around 0.16em to 0.18em.",
+      "Do let shadows stay ambient and diffuse. The interface should feel cushioned, not carved."
+    ],
+    "donts": [
+      "Don't make it overbearing. No alarm-red default states, no challenge-language theatrics, and no interface patterns that pressure the user into intensity.",
+      "Don't use macho or performative gym cues. Black-metal palettes, grit textures, flame gradients, and bodybuilding-poster typography are prohibited.",
+      "Don't drift into hyper-gamified habit pressure or bloated dashboard energy with trophy counts, streak worship, or walls of metric cards.",
+      "Don't make it clinical or cold. If a screen feels like medical intake software or enterprise admin UI, the color warmth and rounded softness are wrong."
+    ]
+  }
+}

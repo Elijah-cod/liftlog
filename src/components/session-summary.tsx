@@ -48,11 +48,11 @@ export function SessionSummary({
             </div>
             <AuthChip label={viewerLabel} mode={authMode} showSignOut={authMode === "live"} />
           </div>
-          <p className="mt-4 text-sm font-medium text-sky-600">{formatWorkoutDate(session.scheduledDate)}</p>
-          <h1 className="mt-2 font-display text-3xl font-semibold tracking-tight text-slate-950">
+          <p className="mt-4 text-sm font-medium text-sky-700">{formatWorkoutDate(session.scheduledDate)}</p>
+          <h1 className="mt-2 font-display text-3xl font-semibold tracking-tight text-slate-950 text-balance">
             {session.workoutName}
           </h1>
-          <p className="mt-2 text-sm text-slate-600">
+          <p className="mt-2 max-w-xl text-sm leading-6 text-slate-600 text-pretty">
             Logged {session.progress.completedSets} of {session.progress.totalSets} sets
           </p>
           <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
@@ -86,13 +86,13 @@ export function SessionSummary({
         <section className="flex-1 overflow-y-auto px-4 py-4">
           <div className="space-y-4">
             {actionState?.scheduled ? (
-              <div className="rounded-3xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-900">
+              <div className="feedback-success rounded-3xl px-4 py-3 text-sm">
                 {session.workoutName} is back on the calendar for {actionState.slot === "tomorrow" ? "tomorrow" : "today"}.
               </div>
             ) : null}
 
             {actionState?.actionError ? (
-              <div className="rounded-3xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-900">
+              <div className="feedback-error rounded-3xl px-4 py-3 text-sm">
                 {actionState.actionError}
               </div>
             ) : null}
@@ -100,7 +100,7 @@ export function SessionSummary({
             {groups.map((group) => (
               <article
                 key={group.id}
-                className="rounded-[28px] border border-white/80 bg-white/85 px-4 py-4 shadow-[0_18px_40px_rgba(96,165,250,0.12)]"
+                className="surface-panel rounded-[28px] px-4 py-4"
               >
                 {group.exercises.length > 1 ? (
                   <div className="mb-4 inline-flex rounded-full border border-fuchsia-200 bg-[linear-gradient(135deg,#fdf4ff,#fae8ff)] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-fuchsia-700">
@@ -176,13 +176,13 @@ export function SessionSummary({
           <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
             <Link
               href="/today"
-              className="flex items-center justify-center rounded-full border border-sky-200 bg-[linear-gradient(135deg,#ffffff,#eff6ff)] px-5 py-4 text-sm font-semibold text-sky-700 shadow-sm"
+              className="secondary-button interactive-lift flex items-center justify-center rounded-full px-5 py-4 text-sm font-semibold text-sky-700 shadow-sm"
             >
               Back to today
             </Link>
             <Link
               href="/history"
-              className="flex items-center justify-center rounded-full bg-[linear-gradient(135deg,#2563eb,#0ea5e9 55%,#8b5cf6)] px-5 py-4 text-sm font-semibold text-white shadow-[0_18px_40px_rgba(59,130,246,0.35)] transition hover:-translate-y-0.5 hover:brightness-105"
+              className="action-button interactive-lift flex items-center justify-center rounded-full px-5 py-4 text-sm font-semibold text-white"
             >
               View history
             </Link>
