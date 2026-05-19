@@ -41,6 +41,43 @@ function createIsoNow() {
   return formatISO(new Date());
 }
 
+function getSeedExerciseNote(exerciseDefinitionId: string) {
+  switch (exerciseDefinitionId) {
+    case "flat-dumbbell-press":
+      return "Keep shoulder blades pinned and stop one rep before form slips.";
+    case "lat-pulldowns":
+      return "Open the chest first, then pull elbows toward the ribs.";
+    case "dumbbell-romanian-deadlift":
+      return "Own the stretch and keep the dumbbells close on the way down.";
+    case "reverse-lunges":
+      return "Long step back and keep pressure through the front heel.";
+    case "rkc-plank":
+      return "Squeeze glutes hard and exhale slowly through the brace.";
+    case "barbell-back-squat":
+      return "Use the first rep to find depth, then drive up fast.";
+    case "barbell-deadlift":
+      return "Wedge in before each rep and finish with a quiet lockout.";
+    case "walking-lunges":
+      return "Stay tall, control the step, and avoid rushing the turnaround.";
+    case "seated-leg-extensions":
+      return "Pause at the top for a clean quad squeeze.";
+    case "reverse-crunches":
+      return "Tuck the pelvis first, then curl the knees toward the chest.";
+    case "low-incline-dumbbell-press":
+      return "Keep wrists stacked and let the elbows travel slightly low.";
+    case "seated-mid-chest-cable-fly":
+      return "Think about meeting the biceps together, not smashing the handles.";
+    case "half-kneeling-cable-row":
+      return "Brace the down knee side glute and row toward the back pocket.";
+    case "incline-dumbbell-overhead-extensions":
+      return "Let the elbows drift back just enough to get a real stretch.";
+    case "dumbbell-preacher-curl":
+      return "Own the lowering phase and avoid losing tension at the bottom.";
+    default:
+      return "";
+  }
+}
+
 function buildSetLabel(setOrder: number, blockRole: BlockRole) {
   return `${setOrder}${blockRole ?? ""}`;
 }
@@ -145,7 +182,7 @@ function createCompletedHistorySession(
 
     return {
       ...exercise,
-      notes: "",
+      notes: getSeedExerciseNote(templateExercise.exerciseDefinitionId),
       sets: exercise.sets.map((set) => {
         const metricValue =
           exercise.loadType === "timed"

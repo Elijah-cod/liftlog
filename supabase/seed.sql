@@ -11,21 +11,21 @@ set
 
 insert into public.exercise_definitions (slug, name, subtitle, media_path, load_type, per_side)
 values
-  ('flat-dumbbell-press', 'Flat Dumbbell Press', '3 sets · 8-12 reps', '/media/exercise-placeholder.svg', 'weighted', false),
-  ('lat-pulldowns', 'Lat Pulldowns', '3 sets · 8-12 reps', '/media/exercise-placeholder.svg', 'weighted', false),
-  ('dumbbell-romanian-deadlift', 'Dumbbell Romanian Deadlift', '3 sets · 10-15 reps', '/media/exercise-placeholder.svg', 'weighted', false),
-  ('reverse-lunges', 'Reverse Lunges (*knee friendly)', '3 sets · 8-12 reps per side', '/media/exercise-placeholder.svg', 'weighted', true),
-  ('rkc-plank', 'RKC Plank', '2 sets · 30-60 second holds', '/media/exercise-placeholder.svg', 'timed', false),
-  ('barbell-back-squat', 'Barbell Back Squat Progression', '3 sets · 6-10 reps', '/media/exercise-placeholder.svg', 'weighted', false),
-  ('barbell-deadlift', 'Barbell Deadlift Progression', '3 sets · 6-10 reps', '/media/exercise-placeholder.svg', 'weighted', false),
-  ('walking-lunges', 'Walking Lunges (Quad Focused)', '3 sets · 8-12 reps per side', '/media/exercise-placeholder.svg', 'weighted', true),
-  ('seated-leg-extensions', 'Seated Leg Extensions', '3 sets · 10-15 reps', '/media/exercise-placeholder.svg', 'weighted', false),
-  ('reverse-crunches', 'Reverse Crunches', '3 sets · 10-20 reps', '/media/exercise-placeholder.svg', 'bodyweight', false),
-  ('low-incline-dumbbell-press', 'Low Incline Dumbbell Press', '3 sets · 8-12 reps', '/media/exercise-placeholder.svg', 'weighted', false),
-  ('seated-mid-chest-cable-fly', 'Seated Mid-Chest Cable Fly', '3 sets · 10-15 reps', '/media/exercise-placeholder.svg', 'weighted', false),
-  ('half-kneeling-cable-row', 'Half-Kneeling Cable Row', '3 sets · 10-15 reps per side', '/media/exercise-placeholder.svg', 'weighted', true),
-  ('incline-dumbbell-overhead-extensions', 'Incline Dumbbell Overhead Extensions', '3 sets · 10-15 reps', '/media/exercise-placeholder.svg', 'weighted', false),
-  ('dumbbell-preacher-curl', 'Dumbbell Preacher Curl', '3 sets · 8-12 reps per side', '/media/exercise-placeholder.svg', 'weighted', true)
+  ('flat-dumbbell-press', 'Flat Dumbbell Press', '3 working sets · 8-12 reps · smooth press', '/media/exercise-placeholder.svg', 'weighted', false),
+  ('lat-pulldowns', 'Lat Pulldowns', '3 working sets · 8-12 reps · full stretch', '/media/exercise-placeholder.svg', 'weighted', false),
+  ('dumbbell-romanian-deadlift', 'Dumbbell Romanian Deadlift', '3 working sets · 10-15 reps · controlled hinge', '/media/exercise-placeholder.svg', 'weighted', false),
+  ('reverse-lunges', 'Reverse Lunges (*knee friendly)', '3 working sets · 8-12 reps per side · stay upright', '/media/exercise-placeholder.svg', 'weighted', true),
+  ('rkc-plank', 'RKC Plank', '2 focused sets · 30-60 second holds · hard brace', '/media/exercise-placeholder.svg', 'timed', false),
+  ('barbell-back-squat', 'Barbell Back Squat Progression', '3 progression sets · 6-10 reps · drive hard', '/media/exercise-placeholder.svg', 'weighted', false),
+  ('barbell-deadlift', 'Barbell Deadlift Progression', '3 progression sets · 6-10 reps · clean lockout', '/media/exercise-placeholder.svg', 'weighted', false),
+  ('walking-lunges', 'Walking Lunges (Quad Focused)', '3 working sets · 8-12 reps per side · long stride', '/media/exercise-placeholder.svg', 'weighted', true),
+  ('seated-leg-extensions', 'Seated Leg Extensions', '3 working sets · 10-15 reps · squeeze at top', '/media/exercise-placeholder.svg', 'weighted', false),
+  ('reverse-crunches', 'Reverse Crunches', '3 controlled sets · 10-20 reps · pelvis tucked', '/media/exercise-placeholder.svg', 'bodyweight', false),
+  ('low-incline-dumbbell-press', 'Low Incline Dumbbell Press', '3 working sets · 8-12 reps · upper chest bias', '/media/exercise-placeholder.svg', 'weighted', false),
+  ('seated-mid-chest-cable-fly', 'Seated Mid-Chest Cable Fly', '3 working sets · 10-15 reps · soft elbows', '/media/exercise-placeholder.svg', 'weighted', false),
+  ('half-kneeling-cable-row', 'Half-Kneeling Cable Row', '3 working sets · 10-15 reps per side · pause at hip', '/media/exercise-placeholder.svg', 'weighted', true),
+  ('incline-dumbbell-overhead-extensions', 'Incline Dumbbell Overhead Extensions', '3 working sets · 10-15 reps · full stretch', '/media/exercise-placeholder.svg', 'weighted', false),
+  ('dumbbell-preacher-curl', 'Dumbbell Preacher Curl', '3 working sets · 8-12 reps per side · slow lower', '/media/exercise-placeholder.svg', 'weighted', true)
 on conflict (slug) do update
 set
   name = excluded.name,
@@ -36,9 +36,9 @@ set
 
 insert into public.workout_templates (slug, workout_name, workout_label)
 values
-  ('workout-a', 'Workout A', 'Upper'),
-  ('workout-b', 'Workout B', 'Lower'),
-  ('workout-c', 'Workout C', 'Pull')
+  ('workout-a', 'Upper Forge', 'Push, pull and trunk control'),
+  ('workout-b', 'Lower Drive', 'Squat, hinge and trunk stability'),
+  ('workout-c', 'Hybrid Pull', 'Chest, back and arm detail')
 on conflict (slug) do update
 set
   workout_name = excluded.workout_name,
@@ -170,7 +170,24 @@ select
   wte.planned_sets,
   wte.rest_seconds,
   ed.media_path,
-  '',
+  case ed.slug
+    when 'flat-dumbbell-press' then 'Keep shoulder blades pinned and stop one rep before form slips.'
+    when 'lat-pulldowns' then 'Open the chest first, then pull elbows toward the ribs.'
+    when 'dumbbell-romanian-deadlift' then 'Own the stretch and keep the dumbbells close on the way down.'
+    when 'reverse-lunges' then 'Long step back and keep pressure through the front heel.'
+    when 'rkc-plank' then 'Squeeze glutes hard and exhale slowly through the brace.'
+    when 'barbell-back-squat' then 'Use the first rep to find depth, then drive up fast.'
+    when 'barbell-deadlift' then 'Wedge in before each rep and finish with a quiet lockout.'
+    when 'walking-lunges' then 'Stay tall, control the step, and avoid rushing the turnaround.'
+    when 'seated-leg-extensions' then 'Pause at the top for a clean quad squeeze.'
+    when 'reverse-crunches' then 'Tuck the pelvis first, then curl the knees toward the chest.'
+    when 'low-incline-dumbbell-press' then 'Keep wrists stacked and let the elbows travel slightly low.'
+    when 'seated-mid-chest-cable-fly' then 'Think about meeting the biceps together, not smashing the handles.'
+    when 'half-kneeling-cable-row' then 'Brace the down knee side glute and row toward the back pocket.'
+    when 'incline-dumbbell-overhead-extensions' then 'Let the elbows drift back just enough to get a real stretch.'
+    when 'dumbbell-preacher-curl' then 'Own the lowering phase and avoid losing tension at the bottom.'
+    else ''
+  end,
   timezone('utc', now()) - interval '7 days'
 from public.workout_template_exercises wte
 join public.workout_templates wt
