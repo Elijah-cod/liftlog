@@ -21,6 +21,7 @@ import {
 
 import { AppShell } from "@/components/app-shell";
 import { AuthChip } from "@/components/auth-chip";
+import { ExerciseMediaTile } from "@/components/exercise-media-tile";
 import { RestTimer } from "@/components/rest-timer";
 import {
   buildExerciseGroups,
@@ -248,13 +249,12 @@ function ExercisePanel({
   return (
     <article className="rounded-[30px] border border-white/80 bg-white/85 px-4 py-4 shadow-[0_18px_40px_rgba(96,165,250,0.12)]">
       <div className="flex items-start gap-4">
-        <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#dbeafe,#e0f2fe_55%,#f5d0fe)] text-xs font-semibold text-sky-700 shadow-sm">
-          {exercise.name
-            .split(" ")
-            .slice(0, 2)
-            .map((part) => part[0])
-            .join("")}
-        </div>
+        <ExerciseMediaTile
+          name={exercise.name}
+          mediaPath={exercise.mediaPath}
+          loadType={exercise.loadType}
+          className="h-16 w-16 shrink-0"
+        />
         <div className="min-w-0 flex-1">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
             <div className="min-w-0">

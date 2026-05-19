@@ -3,6 +3,7 @@ import { ChevronRight, Clock3, Dumbbell, Play, Sparkles } from "lucide-react";
 
 import { AppShell } from "@/components/app-shell";
 import { AuthChip } from "@/components/auth-chip";
+import { ExerciseMediaTile } from "@/components/exercise-media-tile";
 import {
   buildExerciseGroups,
   formatSessionDateTime,
@@ -176,13 +177,12 @@ export function WorkoutPreview({ workout, viewerLabel, authMode }: WorkoutPrevie
                 <div className="space-y-4">
                   {group.exercises.map((exercise) => (
                     <div key={exercise.id} className="flex gap-4">
-                      <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#dbeafe,#e0f2fe_55%,#f5d0fe)] text-xs font-semibold text-sky-700 shadow-sm">
-                        {exercise.name
-                          .split(" ")
-                          .slice(0, 2)
-                          .map((part) => part[0])
-                          .join("")}
-                      </div>
+                      <ExerciseMediaTile
+                        name={exercise.name}
+                        mediaPath={exercise.mediaPath}
+                        loadType={exercise.loadType}
+                        className="h-16 w-16 shrink-0"
+                      />
                       <div className="min-w-0 flex-1">
                         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                           <div className="min-w-0">
