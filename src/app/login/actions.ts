@@ -23,7 +23,9 @@ export async function sendMagicLink(formData: FormData) {
   const next = sanitizeNext(String(formData.get("next") ?? "/today"));
 
   if (!email) {
-    redirect(`/login?error=${encodeURIComponent("Email is required")}&next=${encodeURIComponent(next)}`);
+    redirect(
+      `/login?error=${encodeURIComponent("Enter the email you want to use for LiftLog.")}&next=${encodeURIComponent(next)}`,
+    );
   }
 
   const headerStore = await headers();
@@ -39,7 +41,14 @@ export async function sendMagicLink(formData: FormData) {
   });
 
   if (error) {
-    redirect(`/login?error=${encodeURIComponent(error.message)}&next=${encodeURIComponent(next)}`);
+    const message =
+      error.message.includes("email_address_invalid")
+        ? "That email address does not look valid yet. Double-check it and try again."
+        : error.message.includes("over_email_send_rate_limit")
+          ? "A magic link was sent recently. Give it a minute, then try again."
+          : "We could not send your sign-in link right now. Please try again in a moment.";
+
+    redirect(`/login?error=${encodeURIComponent(message)}&next=${encodeURIComponent(next)}`);
   }
 
   redirect(`/login?sent=1&next=${encodeURIComponent(next)}`);
