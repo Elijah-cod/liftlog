@@ -4,6 +4,8 @@ LiftLog is a mobile-first workout logging web app focused on one job: helping a 
 
 The app is intentionally narrow. It does not try to be a full coaching platform, program builder, or analytics suite. The current scope is daily workout execution and review.
 
+[Live demo](https://liftlog-six-iota.vercel.app) · [Repository](https://github.com/Elijah-cod/liftlog)
+
 ## What The App Does
 
 - Shows today’s assigned workout
