@@ -179,4 +179,3 @@ with check (
       and public.workout_sessions.profile_id = auth.uid()
   )
 );
-

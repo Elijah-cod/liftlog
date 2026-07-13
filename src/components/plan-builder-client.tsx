@@ -1,30 +1,19 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useTransition } from "react";
 import Link from "next/link";
 import { ArrowRight, Check, ChevronDown, Clock3, Dumbbell, Home, RotateCcw, Sparkles } from "lucide-react";
 
 import { TrainingShell } from "@/components/training-shell";
+import { saveTrainingPlan } from "@/app/plan/actions";
+import { DEFAULT_TRAINING_PROFILE, getDefaultTrainingPlan } from "@/lib/training/defaults";
 import { generateWorkoutPlan } from "@/lib/training/engine";
 import { MUSCLE_GROUPS, type Equipment, type GeneratedPlan, type MuscleGroup, type TrainingProfile } from "@/lib/training/types";
+import type { TrainingViewer } from "@/lib/training/viewer";
 import { cn } from "@/lib/utils";
 
 const GYM_EQUIPMENT: Equipment[] = ["barbell", "dumbbell", "cable", "machine", "bodyweight", "cardio"];
 const HOME_EQUIPMENT: Equipment[] = ["bodyweight", "dumbbell", "band", "kettlebell"];
-
-const DEFAULT_PROFILE: TrainingProfile = {
-  goal: "muscle",
-  location: "gym",
-  experience: "intermediate",
-  daysPerWeek: 4,
-  minutesPerSession: 60,
-  age: 30,
-  heightCm: 178,
-  weightKg: 78,
-  availableEquipment: GYM_EQUIPMENT,
-  priorityMuscles: ["shoulders"],
-  limitations: [],
-};
 
 function SelectField({ label, value, onChange, children }: { label: string; value: string | number; onChange: (value: string) => void; children: React.ReactNode }) {
   return (
@@ -52,17 +41,26 @@ function NumberField({ label, value, suffix, min, max, onChange }: { label: stri
   );
 }
 
-export function PlanBuilderClient() {
-  const [profile, setProfile] = useState<TrainingProfile>(DEFAULT_PROFILE);
-  const [plan, setPlan] = useState<GeneratedPlan>(() => generateWorkoutPlan(DEFAULT_PROFILE));
+interface PlanBuilderClientProps {
+  initialProfile: TrainingProfile;
+  initialPlan: GeneratedPlan;
+  viewer: TrainingViewer;
+}
+
+export function PlanBuilderClient({ initialProfile, initialPlan, viewer }: PlanBuilderClientProps) {
+  const [profile, setProfile] = useState<TrainingProfile>(initialProfile);
+  const [plan, setPlan] = useState<GeneratedPlan>(initialPlan);
   const [saved, setSaved] = useState(false);
+  const [saveError, setSaveError] = useState("");
   const [openDay, setOpenDay] = useState("day-1");
+  const [isPending, startTransition] = useTransition();
 
   const prioritySummary = useMemo(() => profile.priorityMuscles.map((muscle) => muscle[0].toUpperCase() + muscle.slice(1)).join(" + "), [profile.priorityMuscles]);
 
   function updateProfile<K extends keyof TrainingProfile>(key: K, value: TrainingProfile[K]) {
     setProfile((current) => ({ ...current, [key]: value }));
     setSaved(false);
+    setSaveError("");
   }
 
   function togglePriority(muscle: MuscleGroup) {
@@ -93,19 +91,36 @@ export function PlanBuilderClient() {
   function buildPlan() {
     const nextPlan = generateWorkoutPlan(profile);
     setPlan(nextPlan);
-    window.localStorage.setItem("liftlog-training-profile", JSON.stringify(profile));
-    window.localStorage.setItem("liftlog-generated-plan", JSON.stringify(nextPlan));
-    setSaved(true);
     setOpenDay("day-1");
+    setSaveError("");
+
+    if (viewer.mode === "demo") {
+      window.localStorage.setItem("liftlog-training-profile", JSON.stringify(profile));
+      window.localStorage.setItem("liftlog-generated-plan", JSON.stringify(nextPlan));
+      setSaved(true);
+      return;
+    }
+
+    startTransition(async () => {
+      const result = await saveTrainingPlan(profile);
+      if (!result.ok) {
+        setSaved(false);
+        setSaveError(result.error);
+        return;
+      }
+      setPlan(result.plan);
+      setSaved(true);
+    });
   }
 
   return (
     <TrainingShell
+      viewer={viewer}
       active="My plan"
       eyebrow="Adaptive program builder"
       title="Build around your actual life."
       description="Tell LiftLog what you can recover from and what you can train with. The plan stays specific without pretending a questionnaire can diagnose pain."
-      actions={<button type="button" onClick={() => { setProfile(DEFAULT_PROFILE); setPlan(generateWorkoutPlan(DEFAULT_PROFILE)); setSaved(false); }} className="secondary-button inline-flex min-h-11 items-center gap-2 rounded-full px-4 text-sm font-semibold text-slate-700"><RotateCcw className="size-4" /> Reset</button>}
+      actions={<button type="button" onClick={() => { setProfile(DEFAULT_TRAINING_PROFILE); setPlan(getDefaultTrainingPlan()); setSaved(false); setSaveError(""); }} className="secondary-button inline-flex min-h-11 items-center gap-2 rounded-full px-4 text-sm font-semibold text-slate-700"><RotateCcw className="size-4" /> Reset</button>}
     >
       <div className="grid gap-5 xl:grid-cols-[minmax(19rem,0.72fr)_minmax(0,1.28fr)]">
         <section className="rounded-[26px] border border-slate-200 bg-white/85 p-5 shadow-[0_16px_36px_oklch(0.35_0.04_255/0.07)]">
@@ -166,8 +181,9 @@ export function PlanBuilderClient() {
             </div>
           </div>
 
-          <button type="button" onClick={buildPlan} className="action-button interactive-lift mt-6 flex min-h-13 w-full items-center justify-center gap-2 rounded-full px-4 text-sm font-semibold text-white"><Sparkles className="size-4" /> Generate my plan</button>
+          <button type="button" onClick={buildPlan} disabled={isPending} className="action-button interactive-lift mt-6 flex min-h-13 w-full items-center justify-center gap-2 rounded-full px-4 text-sm font-semibold text-white disabled:cursor-wait disabled:opacity-70"><Sparkles className="size-4" /> {isPending ? "Saving your routine…" : "Generate and save my plan"}</button>
           {saved ? <p className="mt-3 text-center text-xs font-semibold text-emerald-700">Saved. Today now uses this plan.</p> : null}
+          {saveError ? <p className="feedback-error mt-3 rounded-2xl px-3 py-2 text-center text-xs font-semibold">{saveError}</p> : null}
         </section>
 
         <section className="min-w-0">

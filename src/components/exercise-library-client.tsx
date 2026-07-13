@@ -7,10 +7,11 @@ import { TrainingShell } from "@/components/training-shell";
 import { EXERCISE_LIBRARY, getExerciseSubstitutions } from "@/lib/training/exercise-library";
 import { MUSCLE_GROUPS, type Equipment, type MuscleGroup } from "@/lib/training/types";
 import { cn } from "@/lib/utils";
+import type { TrainingViewer } from "@/lib/training/viewer";
 
 const EQUIPMENT: (Equipment | "all")[] = ["all", "bodyweight", "dumbbell", "barbell", "cable", "machine", "band", "kettlebell", "cardio"];
 
-export function ExerciseLibraryClient() {
+export function ExerciseLibraryClient({ viewer }: { viewer: TrainingViewer }) {
   const [query, setQuery] = useState("");
   const [muscle, setMuscle] = useState<MuscleGroup | "all">("all");
   const [equipment, setEquipment] = useState<Equipment | "all">("all");
@@ -36,6 +37,7 @@ export function ExerciseLibraryClient() {
 
   return (
     <TrainingShell
+      viewer={viewer}
       active="Exercises"
       eyebrow="Free exercise education"
       title={`${EXERCISE_LIBRARY.length} form guides, without a paywall.`}

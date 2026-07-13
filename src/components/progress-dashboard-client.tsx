@@ -6,6 +6,7 @@ import { ArrowRight, ChevronDown, History, Sparkles, Trophy } from "lucide-react
 
 import { TrainingShell } from "@/components/training-shell";
 import { getProgressionGuidance } from "@/lib/training/engine";
+import type { TrainingViewer } from "@/lib/training/viewer";
 
 const HISTORY = [
   { date: "Jul 11", workout: "Lower A", duration: "52 min", sets: 18, status: "Completed" },
@@ -16,7 +17,7 @@ const HISTORY = [
 
 const VOLUME = [58, 62, 60, 68, 71, 69, 78, 82];
 
-export function ProgressDashboardClient() {
+export function ProgressDashboardClient({ viewer }: { viewer: TrainingViewer }) {
   const [weight, setWeight] = useState(30);
   const [reps, setReps] = useState(12);
   const [rir, setRir] = useState<0 | 1 | 2 | 3 | 4>(2);
@@ -26,7 +27,7 @@ export function ProgressDashboardClient() {
   const guidance = useMemo(() => getProgressionGuidance({ exerciseName: "Dumbbell Bench Press", weight, completedReps: reps, targetRange: [8, 12], repsInReserve: rir, unit: "kg", completedAllSets: allSets, deload }), [allSets, deload, reps, rir, weight]);
 
   return (
-    <TrainingShell active="Progress" eyebrow="Training record" title="Progress you can act on." description="Review the work, spot personal records, and get a clear next-session target from the same log.">
+    <TrainingShell viewer={viewer} active="Progress" eyebrow="Training record" title="Progress you can act on." description="Review the work, spot personal records, and get a clear next-session target from the same log.">
       <div className="grid gap-5 xl:grid-cols-[minmax(0,1.2fr)_minmax(19rem,0.8fr)]">
         <section className="rounded-[26px] border border-slate-200 bg-white/85 p-5 sm:p-6">
           <div className="flex items-start justify-between gap-4">
