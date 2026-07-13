@@ -1,9 +1,10 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { BarChart3, BookOpenText, CalendarRange, Dumbbell, Play, Settings2 } from "lucide-react";
+import { BarChart3, BookOpenText, CalendarRange, Dumbbell, LogOut, Play, Settings2, ShieldCheck, Sparkles } from "lucide-react";
 
 import { AppShell } from "@/components/app-shell";
 import { cn } from "@/lib/utils";
+import type { TrainingViewer } from "@/lib/training/viewer";
 
 const NAV_ITEMS = [
   { href: "/today", label: "Today", icon: Dumbbell },
@@ -21,6 +22,7 @@ interface TrainingShellProps {
   description?: string;
   actions?: ReactNode;
   wide?: boolean;
+  viewer: TrainingViewer;
 }
 
 export function TrainingShell({
@@ -31,6 +33,7 @@ export function TrainingShell({
   description,
   actions,
   wide = true,
+  viewer,
 }: TrainingShellProps) {
   return (
     <AppShell contentClassName="min-h-[calc(100vh-3rem)]">
@@ -69,14 +72,31 @@ export function TrainingShell({
             })}
           </nav>
 
-          <div className="mt-auto rounded-[20px] border border-slate-200 bg-white/80 p-3">
-            <div className="flex items-center gap-2 text-xs font-semibold text-slate-700">
-              <Settings2 className="size-3.5" />
-              Plan adapts with you
+          <div className="mt-auto space-y-3">
+            <div className="rounded-[20px] border border-slate-200 bg-white/80 p-3">
+              <div className="flex items-center gap-2 text-xs font-semibold text-slate-700">
+                <Settings2 className="size-3.5" />
+                Plan adapts with you
+              </div>
+              <p className="mt-2 text-xs leading-5 text-slate-500">
+                Update equipment, schedule, or priorities whenever life changes.
+              </p>
             </div>
-            <p className="mt-2 text-xs leading-5 text-slate-500">
-              Update equipment, schedule, or priorities whenever life changes.
-            </p>
+            <div className="rounded-[20px] border border-slate-200 bg-white/80 p-3">
+              <div className="flex min-w-0 items-center gap-2">
+                {viewer.mode === "live" ? <ShieldCheck className="size-3.5 shrink-0 text-emerald-600" /> : <Sparkles className="size-3.5 shrink-0 text-sky-600" />}
+                <span className="truncate text-xs font-semibold text-slate-700">{viewer.label}</span>
+              </div>
+              <p className="mt-1 text-[11px] leading-4 text-slate-500">
+                {viewer.mode === "live" ? "Private account data" : "Local demo data"}
+              </p>
+              <form action={viewer.mode === "live" ? "/auth/sign-out" : "/auth/demo/exit"} method="post" className="mt-2">
+                <button type="submit" className="inline-flex min-h-8 items-center gap-1.5 text-xs font-semibold text-blue-700">
+                  <LogOut className="size-3.5" />
+                  {viewer.mode === "live" ? "Sign out" : "Exit demo"}
+                </button>
+              </form>
+            </div>
           </div>
         </aside>
 
@@ -96,6 +116,13 @@ export function TrainingShell({
               </div>
               {actions ? <div className="shrink-0">{actions}</div> : null}
             </div>
+
+            {viewer.mode === "demo" ? (
+              <div className="mt-4 flex flex-col gap-2 rounded-[16px] border border-sky-200 bg-sky-50 px-3 py-2.5 text-xs text-sky-900 sm:flex-row sm:items-center sm:justify-between">
+                <span><strong>Interactive demo.</strong> Changes stay in this browser and never mix with member data.</span>
+                <Link href="/login?mode=signup" className="shrink-0 font-semibold text-blue-700">Create a private account</Link>
+              </div>
+            ) : null}
 
             <nav className="-mx-1 mt-5 flex gap-1 overflow-x-auto pb-1 md:hidden" aria-label="Primary navigation">
               {NAV_ITEMS.map((item) => {

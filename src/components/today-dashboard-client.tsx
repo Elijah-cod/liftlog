@@ -5,49 +5,36 @@ import Link from "next/link";
 import { ArrowRight, CalendarDays, Check, ChevronRight, CircleGauge, Clock3, Sparkles, Trophy } from "lucide-react";
 
 import { TrainingShell } from "@/components/training-shell";
-import { generateWorkoutPlan } from "@/lib/training/engine";
-import type { GeneratedPlan, TrainingProfile } from "@/lib/training/types";
+import type { GeneratedPlan } from "@/lib/training/types";
+import type { TrainingViewer } from "@/lib/training/viewer";
 
-const DEFAULT_PROFILE: TrainingProfile = {
-  goal: "muscle",
-  location: "gym",
-  experience: "intermediate",
-  daysPerWeek: 4,
-  minutesPerSession: 60,
-  age: 30,
-  heightCm: 178,
-  weightKg: 78,
-  availableEquipment: ["barbell", "dumbbell", "cable", "machine", "bodyweight", "cardio"],
-  priorityMuscles: ["shoulders"],
-  limitations: [],
-};
-
-export function TodayDashboardClient() {
+export function TodayDashboardClient({ initialPlan, viewer }: { initialPlan: GeneratedPlan; viewer: TrainingViewer }) {
   const savedPlan = useSyncExternalStore(
     (onStoreChange) => {
       window.addEventListener("storage", onStoreChange);
       return () => window.removeEventListener("storage", onStoreChange);
     },
-    () => window.localStorage.getItem("liftlog-generated-plan"),
+    () => viewer.mode === "demo" ? window.localStorage.getItem("liftlog-generated-plan") : null,
     () => null,
   );
   const plan = useMemo(() => {
-    if (!savedPlan) return generateWorkoutPlan(DEFAULT_PROFILE);
+    if (!savedPlan) return initialPlan;
     try {
       return JSON.parse(savedPlan) as GeneratedPlan;
     } catch {
-      return generateWorkoutPlan(DEFAULT_PROFILE);
+      return initialPlan;
     }
-  }, [savedPlan]);
+  }, [initialPlan, savedPlan]);
 
   const today = plan.days[0];
   const topExercise = today?.exercises[0];
 
   return (
     <TrainingShell
+      viewer={viewer}
       active="Today"
       eyebrow="Monday, July 13"
-      title="Ready when you are, Elijah."
+      title={`Ready when you are, ${viewer.firstName}.`}
       description="Your plan, progression target, and practical workout options are lined up for today."
       actions={
         <Link href="/train" className="action-button interactive-lift inline-flex min-h-11 items-center gap-2 rounded-full px-4 text-sm font-semibold text-white">

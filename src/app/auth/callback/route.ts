@@ -7,7 +7,7 @@ export async function GET(request: Request) {
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get("code");
   const next = requestUrl.searchParams.get("next") ?? "/today";
-  const safeNext = next.startsWith("/") ? next : "/today";
+  const safeNext = next.startsWith("/") && !next.startsWith("//") ? next : "/today";
 
   if (!code) {
     return NextResponse.redirect(new URL(`/login?error=${encodeURIComponent("Missing auth code")}`, requestUrl.origin));
@@ -32,4 +32,3 @@ export async function GET(request: Request) {
 
   return NextResponse.redirect(new URL(safeNext, requestUrl.origin));
 }
-

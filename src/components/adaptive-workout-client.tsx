@@ -8,6 +8,7 @@ import { TrainingShell } from "@/components/training-shell";
 import { getProgressionGuidance } from "@/lib/training/engine";
 import { getExerciseSubstitutions } from "@/lib/training/exercise-library";
 import { cn } from "@/lib/utils";
+import type { TrainingViewer } from "@/lib/training/viewer";
 
 type SetType = "warm-up" | "working" | "dropset" | "deload" | "rehab" | "cardio";
 type TrackerSet = { id: string; type: SetType; weight: number; reps: number; complete: boolean };
@@ -22,7 +23,7 @@ const INITIAL_EXERCISES: TrackerExercise[] = [
 
 const TYPE_STYLES: Record<SetType, string> = { "warm-up": "bg-sky-50 text-sky-700", working: "bg-slate-100 text-slate-700", dropset: "bg-violet-50 text-violet-700", deload: "bg-amber-50 text-amber-700", rehab: "bg-emerald-50 text-emerald-700", cardio: "bg-rose-50 text-rose-700" };
 
-export function AdaptiveWorkoutClient() {
+export function AdaptiveWorkoutClient({ viewer }: { viewer: TrainingViewer }) {
   const [exercises, setExercises] = useState(INITIAL_EXERCISES);
   const [editScope, setEditScope] = useState<"today" | "future">("today");
   const [shortened, setShortened] = useState<"full" | "45" | "30">("full");
@@ -63,6 +64,7 @@ export function AdaptiveWorkoutClient() {
 
   return (
     <TrainingShell
+      viewer={viewer}
       active="Train"
       eyebrow="Upper A · In progress"
       title="Log the set, keep the context."
