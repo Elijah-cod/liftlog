@@ -263,7 +263,7 @@ export function WorkoutPreview({ workout, viewerLabel, authMode }: WorkoutPrevie
                   What this screen should settle
                 </p>
                 <ul className="mt-3 space-y-2 text-sm leading-6 text-slate-600">
-                  <li>1. How dense is today's session?</li>
+                  <li>1. How dense is today&apos;s session?</li>
                   <li>2. Where are the supersets and pace changes?</li>
                   <li>3. What can flex if equipment is unavailable?</li>
                 </ul>

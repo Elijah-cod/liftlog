@@ -11,18 +11,18 @@ export const metadata: Metadata = {
     default: "LiftLog",
     template: "%s | LiftLog",
   },
-  description: "Daily workout execution and logging for the web.",
+  description: "Adaptive workout planning, progression guidance, exercise education, and training history.",
   applicationName: "LiftLog",
   openGraph: {
     title: "LiftLog",
-    description: "Daily workout execution and logging for the web.",
+    description: "Adaptive workout planning, progression guidance, exercise education, and training history.",
     type: "website",
     siteName: "LiftLog",
   },
   twitter: {
     card: "summary",
     title: "LiftLog",
-    description: "Daily workout execution and logging for the web.",
+    description: "Adaptive workout planning, progression guidance, exercise education, and training history.",
   },
 };
 
