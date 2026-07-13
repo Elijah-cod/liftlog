@@ -19,6 +19,9 @@ The product keeps the clarity of a personal training journal while adding planni
 - Autosaves progress with local draft recovery and sync retry feedback
 - Shows exercise history, personal records, workout summaries, and recent history
 - Lets the athlete schedule the same workout again from history or summary views
+- Supports email/password account creation, password login, and magic-link sign-in
+- Saves each authenticated athlete’s generated routine to a private, user-owned database row
+- Provides an interactive demo whose changes remain isolated in the visitor’s browser
 
 ## Current Product Scope
 
@@ -34,9 +37,9 @@ Included:
 - Completed and partial workout summary
 - Recent workout history
 - Minimal live setup and schedule management in `/setup`
-- Magic-link auth with Supabase
-- Supabase-ready schema, RLS, and seed data
-- Mock fallback mode so the product runs before Supabase is configured
+- Email/password and magic-link auth with Supabase
+- Supabase schema, row-level ownership policies, and seed data
+- Interactive demo mode with browser-local data that never mixes with member records
 
 Out of scope: coach/client roles, social features, medical diagnosis, and prescriptive injury rehabilitation.
 
@@ -63,7 +66,7 @@ Out of scope: coach/client roles, social features, medical diagnosis, and prescr
 - `/setup`
   In-app environment, seeding, schedule, and smoke-test utilities.
 - `/login`
-  Magic-link sign-in for live mode.
+  Account creation, password login, magic-link sign-in, and interactive demo entry.
 
 ## Tech Stack
 
@@ -79,12 +82,13 @@ Out of scope: coach/client roles, social features, medical diagnosis, and prescr
 
 LiftLog supports two runtime modes.
 
-### 1. Mock Mode
+### 1. Demo Mode
 
-Mock mode is the default developer-friendly path.
+Demo mode is the developer-friendly and visitor-facing path.
 
 - No Supabase project is required
-- The app uses seeded in-memory demo data
+- The app uses seeded demo data and browser-local routine changes
+- Demo activity never reads or writes authenticated member records
 - You can open `/today` immediately after install and test the full workout flow
 
 This is useful for UI work, interaction testing, and general local development.
@@ -99,9 +103,10 @@ Live mode activates when:
 
 In live mode:
 
-- Auth uses Supabase magic links
+- Auth supports email/password accounts and Supabase magic links
+- Generated training profiles and routines are persisted per user
 - Workout schedules, sessions, notes, and set logs are read and written from Postgres
-- RLS protects user data
+- RLS requires `auth.uid()` to match the owner on every user-data table
 - `/setup` can seed and manage the authenticated athlete’s demo schedule
 
 ## Core User Flow
@@ -186,24 +191,39 @@ Optional:
 1. Create a Supabase project.
 2. Copy `.env.example` to `.env.local`.
 3. Fill in the public Supabase values and your app URL.
-4. Apply the SQL migration in [20260401130000_create_workout_logging.sql](/Users/elijah/Documents/Projects/liftlog/supabase/migrations/20260401130000_create_workout_logging.sql).
+4. Apply the SQL migrations in order:
+   - [20260713174229_create_workout_logging.sql](/Users/elijah/Documents/Projects/liftlog/supabase/migrations/20260713174229_create_workout_logging.sql)
+   - [20260713174238_add_private_training_plans.sql](/Users/elijah/Documents/Projects/liftlog/supabase/migrations/20260713174238_add_private_training_plans.sql)
 5. Seed data either by:
    - running [seed.sql](/Users/elijah/Documents/Projects/liftlog/supabase/seed.sql), or
    - signing in and using `/setup` if `SUPABASE_SERVICE_ROLE_KEY` is configured.
 
 If live mode is not fully configured, the app automatically falls back to mock data instead of failing closed for local development.
 
-## Auth
+## Accounts, Privacy, And Demo Access
 
-Live mode auth uses Supabase magic links.
+Live mode auth uses Supabase email/password accounts with magic links as an alternative.
 
 - Visit `/login`
-- Enter an email address
-- Open the magic link
-- The callback route exchanges the auth code for a session
+- Create an account with a name, email, and password, or sign in to an existing account
+- Passwords require at least eight characters with both a letter and a number
+- A magic-link option remains available for existing accounts
 - A `profiles` row is created automatically for first-time users
+- The plan builder stores the validated profile and generated routine under the authenticated user ID
+- Postgres RLS independently enforces ownership even if a client attempts to query another user ID
+- Demo access uses an HttpOnly mode cookie and browser-local routine data instead of a shared demo account
 
 When live mode is configured, protected app pages redirect unauthenticated requests back to `/login`.
+
+## July 2026 Multi-User Release
+
+The private-account release is represented by these commits:
+
+- `8a80d95` — account creation, login, isolated demo mode, private routine persistence, and RLS
+- `c1ba7f2` — production Supabase publishable-client connection
+- `bee0899` — merge of the tested release into `main`
+
+Production verification covered `/login`, unauthenticated redirects, demo entry, and successful demo access to `/today`, `/plan`, `/train`, `/exercises`, `/progress`, and `/history`.
 
 ## Setup And Operability
 
@@ -298,11 +318,11 @@ The app is production-shaped, but the most important remaining validation is usa
 Recommended next checks after deployment:
 
 - real magic-link delivery and callback behavior
-- RLS behavior across authenticated users
+- ongoing RLS regression checks as new user-owned tables are introduced
 - autosave behavior on slower networks
 - mobile browser behavior on iPhone and Android
 - any UI friction from longer real-world exercise names or notes
 
 ## Status
 
-LiftLog is currently a focused MVP for daily workout execution and logging on the web. It is ready for continued refinement, live smoke testing, and deployment into a controlled single-athlete production environment.
+LiftLog is a deployed multi-user MVP for private adaptive programming and daily workout execution. It supports authenticated athlete accounts, isolated routines and workout records, and a safe interactive demo for first-time visitors.
