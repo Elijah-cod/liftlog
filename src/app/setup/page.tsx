@@ -199,7 +199,7 @@ export default async function SetupPage({ searchParams }: SetupPageProps) {
                 {seeded ? (
                   <div className="mt-4">
                     <SetupBanner variant="success">
-                      Your starter athlete data is ready. Open today's page to confirm the workout lineup.
+                      Your starter athlete data is ready. Open today&apos;s page to confirm the workout lineup.
                     </SetupBanner>
                   </div>
                 ) : null}
@@ -377,7 +377,7 @@ export default async function SetupPage({ searchParams }: SetupPageProps) {
                 <div className="rounded-3xl border border-slate-200 bg-slate-50 px-4 py-4">
                   <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Step 2</p>
                   <p className="mt-2 text-sm text-slate-700">
-                    Open today's page, move into the workout preview, and confirm the recent-session context looks right before you start.
+                    Open today&apos;s page, move into the workout preview, and confirm the recent-session context looks right before you start.
                   </p>
                   <div className="mt-3 flex flex-wrap gap-3">
                     <Link

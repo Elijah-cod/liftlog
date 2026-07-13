@@ -1,21 +1,23 @@
 # LiftLog
 
-LiftLog is a mobile-first workout logging web app focused on one job: helping a single athlete open the day’s workout, log every set cleanly, recover safely from refreshes, and finish with a usable workout record.
+LiftLog is a mobile-first adaptive training app for self-coached lifters. It builds an equipment-aware workout plan from the athlete’s goals, schedule, experience, body inputs, and muscle priorities, then turns the training log into an exact next-session progression target.
 
-The app is intentionally narrow. It does not try to be a full coaching platform, program builder, or analytics suite. The current scope is daily workout execution and review.
+The product keeps the clarity of a personal training journal while adding planning, substitutions, free exercise education, session adaptations, personal records, and useful progress views.
 
 [Live demo](https://liftlog-six-iota.vercel.app) · [Repository](https://github.com/Elijah-cod/liftlog)
 
-## What The App Does
+## Core Features
 
-- Shows today’s assigned workout
-- Lets the athlete preview the session before starting
-- Starts or resumes a workout session
-- Logs weighted, bodyweight, and timed sets
-- Supports supersets, notes, rest timers, and extra sets
+- Generates 2–6 day gym or home programs from goals, experience, available time, equipment, and body inputs
+- Adds focused weekly volume for up to two lagging muscle groups
+- Calculates exact next-session load and rep targets using double progression, reps in reserve, missed targets, and deload state
+- Includes 270 tutorial-backed exercise entries with free MuscleWiki guides or focused YouTube destinations
+- Finds equipment-compatible substitutions that preserve the trained muscle and movement pattern
+- Logs warm-up, working, dropset, deload, rehab, cardio, bodyweight, timed, and extra work
+- Shortens workouts to 30 or 45 minutes by preserving primary movements before trimming accessories
+- Supports one-off session edits and permanent plan edits
 - Autosaves progress with local draft recovery and sync retry feedback
-- Finishes workouts as either `completed` or `partial`
-- Shows workout summaries and recent history
+- Shows exercise history, personal records, workout summaries, and recent history
 - Lets the athlete schedule the same workout again from history or summary views
 
 ## Current Product Scope
@@ -23,6 +25,10 @@ The app is intentionally narrow. It does not try to be a full coaching platform,
 Included:
 
 - Daily workout entry point at `/today`
+- Adaptive plan builder and Muscle Group Prioritizer at `/plan`
+- Live adaptable workout tracker at `/train`
+- Searchable free tutorial and substitution library at `/exercises`
+- Progression lab, volume trend, personal records, and history at `/progress`
 - Workout preview flow
 - Active workout logging flow
 - Completed and partial workout summary
@@ -32,20 +38,20 @@ Included:
 - Supabase-ready schema, RLS, and seed data
 - Mock fallback mode so the product runs before Supabase is configured
 
-Out of scope:
-
-- Program builder
-- Coach / client roles
-- Advanced progression logic
-- PR detection logic
-- Calendar planning UI beyond the lightweight setup tools
-- Social features
-- Full analytics dashboards
+Out of scope: coach/client roles, social features, medical diagnosis, and prescriptive injury rehabilitation.
 
 ## Screens And Routes
 
 - `/today`
-  Main daily entry point. Shows the current scheduled workout or an empty state.
+  Main daily entry point with today’s generated workout, recovery context, next progression, and shortener shortcuts.
+- `/plan`
+  Adaptive plan builder for schedule, goal, location, equipment, experience, body inputs, and muscle priorities.
+- `/train`
+  Flexible workout logger with set types, substitutions, special exercise additions, shortener, and edit scope.
+- `/exercises`
+  Searchable 270-entry tutorial and substitution library.
+- `/progress`
+  Progression lab, personal records, volume trend, and workout history.
 - `/workouts/[scheduledWorkoutId]`
   Workout preview before the session starts.
 - `/sessions/[sessionId]`

@@ -37,7 +37,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
               Athlete sign in
             </div>
             <h1 className="mt-5 font-display text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
-              Pick up today's training from any screen.
+              Pick up today&apos;s training from any screen.
             </h1>
             <p className="mt-3 max-w-lg text-sm leading-6 text-slate-600 sm:text-base">
               Sign in with a magic link to open your workout space, recover saved progress, and keep every session synced.
@@ -95,7 +95,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
 
             {!isSupabaseConfigured ? (
               <div className="mt-6 rounded-3xl border border-amber-200 bg-[linear-gradient(180deg,rgba(255,251,235,0.98),rgba(255,255,255,0.98))] px-4 py-4 text-sm leading-6 text-amber-900">
-                <p className="font-semibold text-amber-950">You're still in demo mode.</p>
+                <p className="font-semibold text-amber-950">You&apos;re still in demo mode.</p>
                 <p className="mt-2">
                   Add your Supabase keys in `.env.local`, then come back here to unlock sign-in and your live workout history.
                 </p>
@@ -161,7 +161,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
               <ol className="mt-3 space-y-2 text-sm leading-6 text-slate-700">
                 <li>1. We email you a secure sign-in link.</li>
                 <li>2. You tap the link and return to your workout space.</li>
-                <li>3. LiftLog restores your athlete profile and today's schedule.</li>
+                <li>3. LiftLog restores your athlete profile and today&apos;s schedule.</li>
               </ol>
             </div>
           </section>
