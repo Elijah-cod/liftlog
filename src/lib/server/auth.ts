@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { isSupabaseConfigured } from "@/lib/env";
+import { buildUserFromClaims } from "@/lib/auth-claims";
 import { createClient } from "@/lib/supabase/server";
 import type { TrainingViewer } from "@/lib/training/viewer";
 
@@ -48,18 +49,13 @@ export async function getOptionalSupabaseAuth(): Promise<AuthenticatedSupabaseCo
   }
 
   const client = await createClient();
-  const {
-    data: { user },
-  } = await client.auth.getUser();
+  const { data, error } = await client.auth.getClaims();
 
-  if (!user) {
+  if (error || !data?.claims) {
     return null;
   }
 
-  const context = { client, user };
-  await ensureProfile(context);
-
-  return context;
+  return { client, user: buildUserFromClaims(data.claims) };
 }
 
 export async function isDemoSession() {
