@@ -2,7 +2,12 @@ import Link from "next/link";
 import { CheckCircle2, Dumbbell, LockKeyhole, Mail, ShieldCheck, Sparkles, UserRound } from "lucide-react";
 import { redirect } from "next/navigation";
 
-import { sendMagicLink, signInWithPassword, signUpWithPassword } from "@/app/login/actions";
+import {
+  resendConfirmationEmail,
+  sendMagicLink,
+  signInWithPassword,
+  signUpWithPassword,
+} from "@/app/login/actions";
 import { AppShell } from "@/components/app-shell";
 import { isSupabaseConfigured } from "@/lib/env";
 import { getOptionalSupabaseAuth } from "@/lib/server/auth";
@@ -12,6 +17,7 @@ interface LoginPageProps {
     next?: string;
     mode?: string;
     sent?: string;
+    resent?: string;
     created?: string;
     error?: string;
   }>;
@@ -108,6 +114,11 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
                     Your secure sign-in link is on the way.
                   </div>
                 ) : null}
+                {params.resent ? (
+                  <div className="feedback-success mt-5 rounded-2xl px-4 py-3 text-sm leading-6">
+                    If that account is waiting for verification, a fresh confirmation email is on the way.
+                  </div>
+                ) : null}
                 {params.error ? (
                   <div className="feedback-error mt-5 rounded-2xl px-4 py-3 text-sm leading-6">
                     {params.error}
@@ -145,14 +156,27 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
                 </form>
 
                 {mode === "signin" ? (
-                  <details className="mt-5 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
-                    <summary className="cursor-pointer text-sm font-semibold text-slate-700">Email me a sign-in link instead</summary>
-                    <form action={sendMagicLink} className="mt-3 flex gap-2">
-                      <input type="hidden" name="next" value={next} />
-                      <input type="email" name="email" required autoComplete="email" placeholder="you@example.com" className="h-11 min-w-0 flex-1 rounded-[14px] border border-slate-200 bg-white px-3 text-sm outline-none focus:border-blue-400" />
-                      <button type="submit" className="rounded-full bg-slate-950 px-4 text-xs font-semibold text-white">Send link</button>
-                    </form>
-                  </details>
+                  <div className="mt-5 space-y-3">
+                    <details className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
+                      <summary className="cursor-pointer text-sm font-semibold text-slate-700">Email me a sign-in link instead</summary>
+                      <form action={sendMagicLink} className="mt-3 flex gap-2">
+                        <input type="hidden" name="next" value={next} />
+                        <input type="email" name="email" required autoComplete="email" placeholder="you@example.com" className="h-11 min-w-0 flex-1 rounded-[14px] border border-slate-200 bg-white px-3 text-sm outline-none focus:border-blue-400" />
+                        <button type="submit" className="rounded-full bg-slate-950 px-4 text-xs font-semibold text-white">Send link</button>
+                      </form>
+                    </details>
+                    <details className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
+                      <summary className="cursor-pointer text-sm font-semibold text-slate-700">Resend my account verification</summary>
+                      <p className="mt-2 text-xs leading-5 text-slate-500">
+                        Use this if you created an account before email delivery was connected.
+                      </p>
+                      <form action={resendConfirmationEmail} className="mt-3 flex gap-2">
+                        <input type="hidden" name="next" value={next === "/today" ? "/plan" : next} />
+                        <input type="email" name="email" required autoComplete="email" placeholder="you@example.com" className="h-11 min-w-0 flex-1 rounded-[14px] border border-slate-200 bg-white px-3 text-sm outline-none focus:border-blue-400" />
+                        <button type="submit" className="rounded-full bg-slate-950 px-4 text-xs font-semibold text-white">Resend</button>
+                      </form>
+                    </details>
+                  </div>
                 ) : null}
               </>
             ) : (

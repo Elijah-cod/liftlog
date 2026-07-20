@@ -141,3 +141,38 @@ export async function sendMagicLink(formData: FormData) {
 
   redirect(`/login?sent=1&next=${encodeURIComponent(next)}`);
 }
+
+export async function resendConfirmationEmail(formData: FormData) {
+  if (!isSupabaseConfigured) {
+    redirect("/today");
+  }
+
+  const email = emailSchema.safeParse(formData.get("email"));
+  const next = sanitizeNext(String(formData.get("next") ?? "/plan"));
+
+  if (!email.success) {
+    loginError("Enter the email address you used to create your account.", next);
+  }
+
+  const client = await createClient();
+  const { error } = await client.auth.resend({
+    type: "signup",
+    email: email.data,
+    options: {
+      emailRedirectTo: `${await getOrigin()}/auth/callback?next=${encodeURIComponent(next)}`,
+    },
+  });
+
+  if (error) {
+    console.warn("[auth/resend-confirmation] Unable to resend verification email", {
+      code: error.code,
+      status: error.status,
+    });
+    const message = error.code === "over_email_send_rate_limit"
+      ? "A verification email was sent recently. Wait a minute, then try again."
+      : "We could not resend the verification email right now. Please try again in a moment.";
+    loginError(message, next);
+  }
+
+  redirect(`/login?resent=1&next=${encodeURIComponent(next)}`);
+}
