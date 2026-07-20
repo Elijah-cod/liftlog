@@ -76,9 +76,15 @@ export async function requirePageAuth(nextPath: string) {
     return null;
   }
 
+  // Demo mode is intentionally independent of Supabase. Checking it first keeps
+  // the interactive experience available during auth or profile-service outages.
+  if (await isDemoSession()) {
+    return null;
+  }
+
   const auth = await getOptionalSupabaseAuth();
 
-  if (!auth && !(await isDemoSession())) {
+  if (!auth) {
     redirect(`/login?next=${encodeURIComponent(nextPath)}`);
   }
 
