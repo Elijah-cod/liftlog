@@ -32,7 +32,7 @@ export function TrainingNavLink({ href, label, icon: Icon, active, variant }: Tr
   return (
     <Link
       href={href}
-      prefetch
+      prefetch={false}
       aria-current={active ? "page" : undefined}
       className={cn(
         "relative font-semibold transition-colors active:scale-[0.98]",

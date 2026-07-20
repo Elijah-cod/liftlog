@@ -86,9 +86,9 @@ export function TrainingShell({
               </p>
               {viewer.mode === "demo" ? (
                 <div className="mt-3 space-y-2">
-                  <Link href="/login?mode=signup&next=/plan" prefetch className="flex min-h-10 w-full items-center justify-center whitespace-nowrap rounded-full bg-blue-600 px-3 text-xs font-semibold text-white">Create account</Link>
+                  <Link href="/login?mode=signup&next=/plan" prefetch={false} className="flex min-h-10 w-full items-center justify-center whitespace-nowrap rounded-full bg-blue-600 px-3 text-xs font-semibold text-white">Create account</Link>
                   <div className="flex items-center justify-between gap-3 px-1">
-                    <Link href="/login?mode=signin&next=/today" prefetch className="inline-flex min-h-8 items-center text-xs font-semibold text-blue-700">Sign in</Link>
+                    <Link href="/login?mode=signin&next=/today" prefetch={false} className="inline-flex min-h-8 items-center text-xs font-semibold text-blue-700">Sign in</Link>
                     <form action="/auth/demo/exit" method="post">
                       <button type="submit" className="inline-flex min-h-8 items-center gap-1 text-xs font-semibold text-slate-500">
                         <LogOut className="size-3.5" /> Exit demo
@@ -110,7 +110,7 @@ export function TrainingShell({
         <div className="min-w-0">
           <header className="border-b border-white/80 px-4 pb-5 pt-6 sm:px-6 sm:pt-7 lg:px-8">
             <div className="mb-5 flex items-center justify-between gap-3 md:hidden">
-              <Link href="/today" prefetch className="flex min-w-0 items-center gap-2.5">
+              <Link href="/today" prefetch={false} className="flex min-w-0 items-center gap-2.5">
                 <span className="flex size-9 shrink-0 items-center justify-center rounded-[13px] bg-blue-600 text-white shadow-[0_8px_20px_oklch(0.58_0.19_255/0.2)]">
                   <Dumbbell className="size-[18px]" />
                 </span>
@@ -125,7 +125,7 @@ export function TrainingShell({
                   </button>
                 </form>
               ) : (
-                <Link href="/login?mode=signup&next=/plan" prefetch className="inline-flex min-h-10 items-center whitespace-nowrap rounded-full bg-blue-600 px-3.5 text-xs font-semibold text-white">Create account</Link>
+                <Link href="/login?mode=signup&next=/plan" prefetch={false} className="inline-flex min-h-10 items-center whitespace-nowrap rounded-full bg-blue-600 px-3.5 text-xs font-semibold text-white">Create account</Link>
               )}
             </div>
 
@@ -148,8 +148,8 @@ export function TrainingShell({
               <div className="mt-4 flex flex-col gap-3 rounded-[16px] border border-sky-200 bg-sky-50 px-3 py-2.5 text-xs text-sky-900 sm:flex-row sm:items-center sm:justify-between">
                 <span><strong>Interactive demo.</strong> Your changes save in this browser and never mix with member data.</span>
                 <span className="grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto sm:items-center">
-                  <Link href="/login?mode=signin&next=/today" prefetch className="flex min-h-9 items-center justify-center whitespace-nowrap rounded-full border border-sky-200 bg-white px-3 font-semibold text-slate-700">Sign in</Link>
-                  <Link href="/login?mode=signup&next=/plan" prefetch className="flex min-h-9 items-center justify-center whitespace-nowrap rounded-full bg-blue-600 px-3 font-semibold text-white">Create account</Link>
+                  <Link href="/login?mode=signin&next=/today" prefetch={false} className="flex min-h-9 items-center justify-center whitespace-nowrap rounded-full border border-sky-200 bg-white px-3 font-semibold text-slate-700">Sign in</Link>
+                  <Link href="/login?mode=signup&next=/plan" prefetch={false} className="flex min-h-9 items-center justify-center whitespace-nowrap rounded-full bg-blue-600 px-3 font-semibold text-white">Create account</Link>
                 </span>
               </div>
             ) : null}
