@@ -3,6 +3,7 @@ import Link from "next/link";
 import { BarChart3, BookOpenText, CalendarRange, Dumbbell, LogOut, Play, Settings2, ShieldCheck, Sparkles } from "lucide-react";
 
 import { AppShell } from "@/components/app-shell";
+import { TrainingNavLink } from "@/components/training-nav-link";
 import { cn } from "@/lib/utils";
 import type { TrainingViewer } from "@/lib/training/viewer";
 
@@ -51,23 +52,16 @@ export function TrainingShell({
 
           <nav className="mt-8 space-y-1" aria-label="Primary navigation">
             {NAV_ITEMS.map((item) => {
-              const Icon = item.icon;
               const isActive = item.label === active;
               return (
-                <Link
+                <TrainingNavLink
                   key={item.href}
                   href={item.href}
-                  aria-current={isActive ? "page" : undefined}
-                  className={cn(
-                    "flex min-h-11 items-center gap-3 rounded-[16px] px-3 text-sm font-semibold transition-colors",
-                    isActive
-                      ? "bg-slate-950 text-white shadow-sm"
-                      : "text-slate-600 hover:bg-white hover:text-slate-950",
-                  )}
-                >
-                  <Icon className="size-4" />
-                  {item.label}
-                </Link>
+                  label={item.label}
+                  icon={item.icon}
+                  active={isActive}
+                  variant="sidebar"
+                />
               );
             })}
           </nav>
@@ -92,15 +86,15 @@ export function TrainingShell({
               </p>
               {viewer.mode === "demo" ? (
                 <div className="mt-3 space-y-2">
-                  <div className="grid grid-cols-2 gap-2">
-                    <Link href="/login?mode=signin&next=/today" className="flex min-h-9 items-center justify-center rounded-full border border-slate-200 text-xs font-semibold text-slate-700">Sign in</Link>
-                    <Link href="/login?mode=signup&next=/plan" className="flex min-h-9 items-center justify-center rounded-full bg-blue-600 text-xs font-semibold text-white">Create account</Link>
+                  <Link href="/login?mode=signup&next=/plan" prefetch className="flex min-h-10 w-full items-center justify-center whitespace-nowrap rounded-full bg-blue-600 px-3 text-xs font-semibold text-white">Create account</Link>
+                  <div className="flex items-center justify-between gap-3 px-1">
+                    <Link href="/login?mode=signin&next=/today" prefetch className="inline-flex min-h-8 items-center text-xs font-semibold text-blue-700">Sign in</Link>
+                    <form action="/auth/demo/exit" method="post">
+                      <button type="submit" className="inline-flex min-h-8 items-center gap-1 text-xs font-semibold text-slate-500">
+                        <LogOut className="size-3.5" /> Exit demo
+                      </button>
+                    </form>
                   </div>
-                  <form action="/auth/demo/exit" method="post">
-                    <button type="submit" className="inline-flex min-h-8 items-center gap-1.5 text-xs font-semibold text-slate-500">
-                      <LogOut className="size-3.5" /> Exit demo
-                    </button>
-                  </form>
                 </div>
               ) : (
                 <form action="/auth/sign-out" method="post" className="mt-2">
@@ -115,6 +109,26 @@ export function TrainingShell({
 
         <div className="min-w-0">
           <header className="border-b border-white/80 px-4 pb-5 pt-6 sm:px-6 sm:pt-7 lg:px-8">
+            <div className="mb-5 flex items-center justify-between gap-3 md:hidden">
+              <Link href="/today" prefetch className="flex min-w-0 items-center gap-2.5">
+                <span className="flex size-9 shrink-0 items-center justify-center rounded-[13px] bg-blue-600 text-white shadow-[0_8px_20px_oklch(0.58_0.19_255/0.2)]">
+                  <Dumbbell className="size-[18px]" />
+                </span>
+                <span className="text-base font-semibold tracking-tight text-slate-950">LiftLog</span>
+              </Link>
+              {viewer.mode === "live" ? (
+                <form action="/auth/sign-out" method="post">
+                  <button type="submit" className="inline-flex min-h-10 max-w-[9.5rem] items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 text-xs font-semibold text-emerald-800" aria-label={`Sign out ${viewer.firstName}`}>
+                    <ShieldCheck className="size-3.5 shrink-0" />
+                    <span className="truncate">{viewer.firstName}</span>
+                    <LogOut className="size-3.5 shrink-0" />
+                  </button>
+                </form>
+              ) : (
+                <Link href="/login?mode=signup&next=/plan" prefetch className="inline-flex min-h-10 items-center whitespace-nowrap rounded-full bg-blue-600 px-3.5 text-xs font-semibold text-white">Create account</Link>
+              )}
+            </div>
+
             <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
               <div className="min-w-0">
                 {eyebrow ? (
@@ -133,30 +147,25 @@ export function TrainingShell({
             {viewer.mode === "demo" ? (
               <div className="mt-4 flex flex-col gap-3 rounded-[16px] border border-sky-200 bg-sky-50 px-3 py-2.5 text-xs text-sky-900 sm:flex-row sm:items-center sm:justify-between">
                 <span><strong>Interactive demo.</strong> Your changes save in this browser and never mix with member data.</span>
-                <span className="flex shrink-0 items-center gap-3">
-                  <Link href="/login?mode=signin&next=/today" className="font-semibold text-slate-700">Sign in</Link>
-                  <Link href="/login?mode=signup&next=/plan" className="rounded-full bg-blue-600 px-3 py-2 font-semibold text-white">Create account</Link>
+                <span className="grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto sm:items-center">
+                  <Link href="/login?mode=signin&next=/today" prefetch className="flex min-h-9 items-center justify-center whitespace-nowrap rounded-full border border-sky-200 bg-white px-3 font-semibold text-slate-700">Sign in</Link>
+                  <Link href="/login?mode=signup&next=/plan" prefetch className="flex min-h-9 items-center justify-center whitespace-nowrap rounded-full bg-blue-600 px-3 font-semibold text-white">Create account</Link>
                 </span>
               </div>
             ) : null}
 
-            <nav className="-mx-1 mt-5 flex gap-1 overflow-x-auto pb-1 md:hidden" aria-label="Primary navigation">
+            <nav className="mt-5 grid grid-cols-5 gap-1.5 md:hidden" aria-label="Primary navigation">
               {NAV_ITEMS.map((item) => {
-                const Icon = item.icon;
                 const isActive = item.label === active;
                 return (
-                  <Link
+                  <TrainingNavLink
                     key={item.href}
                     href={item.href}
-                    aria-current={isActive ? "page" : undefined}
-                    className={cn(
-                      "flex min-h-10 shrink-0 items-center gap-2 rounded-full px-3 text-xs font-semibold",
-                      isActive ? "bg-slate-950 text-white" : "border border-slate-200 bg-white/80 text-slate-600",
-                    )}
-                  >
-                    <Icon className="size-3.5" />
-                    {item.label}
-                  </Link>
+                    label={item.label}
+                    icon={item.icon}
+                    active={isActive}
+                    variant="mobile"
+                  />
                 );
               })}
             </nav>

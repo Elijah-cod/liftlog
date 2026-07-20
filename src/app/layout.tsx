@@ -13,6 +13,10 @@ export const metadata: Metadata = {
   },
   description: "Adaptive workout planning, progression guidance, exercise education, and training history.",
   applicationName: "LiftLog",
+  icons: {
+    icon: "/icon.svg",
+    shortcut: "/icon.svg",
+  },
   openGraph: {
     title: "LiftLog",
     description: "Adaptive workout planning, progression guidance, exercise education, and training history.",
