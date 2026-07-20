@@ -20,10 +20,10 @@ export function RepeatWorkoutActions({
   if (authMode !== "live") {
     return (
       <Link
-        href="/setup"
+        href="/login?mode=signup&next=/plan"
         className="inline-flex w-full items-center justify-center rounded-full border border-slate-200 px-4 py-3 text-center text-sm font-semibold text-slate-700"
       >
-        Use live mode to schedule again
+        Create an account to keep this plan
       </Link>
     );
   }

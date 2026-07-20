@@ -90,12 +90,25 @@ export function TrainingShell({
               <p className="mt-1 text-[11px] leading-4 text-slate-500">
                 {viewer.mode === "live" ? "Private account data" : "Local demo data"}
               </p>
-              <form action={viewer.mode === "live" ? "/auth/sign-out" : "/auth/demo/exit"} method="post" className="mt-2">
-                <button type="submit" className="inline-flex min-h-8 items-center gap-1.5 text-xs font-semibold text-blue-700">
-                  <LogOut className="size-3.5" />
-                  {viewer.mode === "live" ? "Sign out" : "Exit demo"}
-                </button>
-              </form>
+              {viewer.mode === "demo" ? (
+                <div className="mt-3 space-y-2">
+                  <div className="grid grid-cols-2 gap-2">
+                    <Link href="/login?mode=signin&next=/today" className="flex min-h-9 items-center justify-center rounded-full border border-slate-200 text-xs font-semibold text-slate-700">Sign in</Link>
+                    <Link href="/login?mode=signup&next=/plan" className="flex min-h-9 items-center justify-center rounded-full bg-blue-600 text-xs font-semibold text-white">Create account</Link>
+                  </div>
+                  <form action="/auth/demo/exit" method="post">
+                    <button type="submit" className="inline-flex min-h-8 items-center gap-1.5 text-xs font-semibold text-slate-500">
+                      <LogOut className="size-3.5" /> Exit demo
+                    </button>
+                  </form>
+                </div>
+              ) : (
+                <form action="/auth/sign-out" method="post" className="mt-2">
+                  <button type="submit" className="inline-flex min-h-8 items-center gap-1.5 text-xs font-semibold text-blue-700">
+                    <LogOut className="size-3.5" /> Sign out
+                  </button>
+                </form>
+              )}
             </div>
           </div>
         </aside>
@@ -118,9 +131,12 @@ export function TrainingShell({
             </div>
 
             {viewer.mode === "demo" ? (
-              <div className="mt-4 flex flex-col gap-2 rounded-[16px] border border-sky-200 bg-sky-50 px-3 py-2.5 text-xs text-sky-900 sm:flex-row sm:items-center sm:justify-between">
-                <span><strong>Interactive demo.</strong> Changes stay in this browser and never mix with member data.</span>
-                <Link href="/login?mode=signup" className="shrink-0 font-semibold text-blue-700">Create a private account</Link>
+              <div className="mt-4 flex flex-col gap-3 rounded-[16px] border border-sky-200 bg-sky-50 px-3 py-2.5 text-xs text-sky-900 sm:flex-row sm:items-center sm:justify-between">
+                <span><strong>Interactive demo.</strong> Your changes save in this browser and never mix with member data.</span>
+                <span className="flex shrink-0 items-center gap-3">
+                  <Link href="/login?mode=signin&next=/today" className="font-semibold text-slate-700">Sign in</Link>
+                  <Link href="/login?mode=signup&next=/plan" className="rounded-full bg-blue-600 px-3 py-2 font-semibold text-white">Create account</Link>
+                </span>
               </div>
             ) : null}
 

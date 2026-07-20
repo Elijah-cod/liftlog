@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { ensureProfile } from "@/lib/server/auth";
+import { DEMO_COOKIE_NAME, ensureProfile } from "@/lib/server/auth";
 import { createClient } from "@/lib/supabase/server";
 import { parseEmailOtpType, sanitizeAuthRedirect } from "@/lib/auth-callback";
 
@@ -80,5 +80,7 @@ export async function GET(request: Request) {
     return redirectToLogin(requestUrl, safeNext, INVALID_LINK_MESSAGE);
   }
 
-  return NextResponse.redirect(new URL(safeNext, requestUrl.origin));
+  const response = NextResponse.redirect(new URL(safeNext, requestUrl.origin));
+  response.cookies.delete(DEMO_COOKIE_NAME);
+  return response;
 }
