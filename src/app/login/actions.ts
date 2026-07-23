@@ -1,20 +1,18 @@
 "use server";
 
-import { cookies, headers } from "next/headers";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 
+import { isEmailCode, sanitizeAuthNext } from "@/lib/auth-code";
 import { isSupabaseConfigured } from "@/lib/env";
 import { DEMO_COOKIE_NAME, ensureProfile } from "@/lib/server/auth";
+import {
+  clearPendingEmailAuth,
+  getPendingEmailAuth,
+  setPendingEmailAuth,
+} from "@/lib/server/pending-auth";
 import { createClient } from "@/lib/supabase/server";
-
-function sanitizeNext(next: string | null) {
-  if (!next || !next.startsWith("/") || next.startsWith("//")) {
-    return "/today";
-  }
-
-  return next;
-}
 
 const emailSchema = z.string().trim().email();
 const passwordSchema = z
@@ -29,18 +27,33 @@ function loginError(message: string, next: string, mode: "signin" | "signup" = "
   );
 }
 
-async function getOrigin() {
-  const headerStore = await headers();
-  return headerStore.get("origin") ?? process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
-}
-
 async function leaveDemoMode() {
   const cookieStore = await cookies();
   cookieStore.delete(DEMO_COOKIE_NAME);
 }
 
+function emailDeliveryError(code: string | undefined, fallback: string) {
+  if (code === "email_address_not_authorized") {
+    return "Email delivery is not connected for public accounts yet. Use the interactive demo for now.";
+  }
+
+  if (code === "over_email_send_rate_limit") {
+    return "A code was sent recently. Wait a minute, then try again.";
+  }
+
+  if (code === "email_address_invalid") {
+    return "Enter a valid email address.";
+  }
+
+  return fallback;
+}
+
+function verificationError(message: string, intent: "signup" | "signin"): never {
+  redirect(`/login/verify?intent=${intent}&error=${encodeURIComponent(message)}`);
+}
+
 export async function signInWithPassword(formData: FormData) {
-  const next = sanitizeNext(String(formData.get("next") ?? "/today"));
+  const next = sanitizeAuthNext(String(formData.get("next") ?? "/today"));
   if (!isSupabaseConfigured) redirect(next);
 
   const email = emailSchema.safeParse(formData.get("email"));
@@ -65,7 +78,7 @@ export async function signInWithPassword(formData: FormData) {
 }
 
 export async function signUpWithPassword(formData: FormData) {
-  const next = sanitizeNext(String(formData.get("next") ?? "/plan"));
+  const next = sanitizeAuthNext(String(formData.get("next") ?? "/plan"), "/plan");
   if (!isSupabaseConfigured) redirect(next);
 
   const name = z.string().trim().min(2).max(80).safeParse(formData.get("name"));
@@ -83,15 +96,21 @@ export async function signUpWithPassword(formData: FormData) {
     password: password.data,
     options: {
       data: { full_name: name.data },
-      emailRedirectTo: `${await getOrigin()}/auth/callback?next=${encodeURIComponent(next)}`,
     },
   });
 
   if (error) {
-    const message = error.message.toLowerCase().includes("already")
-      ? "An account already uses that email. Sign in instead."
-      : "We could not create your account right now. Please try again.";
+    const message = emailDeliveryError(
+      error.code,
+      error.message.toLowerCase().includes("already")
+        ? "An account already uses that email. Sign in instead."
+        : "We could not create your account right now. Please try again.",
+    );
     loginError(message, next, "signup");
+  }
+
+  if (data.user?.identities?.length === 0) {
+    loginError("An account already uses that email. Sign in instead.", next, "signup");
   }
 
   if (data.user && data.session) {
@@ -100,79 +119,140 @@ export async function signUpWithPassword(formData: FormData) {
     redirect(next);
   }
 
-  redirect(`/login?created=1&next=${encodeURIComponent(next)}`);
-}
-
-export async function sendMagicLink(formData: FormData) {
-  if (!isSupabaseConfigured) {
-    redirect("/today");
-  }
-
-  const email = String(formData.get("email") ?? "").trim();
-  const next = sanitizeNext(String(formData.get("next") ?? "/today"));
-
-  if (!email) {
-    redirect(
-      `/login?error=${encodeURIComponent("Enter the email you want to use for LiftLog.")}&next=${encodeURIComponent(next)}`,
-    );
-  }
-
-  const origin = await getOrigin();
-  const client = await createClient();
-
-  const { error } = await client.auth.signInWithOtp({
-    email,
-    options: {
-      emailRedirectTo: `${origin}/auth/callback?next=${encodeURIComponent(next)}`,
-      shouldCreateUser: false,
-    },
+  await setPendingEmailAuth({
+    email: email.data,
+    intent: "signup",
+    next,
   });
-
-  if (error) {
-    const message =
-      error.message.includes("email_address_invalid")
-        ? "That email address does not look valid yet. Double-check it and try again."
-        : error.message.includes("over_email_send_rate_limit")
-          ? "A magic link was sent recently. Give it a minute, then try again."
-          : "We could not send your sign-in link right now. Please try again in a moment.";
-
-    redirect(`/login?error=${encodeURIComponent(message)}&next=${encodeURIComponent(next)}`);
-  }
-
-  redirect(`/login?sent=1&next=${encodeURIComponent(next)}`);
+  redirect("/login/verify?intent=signup");
 }
 
-export async function resendConfirmationEmail(formData: FormData) {
+export async function sendLoginCode(formData: FormData) {
   if (!isSupabaseConfigured) {
     redirect("/today");
   }
 
   const email = emailSchema.safeParse(formData.get("email"));
-  const next = sanitizeNext(String(formData.get("next") ?? "/plan"));
+  const next = sanitizeAuthNext(String(formData.get("next") ?? "/today"));
 
   if (!email.success) {
-    loginError("Enter the email address you used to create your account.", next);
+    redirect(
+      `/login?error=${encodeURIComponent("Enter the email you want to use for LiftLog.")}&next=${encodeURIComponent(next)}`,
+    );
   }
 
   const client = await createClient();
-  const { error } = await client.auth.resend({
-    type: "signup",
+
+  const { error } = await client.auth.signInWithOtp({
     email: email.data,
     options: {
-      emailRedirectTo: `${await getOrigin()}/auth/callback?next=${encodeURIComponent(next)}`,
+      shouldCreateUser: false,
     },
   });
 
   if (error) {
-    console.warn("[auth/resend-confirmation] Unable to resend verification email", {
-      code: error.code,
-      status: error.status,
-    });
-    const message = error.code === "over_email_send_rate_limit"
-      ? "A verification email was sent recently. Wait a minute, then try again."
-      : "We could not resend the verification email right now. Please try again in a moment.";
-    loginError(message, next);
+    const message = emailDeliveryError(
+      error.code,
+      "We could not send your sign-in code right now. Please try again in a moment.",
+    );
+
+    redirect(`/login?error=${encodeURIComponent(message)}&next=${encodeURIComponent(next)}`);
   }
 
-  redirect(`/login?resent=1&next=${encodeURIComponent(next)}`);
+  await setPendingEmailAuth({
+    email: email.data,
+    intent: "signin",
+    next,
+  });
+  redirect("/login/verify?intent=signin");
+}
+
+export async function verifyEmailCode(formData: FormData) {
+  if (!isSupabaseConfigured) {
+    redirect("/today");
+  }
+
+  const pending = await getPendingEmailAuth();
+  if (!pending) {
+    redirect(
+      `/login?error=${encodeURIComponent("Start again so we can send a fresh verification code.")}`,
+    );
+  }
+
+  const token = String(formData.get("code") ?? "").trim();
+  if (!isEmailCode(token)) {
+    verificationError("Enter the 6-digit code from your email.", pending.intent);
+  }
+
+  const client = await createClient();
+  const { data, error } = await client.auth.verifyOtp({
+    email: pending.email,
+    token,
+    type: "email",
+  });
+
+  if (error || !data.user) {
+    console.warn("[auth/verify-code] Unable to verify email code", {
+      code: error?.code,
+      status: error?.status,
+    });
+    verificationError(
+      "That code is invalid or expired. Check the latest email or request a new code.",
+      pending.intent,
+    );
+  }
+
+  try {
+    await ensureProfile({ client, user: data.user });
+  } catch (profileError) {
+    console.error("[auth/verify-code] Session created but profile setup failed", {
+      error: profileError instanceof Error ? profileError.message : String(profileError),
+      userId: data.user.id,
+    });
+    verificationError(
+      "Your email was verified, but we could not finish your profile. Please sign in again.",
+      pending.intent,
+    );
+  }
+
+  await clearPendingEmailAuth();
+  await leaveDemoMode();
+  redirect(pending.next);
+}
+
+export async function resendEmailCode() {
+  if (!isSupabaseConfigured) {
+    redirect("/today");
+  }
+
+  const pending = await getPendingEmailAuth();
+  if (!pending) {
+    redirect(
+      `/login?error=${encodeURIComponent("Enter your email again so we can send a fresh code.")}`,
+    );
+  }
+
+  const client = await createClient();
+  const { error } =
+    pending.intent === "signup"
+      ? await client.auth.resend({
+          type: "signup",
+          email: pending.email,
+        })
+      : await client.auth.signInWithOtp({
+          email: pending.email,
+          options: { shouldCreateUser: false },
+        });
+
+  if (error) {
+    verificationError(
+      emailDeliveryError(
+        error.code,
+        "We could not send another code right now. Please try again in a moment.",
+      ),
+      pending.intent,
+    );
+  }
+
+  redirect(`/login/verify?intent=${pending.intent}&resent=1`);
 }

@@ -202,18 +202,36 @@ If live mode is not fully configured, the app automatically falls back to mock d
 
 ## Accounts, Privacy, And Demo Access
 
-Live mode auth uses Supabase email/password accounts with magic links as an alternative.
+Live mode auth uses Supabase email/password accounts with in-app email-code verification.
 
 - Visit `/login`
 - Create an account with a name, email, and password, or sign in to an existing account
 - Passwords require at least eight characters with both a letter and a number
-- A magic-link option remains available for existing accounts
+- New accounts enter a six-digit email code in LiftLog instead of opening a confirmation link
+- Existing accounts can request a six-digit sign-in code instead of using a password
+- Pending email addresses are stored in a short-lived HttpOnly cookie, not exposed in the URL
+- Resends and expired-code recovery stay on the verification screen
 - A `profiles` row is created automatically for first-time users
 - The plan builder stores the validated profile and generated routine under the authenticated user ID
 - Postgres RLS independently enforces ownership even if a client attempts to query another user ID
 - Demo access uses an HttpOnly mode cookie and browser-local routine data instead of a shared demo account
 
 When live mode is configured, protected app pages redirect unauthenticated requests back to `/login`.
+
+### Production Auth Email
+
+Supabase's built-in sender is intended for testing and is too restricted for public account creation. Production must use a custom SMTP provider.
+
+1. Verify a dedicated sending domain with the SMTP provider.
+2. Configure the provider in Supabase under Authentication, Emails, SMTP Settings.
+3. Set the sender to a dedicated address such as `no-reply@auth.example.com`.
+4. Replace the hosted Confirm sign up and Magic link or OTP templates with the code-based versions in:
+   - `supabase/templates/confirmation.html`
+   - `supabase/templates/magic_link.html`
+5. Keep email confirmation enabled and the OTP length set to six digits.
+6. Test signup, resend, code verification, password login, and passwordless code login with an address outside the Supabase organization.
+
+Local Supabase uses the same templates through `supabase/config.toml`.
 
 ## July 2026 Multi-User Release
 
